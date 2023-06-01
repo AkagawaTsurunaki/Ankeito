@@ -6,7 +6,7 @@ import com.github.akagawatsurunaki.ankeito.common.constant.StringValue;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ResultCode;
 import com.github.akagawatsurunaki.ankeito.dao.ModelDao;
 import com.github.akagawatsurunaki.ankeito.dao.impl.ModelDaoImpl;
-import com.github.akagawatsurunaki.ankeito.entity.User;
+import com.github.akagawatsurunaki.ankeito.entity.UserEntity;
 import com.github.akagawatsurunaki.ankeito.entity.vo.LoginUserVO;
 import com.github.akagawatsurunaki.ankeito.service.LoginService;
 import com.github.akagawatsurunaki.ankeito.util.Md5Util;
@@ -23,7 +23,7 @@ public class LoginServiceImpl implements LoginService {
     @Getter
     private static final LoginService instance = new LoginServiceImpl();
 
-    private static final ModelDao<User> userDao = new ModelDaoImpl<User>();
+    private static final ModelDao<UserEntity> userDao = new ModelDaoImpl<UserEntity>();
 
     @Override
     public ServiceResult<LoginUserVO> login(@NonNull LoginParam loginParam) {
@@ -60,7 +60,7 @@ public class LoginServiceImpl implements LoginService {
         val passwordMd5 = Md5Util.getMd5Password(password);
 
         // 如果密码不相等
-        if (!loginUser.getPasswordMd5().equals(passwordMd5)) {
+        if (!loginUser.getPassword().equals(passwordMd5)) {
             return ServiceResult.of(ResultCode.LOGIN_FAILED, StringValue.PASSWORD_ERROR);
         }
 

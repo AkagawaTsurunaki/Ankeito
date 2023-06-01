@@ -4,11 +4,11 @@ import com.github.akagawatsurunaki.ankeito.common.enumeration.UserType;
 import lombok.Data;
 
 @Data
-public class User {
+public class UserEntity {
     /**
      用户的ID(唯一且尽量不要更改)
      */
-    Integer id;
+    String id;
 
     /**
      * 用户名
@@ -16,14 +16,28 @@ public class User {
     String username;
 
     /**
-     * 用户密码(已加密)
+     * 用户密码
      */
-    String passwordMd5;
+    String password;
 
     /**
      * 用户类型
      */
-    UserType userType;
+    String roleId;
+
+    String startTime;
+
+    String stopTime;
+
+    String status;
+
+    String createdBy;
+
+    String creationDate;
+
+    String lastUpdatedBy;
+
+    String lastUpdateDate;
 
 
 }
