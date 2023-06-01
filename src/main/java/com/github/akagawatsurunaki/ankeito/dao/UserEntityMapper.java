@@ -2,7 +2,7 @@ package com.github.akagawatsurunaki.ankeito.dao;
 
 import com.github.akagawatsurunaki.ankeito.dao.entity.UserEntity;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Map;
@@ -11,10 +11,10 @@ public interface UserEntityMapper {
 
     /**
      * 搜索用户
-     * @param userEntity
+     * @param map
      * @return
      */
-    List<Map<String, Object>> queryUserList(@NonNull UserEntity userEntity);
+    List<Map<String, Object>> queryUserList(@NonNull Map<String, Object> map);
 
     /**
      * 增加数据

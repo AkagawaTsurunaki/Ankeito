@@ -10,3 +10,4 @@ spring:
 
 mybatis:
     type-aliases-package: com.github.akagawatsurunaki.ankeito.entity
+    mapper-locations: src/main/resources/mapper
