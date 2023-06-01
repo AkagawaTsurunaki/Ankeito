@@ -3,6 +3,8 @@ package com.github.akagawatsurunaki.ankeito.entity;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserType;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class UserEntity {
     /**
@@ -25,19 +27,19 @@ public class UserEntity {
      */
     String roleId;
 
-    String startTime;
+    Date startTime;
 
-    String stopTime;
+    Date stopTime;
 
     String status;
 
     String createdBy;
 
-    String creationDate;
+    Date creationDate;
 
     String lastUpdatedBy;
 
-    String lastUpdateDate;
+    Date lastUpdateDate;
 
 
 }
