@@ -1,4 +1,4 @@
-package com.github.akagawatsurunaki.ankeito.entity.vo;
+package com.github.akagawatsurunaki.ankeito.dao.entity.vo;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.dao;
 
-import com.github.akagawatsurunaki.ankeito.entity.UserEntity;
+import com.github.akagawatsurunaki.ankeito.dao.entity.UserEntity;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.NonNull;
 

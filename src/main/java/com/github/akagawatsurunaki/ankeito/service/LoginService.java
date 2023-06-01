@@ -2,7 +2,7 @@ package com.github.akagawatsurunaki.ankeito.service;
 
 import com.github.akagawatsurunaki.ankeito.api.param.LoginParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
-import com.github.akagawatsurunaki.ankeito.entity.vo.LoginUserVO;
+import com.github.akagawatsurunaki.ankeito.dao.entity.vo.LoginUserVO;
 import lombok.NonNull;
 
 public interface LoginService {

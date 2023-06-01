@@ -1,6 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
-import com.github.akagawatsurunaki.ankeito.entity.UserEntity;
+import com.github.akagawatsurunaki.ankeito.dao.entity.UserEntity;
 import lombok.NonNull;
 
 import java.util.List;

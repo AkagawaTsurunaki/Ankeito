@@ -1,7 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
-import com.github.akagawatsurunaki.ankeito.entity.HttpResponseEntity;
-import com.github.akagawatsurunaki.ankeito.entity.UserEntity;
+import com.github.akagawatsurunaki.ankeito.dao.entity.HttpResponseEntity;
+import com.github.akagawatsurunaki.ankeito.dao.entity.UserEntity;
 import lombok.NonNull;
 
 public class UserController {
