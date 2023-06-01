@@ -1,11 +1,15 @@
 package com.github.akagawatsurunaki.ankeito.dao.entity;
 
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 public class UserEntity {
     /**
      用户的ID(唯一且尽量不要更改)

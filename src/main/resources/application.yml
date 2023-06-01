@@ -10,4 +10,6 @@ spring:
 
 mybatis:
     type-aliases-package: com.github.akagawatsurunaki.ankeito.entity
-    mapper-locations: src/main/resources/mapper
+    mapper-locations: classpath:mapper/*.xml
+    configuration:
+        cache-enabled: true

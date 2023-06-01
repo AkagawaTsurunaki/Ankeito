@@ -20,7 +20,7 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="mapper/user_entity_mapper.xml"/>
+        <mapper resource="mapper/UserEntityMapper.xml"/>
     </mappers>
 
 </configuration>

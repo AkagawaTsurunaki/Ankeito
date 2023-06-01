@@ -2,39 +2,19 @@ package com.github.akagawatsurunaki.ankeito.dao;
 
 import com.github.akagawatsurunaki.ankeito.dao.entity.UserEntity;
 import jakarta.validation.constraints.NotEmpty;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Map;
 
+@Mapper
 public interface UserEntityMapper {
-
-    /**
-     * 搜索用户
-     * @param map
-     * @return
-     */
-    List<Map<String, Object>> queryUserList(@NonNull Map<String, Object> map);
-
-    /**
-     * 增加数据
-     * @param userEntity
-     * @return
-     */
+    UserEntity selectByPrimaryKey(@NonNull String id);
+    UserEntity deleteByPrimaryKey(@NonNull String id);
     int insert(@NonNull UserEntity userEntity);
-
-    /**
-     * 删除数据
-     * @param id
-     * @return
-     */
-    int deleteUserId(@NonNull @NotEmpty(message = "用户ID不能为空") String id);
-
-    /**
-     * 修改数据
-     * @param userEntity
-     * @return
-     */
+    int insertSelective(@NonNull UserEntity userEntity);
     int updateByPrimaryKeySelective(@NonNull UserEntity userEntity);
+    int updateByPrimaryKey(@NonNull UserEntity userEntity);
 
 }
