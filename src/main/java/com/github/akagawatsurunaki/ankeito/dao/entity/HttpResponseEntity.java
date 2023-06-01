@@ -4,4 +4,8 @@ import lombok.Data;
 
 @Data
 public class HttpResponseEntity {
+
+    String code;
+    Object data;
+    String message;
 }

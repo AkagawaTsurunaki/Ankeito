@@ -6,11 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class UserEntity {
+public class UserEntity implements Serializable {
     /**
      用户的ID(唯一且尽量不要更改)
      */

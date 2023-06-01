@@ -1,12 +1,13 @@
 package com.github.akagawatsurunaki.ankeito;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+@MapperScan("com.github.akagawatsurunaki.ankeito.dao")
 public class AnkeitoApplication {
 
-	// 这个文件你不用管，跟实验无关
 	public static void main(String[] args) {
 		SpringApplication.run(AnkeitoApplication.class, args);
 	}
