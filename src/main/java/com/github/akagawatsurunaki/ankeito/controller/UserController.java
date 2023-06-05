@@ -106,4 +106,26 @@ public class UserController {
         }
         return httpResponseEntity;
     }
+
+    @RequestMapping(value = "/queryUserList", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity queryUserList(@RequestBody UserEntity userEntity) {
+        val httpResponseEntity = new HttpResponseEntity();
+        try {
+            val hasUser = userService.queryUserList(userEntity);
+
+            if (CollectionUtils.isEmpty(hasUser)) {
+                httpResponseEntity.setCode("0");
+                httpResponseEntity.setData(hasUser.get(0));
+                httpResponseEntity.setMessage("无用户信息");
+            } else {
+                httpResponseEntity.setCode("666");
+                httpResponseEntity.setData(hasUser);
+                httpResponseEntity.setMessage("查询成功");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return httpResponseEntity;
+    }
 }

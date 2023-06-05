@@ -41,6 +41,16 @@
              -->
         delete from user_info where id = #{id,jdbcType=VARCHAR}
     </delete>
+    <delete id="deleteUserByName">
+        delete
+        from user_info
+        where username = #{username,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteUserById">
+        delete
+        from user_info
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
     <insert id="insert" parameterType="com.github.akagawatsurunaki.ankeito.dao.entity.UserEntity">
         <!--
               WARNING - @mbg.generated
@@ -116,8 +126,19 @@
     <!-- 根据用户名查找用户信息 -->
     <select id="selectUserInfo" parameterType="java.lang.String"
             resultType="com.github.akagawatsurunaki.ankeito.dao.entity.UserEntity">
-        SELECT id,username,`password`,status
-        FROM user_info WHERE username = #{username,jdbcType=VARCHAR} and `password` = #{password,jdbcType=VARCHAR} AND
-        status = "1"
+        SELECT id, username, `password`, status
+        FROM user_info
+        WHERE username = #{username,jdbcType=VARCHAR}
+          and `password` = #{password,jdbcType=VARCHAR}
+          AND status = '1'
+    </select>
+    <select id="queryUserList" resultType="com.github.akagawatsurunaki.ankeito.dao.entity.UserEntity">
+        SELECT id,
+               username,
+               password,
+               start_time as "starttime",
+               stop_time  as "stoptime"
+        FROM user_info
+        WHERE status = '1'
     </select>
 </mapper>

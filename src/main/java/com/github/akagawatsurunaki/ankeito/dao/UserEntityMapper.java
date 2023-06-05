@@ -11,13 +11,23 @@ import java.util.List;
 @Component
 public interface UserEntityMapper {
     UserEntity selectByPrimaryKey(@NonNull String id);
+
     UserEntity deleteByPrimaryKey(@NonNull String id);
+
     int insert(@NonNull UserEntity userEntity);
+
     int insertSelective(@NonNull UserEntity userEntity);
+
     int updateByPrimaryKeySelective(@NonNull UserEntity userEntity);
+
     int updateByPrimaryKey(@NonNull UserEntity userEntity);
+
     List<UserEntity> queryUserList(UserEntity userEntity);
+
     int deleteUserById(UserEntity userEntity);
+
+    int deleteUserByName(UserEntity userEntity);
+
     List<UserEntity> selectUserInfo(UserEntity userEntity);
 
 }

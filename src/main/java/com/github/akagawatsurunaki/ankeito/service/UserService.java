@@ -17,6 +17,7 @@ public class UserService {
 
     /**
      * 登录
+     *
      * @param userEntity
      * @return
      */
@@ -26,6 +27,7 @@ public class UserService {
 
     /**
      * 查询用户列表
+     *
      * @param userEntity
      * @return
      */
@@ -35,6 +37,7 @@ public class UserService {
 
     /**
      * 创建用户
+     *
      * @param userEntity
      * @return
      */
@@ -56,4 +59,7 @@ public class UserService {
         return userEntityMapper.deleteUserById(userEntity);
     }
 
+    public int deleteUserByName(UserEntity userEntity) {
+        return userEntityMapper.deleteUserByName(userEntity);
+    }
 }
