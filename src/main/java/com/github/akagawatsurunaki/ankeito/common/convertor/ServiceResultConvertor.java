@@ -1,6 +1,5 @@
 package com.github.akagawatsurunaki.ankeito.common.convertor;
 
-import com.github.akagawatsurunaki.ankeito.api.dto.UserDTO;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import lombok.AllArgsConstructor;

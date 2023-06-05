@@ -2,7 +2,6 @@ package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.akagawatsurunaki.ankeito.api.dto.UserDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.*;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
@@ -42,20 +41,6 @@ public class UserService {
                 ServiceResultCode.OK,
                 "共查询到" + records.size() + "条用户信息",
                 records);
-    }
-
-    public ServiceResult<User> getUserById(@NonNull UserDTO userDTO) {
-        val user = userMapper.selectById(userDTO.getId());
-        if (user == null) {
-            return ServiceResult.of(
-                    ServiceResultCode.NO_SUCH_ENTITY,
-                    "此用户不存在");
-        }
-        return ServiceResult.of(
-                ServiceResultCode.OK,
-                "查询到1条用户信息",
-                user
-        );
     }
 
     /**
