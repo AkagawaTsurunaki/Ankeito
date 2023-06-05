@@ -6,11 +6,13 @@ import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 
 import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+@FieldNameConstants
 @Builder
 public class User extends Model<User> {
 

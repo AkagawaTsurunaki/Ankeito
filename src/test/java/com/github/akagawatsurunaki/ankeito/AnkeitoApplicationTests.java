@@ -15,10 +15,6 @@ class AnkeitoApplicationTests {
 
 	@Test
 	void contextLoads() {
-		val all = userService.getAll();
-		val s = JSONObject.toJSONString(all);
-		System.out.println("这是一段测试");
-		System.out.println(s);
 	}
 
 }
