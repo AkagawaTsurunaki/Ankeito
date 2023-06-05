@@ -26,7 +26,11 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserPageAsList() {
-        userService.getUserPageAsList(new QueryUserListParam());
+        val param = new QueryUserListParam();
+        param.setPageNum(1);
+        param.setPageSize(1);
+        param.setUserName("123");
+        userService.getUserPageAsList(param);
     }
 
 
