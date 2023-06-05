@@ -27,11 +27,6 @@ public class User {
     String password;
 
     /**
-     * 用户的角色
-     */
-    UserRole userRole;
-
-    /**
      * 开始时间
      */
     Date startTime;
@@ -40,6 +35,11 @@ public class User {
      * 截止时间
      */
     Date stopTime;
+
+    /**
+     * 用户的角色
+     */
+    UserRole userRole;
 
     /**
      * 是否启用
