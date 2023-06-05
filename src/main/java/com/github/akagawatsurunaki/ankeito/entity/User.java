@@ -1,4 +1,4 @@
-package com.github.akagawatsurunaki.entity;
+package com.github.akagawatsurunaki.ankeito.entity;
 
 import com.github.akagawatsurunaki.common.enumeration.UserRole;
 import com.github.akagawatsurunaki.common.enumeration.UserStatus;
