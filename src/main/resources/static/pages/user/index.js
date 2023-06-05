@@ -47,7 +47,7 @@ const deleteUser = (id) => {
     id: id
   }
   $.ajax({
-    url: API_BASE_URL + '/admin/deleteUserinfo',
+    url: API_BASE_URL + '/admin/deleteUserInfo',
     type: 'POST',
     data: JSON.stringify(params),
     dataType: 'json',
