@@ -2,6 +2,7 @@ package com.github.akagawatsurunaki.ankeito.api.result;
 
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -12,23 +13,20 @@ public class ServiceResult<Data> {
     /**
      * 服务响应码
      */
+    @Getter
     ServiceResultCode code;
 
     /**
      * 服务响应信息
      */
+    @Getter
     String message;
 
     /**
      * 服务响应数据 (可空)
      */
+    @Getter
     Data data;
-
-//    ServiceResult(@NonNull ServiceResultCode code,@NonNull String message, Data data) {
-//        this.code = code;
-//        this.message = message;
-//        this.data = data;
-//    }
 
     public static <Data> ServiceResult<Data> of(@NonNull ServiceResultCode code, @NonNull String message) {
         return new ServiceResult<>(code, message, null);
