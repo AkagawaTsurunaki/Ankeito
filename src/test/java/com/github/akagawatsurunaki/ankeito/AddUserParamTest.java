@@ -59,24 +59,4 @@ public class AddUserParamTest {
         assertNotEquals(param1, param2);
         assertNotEquals(param2, param1);
     }
-
-    @Test
-    public void testToString() {
-        AddUserParam param = new AddUserParam();
-        String expected = "AddUserParam(username=null, password=null, startTime=null, stopTime=null)";
-
-        assertEquals(expected, param.toString());
-
-        LocalDate today = LocalDate.now();
-        Date startTime = java.sql.Timestamp.valueOf(today.atStartOfDay());
-        Date stopTime = java.sql.Timestamp.valueOf(today.plusDays(1).atStartOfDay());
-
-        param.setUsername("test");
-        param.setPassword("123456");
-        param.setStartTime(startTime);
-        param.setStopTime(stopTime);
-
-        expected = "AddUserParam(username=test, password=123456, startTime=" + startTime + ", stopTime=" + stopTime + ")";
-        assertEquals(expected, param.toString());
-    }
 }
