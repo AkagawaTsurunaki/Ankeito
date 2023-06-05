@@ -1,47 +1,48 @@
 package com.github.akagawatsurunaki.ankeito;
 
-import com.github.akagawatsurunaki.ankeito.api.param.AddUserParam;
+import com.github.akagawatsurunaki.ankeito.api.param.DeleteUserParam;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class AddUserParamTest {
+public class DeleteUserParamTest {
     @Test
     public void testHashCode() {
-        AddUserParam param1 = new AddUserParam();
-        AddUserParam param2 = new AddUserParam();
+        val param1 = new DeleteUserParam();
+        val param2 = new DeleteUserParam();
 
         if (param1.hashCode() == param2.hashCode()) {
             System.out.println("equal");
         }
 
-        param1.setUsername("test");
+        param1.setId("test");
         if (param1.hashCode() == param2.hashCode()) {
             System.out.println("equal");
         }
 
-        param2.setUsername("test");
+        param2.setId("test");
         if (param1.hashCode() == param2.hashCode()) {
             System.out.println("equal");
         }
+
     }
 
     @Test
     public void testEquals() {
-        AddUserParam param1 = new AddUserParam();
-        AddUserParam param2 = new AddUserParam();
+        val param1 = new DeleteUserParam();
+        val param2 = new DeleteUserParam();
 
         if (param1.equals(param2)) {
             System.out.println("equal");
         }
 
-        param1.setUsername("test");
+        param1.setId("test");
         if (param1.equals(param2)) {
             System.out.println("equal");
         }
 
-        param2.setUsername("test");
+        param2.setId("test");
         if (param1.equals(param2)) {
             System.out.println("equal");
         }
@@ -49,8 +50,8 @@ public class AddUserParamTest {
 
     @Test
     public void testToString() {
-        val param1 = new AddUserParam();
-        val param2 = new AddUserParam();
+        val param1 = new DeleteUserParam();
+        val param2 = new DeleteUserParam();
         System.out.println("param1.toString() = " + param1);
         System.out.println("param2.toString() = " + param2);
     }
