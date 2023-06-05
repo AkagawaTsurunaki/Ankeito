@@ -1,6 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.common.convertor;
 
 import com.github.akagawatsurunaki.ankeito.api.dto.UserDTO;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
 import com.github.akagawatsurunaki.ankeito.entity.User;
 import org.springframework.lang.NonNull;
 
@@ -20,6 +21,7 @@ public class UserConvertor {
                 .stopTime(  userDTO.getStopTime())
                 .userStatus(
                        // TODO : userDTO.getStatus();
+
                        null
                 )
                 .createdBy(userDTO.getCreatedBy())
