@@ -76,7 +76,7 @@ public class AddUserParamTest {
         param.setStartTime(startTime);
         param.setStopTime(stopTime);
 
-        expected = "AddUserParam(username=test, password=123456, startTime=" + startTime.toString() + ", stopTime=" + stopTime.toString() + ")";
+        expected = "AddUserParam(username=test, password=123456, startTime=" + startTime + ", stopTime=" + stopTime + ")";
         assertEquals(expected, param.toString());
     }
 }
