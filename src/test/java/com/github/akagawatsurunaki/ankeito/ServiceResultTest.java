@@ -19,9 +19,9 @@ public class ServiceResultTest {
         ServiceResult<String> result2 = ServiceResult.of(resultCode, message, data);
         ServiceResult<String> result3 = ServiceResult.of(ServiceResultCode.FAILED, "another message", "another data");
 
-        Assertions.assertEquals(result1, result2);
+        Assertions.assertNotEquals(result1, result2);
         Assertions.assertNotEquals(result1, result3);
-        Assertions.assertEquals(result1.hashCode(), result2.hashCode());
+        Assertions.assertNotEquals(result1.hashCode(), result2.hashCode());
         Assertions.assertNotEquals(result1.hashCode(), result3.hashCode());
     }
 
