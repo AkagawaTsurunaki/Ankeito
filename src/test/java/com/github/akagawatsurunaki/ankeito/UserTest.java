@@ -50,6 +50,22 @@ public class UserTest {
         Assertions.assertEquals(creationTime, user.getCreationTime());
         Assertions.assertEquals(lastUpdatedBy, user.getLastUpdatedBy());
         Assertions.assertEquals(lastUpdateTime, user.getLastUpdateTime());
+
+    }
+
+    @Test
+    public void testFieldConstants() {
+        System.out.println(User.Fields.username);
+        System.out.println(User.Fields.userRole);
+        System.out.println(User.Fields.userStatus);
+        System.out.println(User.Fields.id);
+        System.out.println(User.Fields.createdBy);
+        System.out.println(User.Fields.creationTime);
+        System.out.println(User.Fields.lastUpdatedBy);
+        System.out.println(User.Fields.lastUpdateTime);
+        System.out.println(User.Fields.password);
+        System.out.println(User.Fields.stopTime);
+        System.out.println(User.Fields.startTime);
     }
 
 }
