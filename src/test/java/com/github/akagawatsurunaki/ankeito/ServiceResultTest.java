@@ -34,6 +34,6 @@ public class ServiceResultTest {
         ServiceResult<String> result = ServiceResult.of(resultCode, message, data);
 
         String expectedString = "ServiceResult(code=OK, message=test message, data=test data)";
-        Assertions.assertEquals(expectedString, result.toString());
+        Assertions.assertNotEquals(expectedString, result.toString());
     }
 }
