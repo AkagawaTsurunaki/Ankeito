@@ -1,15 +1,18 @@
 package com.github.akagawatsurunaki.ankeito.entity;
 
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserRole;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Builder
-public class User {
+public class User extends Model<User> {
 
     /**
      * 用户UUID, 最大40个字符
