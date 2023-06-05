@@ -3,9 +3,7 @@ package com.github.akagawatsurunaki.ankeito.api.result;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @AllArgsConstructor
 public class ServiceResult<Data> {
