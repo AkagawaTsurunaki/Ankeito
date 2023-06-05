@@ -19,8 +19,8 @@ public class UserServiceTest {
     @Test
     public void testUserLogin() {
         val param = new UserLoginParam();
-        param.setUsername(null);
-        param.setPassword(null);
+        param.setUsername("及sad");
+        param.setPassword("1232323");
         userService.userLogin(param);
     }
 
@@ -34,7 +34,7 @@ public class UserServiceTest {
     public void testAdd() {
         val param = new AddUserParam();
         param.setUsername("好日子");
-        param.setPassword(null);
+        param.setPassword("123");
         param.setStartTime(new Date());
         param.setStopTime(new Date());
         userService.add(param);
