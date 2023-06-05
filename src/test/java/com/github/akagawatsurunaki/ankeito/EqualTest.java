@@ -5,6 +5,7 @@ import com.github.akagawatsurunaki.ankeito.common.enumeration.UserRole;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
 import com.github.akagawatsurunaki.ankeito.entity.User;
 import lombok.val;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Date;
 @SpringBootTest
 public class EqualTest {
 
+    @Test
     public void userEqualTest() {
         val user1 = User.builder()
                 .id(UUID.fastUUID().toString())
