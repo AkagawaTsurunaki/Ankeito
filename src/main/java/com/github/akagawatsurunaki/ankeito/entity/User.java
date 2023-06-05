@@ -1,7 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.entity;
 
-import com.github.akagawatsurunaki.common.enumeration.UserRole;
-import com.github.akagawatsurunaki.common.enumeration.UserStatus;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.UserRole;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,27 +11,59 @@ import java.util.Date;
 @Builder
 public class User {
 
-    // 最大40个字符
+    /**
+     * 用户UUID, 最大40个字符
+     */
     String id;
 
+    /**
+     * 用户名, 最大36个字符
+     */
     String username;
 
+    /**
+     * 密码, 最大20个字符
+     */
     String password;
 
+    /**
+     * 用户的角色
+     */
     UserRole userRole;
 
+    /**
+     * 开始时间
+     */
     Date startTime;
 
+    /**
+     * 截止时间
+     */
     Date stopTime;
 
+    /**
+     * 是否启用
+     */
     UserStatus userStatus;
 
+    /**
+     * 创建人
+     */
     String createdBy;
 
+    /**
+     * 创建时间
+     */
     Date creationTime;
 
+    /**
+     * 最后修改人
+     */
     String lastUpdatedBy;
 
+    /**
+     * 最后修改时间
+     */
     Date lastUpdateTime;
 
 }
