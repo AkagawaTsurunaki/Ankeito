@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
     default User selectByUsername(@NonNull String username) {
-        val wrapper = new QueryWrapper<User>().eq(StrUtil.toUnderlineCase(User.Fields.username), username);
+        val wrapper = new QueryWrapper<User>().eq("username", username);
         val users = this.selectList(wrapper);
         if (users.isEmpty()) {
             return null;

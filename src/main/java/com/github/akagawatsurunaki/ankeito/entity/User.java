@@ -12,7 +12,6 @@ import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@FieldNameConstants
 @Builder
 public class User extends Model<User> {
 
