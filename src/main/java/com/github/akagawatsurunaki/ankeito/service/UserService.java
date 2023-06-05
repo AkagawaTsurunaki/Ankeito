@@ -37,6 +37,37 @@ public class UserService {
                 allUsers);
     }
 
+    public ServiceResult<User> getUserById(@NonNull UserDTO userDTO) {
+        val user = userMapper.selectById(userDTO.getId());
+        if (user == null) {
+            return ServiceResult.of(
+                    ServiceResultCode.NO_SUCH_ENTITY,
+                    "此用户不存在");
+        }
+        return ServiceResult.of(
+                ServiceResultCode.OK,
+                "查询到1条用户信息",
+                user
+        );
+    }
+
+    public ServiceResult<User> userLogin(@NonNull UserDTO userDTO) {
+        val user = userMapper.selectById(userDTO.getId());
+
+        if (user == null || (!user.getPassword().equals(userDTO.getPassword()))) {
+            return ServiceResult.of(
+                    ServiceResultCode.FAILED,
+                    "用户名或密码错误"
+            );
+        }
+
+        return ServiceResult.of(
+                ServiceResultCode.OK,
+                "登录成功",
+                user
+        );
+    }
+
     /**
      * 增加一条用户信息
      *
@@ -99,6 +130,7 @@ public class UserService {
 
     /**
      * 删除一条用户信息
+     *
      * @param userDTO 用户数据传输对象
      * @return 服务响应结果
      */
