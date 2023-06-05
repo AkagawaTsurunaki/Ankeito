@@ -24,6 +24,11 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
+    /**
+     * 获取所有用户列表
+     *
+     * @return 服务响应结果
+     */
     public ServiceResult<List<User>> getAll() {
         val allUsers = userMapper.selectList(null);
         return ServiceResult.of(
@@ -32,6 +37,12 @@ public class UserService {
                 allUsers);
     }
 
+    /**
+     * 增加一条用户信息
+     *
+     * @param userDTO 用户数据传输对象
+     * @return 服务响应结果
+     */
     public ServiceResult<User> add(@NonNull UserDTO userDTO) {
         val user = new UserConvertor(userDTO).dtoToEntity();
         if (user == null) {
@@ -50,6 +61,12 @@ public class UserService {
         );
     }
 
+    /**
+     * 修改一条用户信息
+     *
+     * @param userDTO 用户数据传输对象
+     * @return 服务响应结果
+     */
     public ServiceResult<User> modify(@NonNull UserDTO userDTO) {
         val user = new UserConvertor(userDTO).dtoToEntity();
         if (user == null) {
@@ -78,6 +95,33 @@ public class UserService {
                 "修改用户信息失败"
         );
 
+    }
+
+    /**
+     * 删除一条用户信息
+     * @param userDTO 用户数据传输对象
+     * @return 服务响应结果
+     */
+    public ServiceResult<User> delete(@NonNull UserDTO userDTO) {
+        val id = userDTO.getId();
+        val user = userMapper.selectById(id);
+        if (user == null) {
+            return ServiceResult.of(
+                    ServiceResultCode.NO_SUCH_ENTITY,
+                    "此用户不存在");
+        }
+
+        val delete = userMapper.deleteById(id);
+        if (delete == 1) {
+            return ServiceResult.of(
+                    ServiceResultCode.OK,
+                    "成功删除1条用户信息",
+                    user);
+        }
+        return ServiceResult.of(
+                ServiceResultCode.FAILED,
+                "删除用户信息失败"
+        );
     }
 
 }
