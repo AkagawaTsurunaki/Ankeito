@@ -24,21 +24,20 @@ public class ModifyUserParamTest {
         addUserParam.setUsername(username);
         addUserParam.setPassword(password);
 
-        ModifyUserParam param1 = ModifyUserParam.builder()
-                .id(id)
-                .userRole(userRole)
-                .userStatus(userStatus)
-                .build();
-        ModifyUserParam param2 = ModifyUserParam.builder()
-                .id(id)
-                .userRole(userRole)
-                .userStatus(userStatus)
-                .build();
-        ModifyUserParam param3 = ModifyUserParam.builder()
-                .id("abcdef1234567890")
-                .userRole(userRole)
-                .userStatus(userStatus)
-                .build();
+        ModifyUserParam param1 = new ModifyUserParam();
+        param1.setId(id);
+        param1.setUserRole(userRole);
+        param1.setUserStatus(userStatus);
+
+        ModifyUserParam param2 = new ModifyUserParam();
+        param2.setId(id);
+        param2.setUserRole(userRole);
+        param2.setUserStatus(userStatus);
+
+        ModifyUserParam param3 = new ModifyUserParam();
+        param3.setId("abcdef1234567890");
+        param3.setUserRole(userRole);
+        param3.setUserStatus(userStatus);
 
         Assertions.assertEquals(param1, param2);
         Assertions.assertNotEquals(param1, param3);
@@ -52,16 +51,13 @@ public class ModifyUserParamTest {
     @Test
     public void testToString() {
         String id = "1234567890abcdef";
-        String username = "testUser";
-        String password = "testPassword";
         UserRole userRole = UserRole.ADMIN;
         UserStatus userStatus = UserStatus.ENABLE;
 
-        ModifyUserParam param = ModifyUserParam.builder()
-                .id(id)
-                .userRole(userRole)
-                .userStatus(userStatus)
-                .build();
+        ModifyUserParam param = new ModifyUserParam();
+        param.setId(id);
+        param.setUserRole(userRole);
+        param.setUserStatus(userStatus);
         System.out.println("param = " + param);
 
     }
