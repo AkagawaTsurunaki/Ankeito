@@ -33,7 +33,7 @@ public class UserService {
      */
     public ServiceResult<List<User>> getUserPageAsList(@NonNull QueryUserListParam queryUserListParam) {
         val userPage = userMapper.selectPage(
-                new Page<User>(queryUserListParam.getPageNum(), queryUserListParam.getPageSize()),
+                new Page<>(queryUserListParam.getPageNum(), queryUserListParam.getPageSize()),
                 null);
         val records = userPage.getRecords();
 
