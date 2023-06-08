@@ -1,6 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.param;
 
-import com.github.akagawatsurunaki.ankeito.api.param.DeleteUserParam;
+import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

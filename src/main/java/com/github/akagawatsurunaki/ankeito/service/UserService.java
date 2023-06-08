@@ -3,7 +3,7 @@ package com.github.akagawatsurunaki.ankeito.service;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
-import com.github.akagawatsurunaki.ankeito.api.param.DeleteUserParam;
+import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.ModifyUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.UserLoginParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;

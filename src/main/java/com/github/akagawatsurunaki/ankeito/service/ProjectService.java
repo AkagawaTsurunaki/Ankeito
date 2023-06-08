@@ -3,6 +3,7 @@ package com.github.akagawatsurunaki.ankeito.service;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddProjectParam;
+import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
@@ -33,12 +34,18 @@ public class ProjectService {
      * @return 服务响应结果，包括按照分页查询到的项目列表
      */
     public ServiceResult<List<Project>> getProjectPageAsList(@NonNull QueryProjectListParam queryProjectListParam) {
+        List<Project> records;
+        if (queryProjectListParam.getPageNum()
+                != 0 && queryProjectListParam.getPageSize() != 0) {
+            val projectPage = projectMapper.selectPage(
+                    new Page<>(queryProjectListParam.getPageNum(), queryProjectListParam.getPageSize()),
+                    null
+            );
+            records = projectPage.getRecords();
+        } else {
+            records = projectMapper.selectList(null);
+        }
 
-        val projectPage = projectMapper.selectPage(
-                new Page<>(queryProjectListParam.getPageNum(), queryProjectListParam.getPageSize()),
-                null
-        );
-        val records = projectPage.getRecords();
         return ServiceResult.of(
                 ServiceResultCode.OK,
                 "共查询到" + records.size() + "条项目信息",
@@ -68,6 +75,12 @@ public class ProjectService {
         );
     }
 
+    /**
+     * 添加项目
+     *
+     * @param addProjectParam 添加项目参数
+     * @return 服务响应结果，包括将要被添加的Project对象
+     */
     public ServiceResult<Project> addProject(@NonNull AddProjectParam addProjectParam) {
         val project = Project.builder()
                 .id(UUID.fastUUID().toString())
@@ -91,6 +104,33 @@ public class ProjectService {
         return ServiceResult.of(
                 ServiceResultCode.FAILED,
                 "增加项目信息失败"
+        );
+    }
+
+    /**
+     * 删除一条项目信息
+     * @param deleteProjectParam 删除项目参数
+     * @return 服务响应结果，包括将被删除的Project对象
+     */
+    public ServiceResult<Project> deleteProject(@NonNull DeleteProjectParam deleteProjectParam) {
+        val id = deleteProjectParam.getId();
+        val project = projectMapper.selectById(id);
+        if (project == null) {
+            return ServiceResult.of(
+                    ServiceResultCode.NO_SUCH_ENTITY,
+                    "此项目不存在");
+        }
+
+        val delete = projectMapper.deleteById(id);
+        if (delete == 1) {
+            return ServiceResult.of(
+                    ServiceResultCode.OK,
+                    "成功删除1条项目信息",
+                    project);
+        }
+        return ServiceResult.of(
+                ServiceResultCode.FAILED,
+                "删除项目信息失败"
         );
     }
 
