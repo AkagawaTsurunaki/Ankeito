@@ -26,11 +26,11 @@ public class ProjectService {
 
     public ServiceResult<List<Project>> getPageAsList(@NonNull QueryProjectListParam queryProjectListParam) {
 
-        val page = projectMapper.selectPage(
+        val projectPage = projectMapper.selectPage(
                 new Page<>(queryProjectListParam.getPageNum(), queryProjectListParam.getPageSize()),
                 null
         );
-        val records = page.getRecords();
+        val records = projectPage.getRecords();
         return ServiceResult.of(
                 ServiceResultCode.OK,
                 "共查询到" + records.size() + "条项目信息",
