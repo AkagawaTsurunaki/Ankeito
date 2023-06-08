@@ -11,6 +11,6 @@ public class Project {
     String projectName;
     String projectContent;
     String createdBy;
-    String creationDate;
+    Date creationDate;
     Date lastUpdateDate;
 }
