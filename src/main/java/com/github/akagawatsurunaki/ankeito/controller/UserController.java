@@ -3,6 +3,7 @@ package com.github.akagawatsurunaki.ankeito.controller;
 import com.github.akagawatsurunaki.ankeito.api.param.*;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
+import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
 import com.github.akagawatsurunaki.ankeito.common.convertor.ServiceResultConvertor;

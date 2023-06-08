@@ -2,6 +2,7 @@ package com.github.akagawatsurunaki.ankeito.controller;
 
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteProjectParam;
+import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
 import com.github.akagawatsurunaki.ankeito.common.convertor.ServiceResultConvertor;
@@ -30,10 +31,15 @@ public class ProjectController {
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 
-    ///addProjectInfo
     @RequestMapping(path = "/addProjectInfo", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity addProjectInfo(@Validated @RequestBody AddProjectParam addProjectParam) {
         val serviceResult = projectService.addProject(addProjectParam);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
+
+    @RequestMapping(path = "/modifyProjectInfo", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity modifyProjectInfo(@Validated @RequestBody ModifyProjectParam modifyProjectParam) {
+        val serviceResult = projectService.modifyProject(modifyProjectParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 

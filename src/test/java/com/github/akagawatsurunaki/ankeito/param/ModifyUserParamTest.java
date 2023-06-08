@@ -1,7 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.param;
 
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
-import com.github.akagawatsurunaki.ankeito.api.param.ModifyUserParam;
+import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyUserParam;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserRole;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
 import org.junit.jupiter.api.Assertions;

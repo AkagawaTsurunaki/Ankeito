@@ -4,6 +4,7 @@ import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteProjectParam;
+import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
@@ -109,6 +110,7 @@ public class ProjectService {
 
     /**
      * 删除一条项目信息
+     *
      * @param deleteProjectParam 删除项目参数
      * @return 服务响应结果，包括将被删除的Project对象
      */
@@ -131,6 +133,33 @@ public class ProjectService {
         return ServiceResult.of(
                 ServiceResultCode.FAILED,
                 "删除项目信息失败"
+        );
+    }
+
+    public ServiceResult<Project> modifyProject(@NonNull ModifyProjectParam modifyProjectParam) {
+        val id = modifyProjectParam.getId();
+        val project = projectMapper.selectById(id);
+        if (project == null) {
+            return ServiceResult.of(
+                    ServiceResultCode.NO_SUCH_ENTITY,
+                    "此项目不存在");
+        }
+
+        // 修改属性
+        project.setProjectContent(modifyProjectParam.getProjectContent());
+        project.setProjectName(modifyProjectParam.getProjectName());
+
+        val update = projectMapper.updateById(project);
+
+        if (update == 1) {
+            return ServiceResult.of(
+                    ServiceResultCode.OK,
+                    "成功修改1条项目信息",
+                    project);
+        }
+        return ServiceResult.of(
+                ServiceResultCode.FAILED,
+                "修改项目信息失败"
         );
     }
 
