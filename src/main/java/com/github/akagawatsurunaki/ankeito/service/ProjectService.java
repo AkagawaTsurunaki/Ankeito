@@ -23,6 +23,11 @@ public class ProjectService {
         this.projectMapper = projectMapper;
     }
 
+    /**
+     * 查询项目列表
+     * @param queryProjectListParam 查询项目列表参数，包括分页参数
+     * @return 服务响应结果，包括按照分页查询到的项目列表
+     */
     public ServiceResult<List<Project>> getPageAsList(@NonNull QueryProjectListParam queryProjectListParam) {
 
         val projectPage = projectMapper.selectPage(
