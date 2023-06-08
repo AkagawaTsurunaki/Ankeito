@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyUserParam;
-import com.github.akagawatsurunaki.ankeito.api.param.UserLoginParam;
+import com.github.akagawatsurunaki.ankeito.api.param.login.UserLoginParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
