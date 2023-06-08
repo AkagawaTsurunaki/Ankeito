@@ -1,6 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
-import com.github.akagawatsurunaki.ankeito.api.param.QueryProjectListParam;
+import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
 import com.github.akagawatsurunaki.ankeito.common.convertor.ServiceResultConvertor;
 import com.github.akagawatsurunaki.ankeito.service.ProjectService;

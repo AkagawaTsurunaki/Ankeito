@@ -1,7 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.akagawatsurunaki.ankeito.api.param.QueryProjectListParam;
+import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.Project;
@@ -10,7 +10,6 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 

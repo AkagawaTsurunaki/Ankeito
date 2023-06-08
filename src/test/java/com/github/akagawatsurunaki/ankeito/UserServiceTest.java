@@ -2,7 +2,7 @@ package com.github.akagawatsurunaki.ankeito;
 
 import com.github.akagawatsurunaki.ankeito.api.param.AddUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.ModifyUserParam;
-import com.github.akagawatsurunaki.ankeito.api.param.QueryUserListParam;
+import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;
 import com.github.akagawatsurunaki.ankeito.api.param.UserLoginParam;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserRole;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
