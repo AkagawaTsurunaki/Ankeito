@@ -36,6 +36,8 @@ public class ProjectService {
      */
     public ServiceResult<List<Project>> getProjectPageAsList(@NonNull QueryProjectListParam queryProjectListParam) {
         List<Project> records;
+
+        // 是否执行分页查询
         if (queryProjectListParam.getPageNum()
                 != 0 && queryProjectListParam.getPageSize() != 0) {
             val projectPage = projectMapper.selectPage(
@@ -44,6 +46,10 @@ public class ProjectService {
             );
             records = projectPage.getRecords();
         } else {
+            // 不执行分页查询
+            if (queryProjectListParam.getCreatedBy() != null) {
+                return getProjectsByName(queryProjectListParam);
+            }
             records = projectMapper.selectList(null);
         }
 
@@ -68,7 +74,7 @@ public class ProjectService {
                     "项目名称不能为空"
             );
         }
-        val records = projectMapper.selectPageByProjectName(queryProjectListParam).getRecords();
+        val records = projectMapper.selectPageByProjectName(queryProjectListParam);
         return ServiceResult.of(
                 ServiceResultCode.OK,
                 "共查询到" + records.size() + "条项目信息",

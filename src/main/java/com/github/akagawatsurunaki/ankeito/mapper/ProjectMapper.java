@@ -16,12 +16,10 @@ import java.util.List;
 @Mapper
 public interface ProjectMapper extends BaseMapper<Project> {
 
-    default Page<Project> selectPageByProjectName(@NonNull QueryProjectListParam queryProjectListParam) {
+    default List<Project> selectPageByProjectName(@NonNull QueryProjectListParam queryProjectListParam) {
         val projectName = queryProjectListParam.getProjectName();
         val wrapper = new QueryWrapper<Project>().eq("project_name", projectName);
-        return this.selectPage(
-                new Page<>(queryProjectListParam.getPageNum(), queryProjectListParam.getPageSize()),
-                wrapper);
+        return this.selectList(wrapper);
     }
 
 }
