@@ -1,6 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddProjectParam;
+import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
 import com.github.akagawatsurunaki.ankeito.common.convertor.ServiceResultConvertor;
@@ -23,8 +24,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    // TODO: fix
-    @RequestMapping(path = "/???", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(path = "/queryProjectList", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity queryProjectList(@Validated @RequestBody QueryProjectListParam queryProjectListParam) {
         val serviceResult = projectService.getProjectPageAsList(queryProjectListParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
@@ -34,6 +34,12 @@ public class ProjectController {
     @RequestMapping(path = "/addProjectInfo", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity addProjectInfo(@Validated @RequestBody AddProjectParam addProjectParam) {
         val serviceResult = projectService.addProject(addProjectParam);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
+
+    @RequestMapping(path = "/deleteProjectById", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity deleteProjectById(@Validated @RequestBody DeleteProjectParam deleteProjectParam) {
+        val serviceResult = projectService.deleteProject(deleteProjectParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 

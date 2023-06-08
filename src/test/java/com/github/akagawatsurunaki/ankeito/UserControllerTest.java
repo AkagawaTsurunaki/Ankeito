@@ -1,7 +1,7 @@
 package com.github.akagawatsurunaki.ankeito;
 
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
-import com.github.akagawatsurunaki.ankeito.api.param.DeleteUserParam;
+import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.ModifyUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.UserLoginParam;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserRole;
