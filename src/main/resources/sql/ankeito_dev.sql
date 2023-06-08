@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 08/06/2023 13:16:46
+ Date: 08/06/2023 13:20:38
 */
 
 SET NAMES utf8mb4;
@@ -34,6 +34,10 @@ CREATE TABLE `project`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of project
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -51,5 +55,10 @@ CREATE TABLE `user`  (
   `last_update_time` date NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+INSERT INTO `user` VALUES ('82697df6-4acb-7e7b-8812-df7e28eaf51c', 'admin', '0000', '2023-06-08 13:19:38', '2023-06-30 13:19:41', 'ADMIN', 'ENABLE', '82697df6-4acb-7e7b-8812-df7e28eaf51c', '2023-06-08 13:19:55', '82697df6-4acb-7e7b-8812-df7e28eaf51c', '2023-06-08');
 
 SET FOREIGN_KEY_CHECKS = 1;
