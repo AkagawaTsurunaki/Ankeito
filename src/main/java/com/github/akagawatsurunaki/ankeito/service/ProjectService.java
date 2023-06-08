@@ -1,5 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -58,9 +60,7 @@ public class ProjectService {
                     "项目名称不能为空"
             );
         }
-
         val records = projectMapper.selectPageByProjectName(queryProjectListParam).getRecords();
-
         return ServiceResult.of(
                 ServiceResultCode.OK,
                 "共查询到" + records.size() + "条项目信息",
@@ -69,7 +69,29 @@ public class ProjectService {
     }
 
     public ServiceResult<Project> addProject(@NonNull AddProjectParam addProjectParam) {
-        return null;
+        val project = Project.builder()
+                .id(UUID.fastUUID().toString())
+                // TODO: 用户校验
+                .userId("TODO")
+                .projectName(addProjectParam.getProjectName())
+                .projectContent(addProjectParam.getProjectContent())
+                .createdBy(addProjectParam.getCreatedBy())
+                .lastUpdatedBy(addProjectParam.getLastUpdatedBy())
+                .creationDate(new Date())
+                .lastUpdateDate(new Date()).build();
+
+        val insert = projectMapper.insert(project);
+
+        if (insert == 1) {
+            return ServiceResult.of(
+                    ServiceResultCode.OK,
+                    "成功增加1条项目信息",
+                    project);
+        }
+        return ServiceResult.of(
+                ServiceResultCode.FAILED,
+                "增加项目信息失败"
+        );
     }
 
 }
