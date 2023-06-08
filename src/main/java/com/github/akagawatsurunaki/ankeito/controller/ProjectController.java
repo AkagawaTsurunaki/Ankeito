@@ -24,7 +24,7 @@ public class ProjectController {
 
     @RequestMapping(path = "/userLogin", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity queryProjectList(@Validated @RequestBody QueryProjectListParam queryProjectListParam) {
-        val serviceResult = projectService.getPageAsList(queryProjectListParam);
+        val serviceResult = projectService.getProjectPageAsList(queryProjectListParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 
