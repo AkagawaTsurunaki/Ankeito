@@ -1,6 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.param;
 
-import com.github.akagawatsurunaki.ankeito.api.param.QueryUserListParam;
+import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
