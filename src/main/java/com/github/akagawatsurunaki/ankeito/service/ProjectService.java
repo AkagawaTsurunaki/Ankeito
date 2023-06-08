@@ -47,7 +47,7 @@ public class ProjectService {
             records = projectPage.getRecords();
         } else {
             // 不执行分页查询
-            if (queryProjectListParam.getCreatedBy() != null) {
+            if (queryProjectListParam.getCreatedBy() != null && queryProjectListParam.getProjectName() != null && !queryProjectListParam.getProjectName().isBlank()) {
                 return getProjectsByName(queryProjectListParam);
             }
             records = projectMapper.selectList(null);
