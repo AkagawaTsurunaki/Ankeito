@@ -1,4 +1,4 @@
-package com.github.akagawatsurunaki.ankeito.api.param;
+package com.github.akagawatsurunaki.ankeito.api.param.login;
 
 import lombok.Data;
 
