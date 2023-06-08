@@ -9,6 +9,7 @@ public enum ServiceResultCode {
     FAILED(0),
     NO_SUCH_ENTITY(0),
     DTO_TO_ENTITY_EXCEPTION(0),
+    ILLEGAL_PARAM(0),
     ;
 
     @Getter

@@ -1,6 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.akagawatsurunaki.ankeito.api.param.add.AddProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
@@ -25,10 +26,11 @@ public class ProjectService {
 
     /**
      * 查询项目列表
+     *
      * @param queryProjectListParam 查询项目列表参数，包括分页参数
      * @return 服务响应结果，包括按照分页查询到的项目列表
      */
-    public ServiceResult<List<Project>> getPageAsList(@NonNull QueryProjectListParam queryProjectListParam) {
+    public ServiceResult<List<Project>> getProjectPageAsList(@NonNull QueryProjectListParam queryProjectListParam) {
 
         val projectPage = projectMapper.selectPage(
                 new Page<>(queryProjectListParam.getPageNum(), queryProjectListParam.getPageSize()),
@@ -40,6 +42,34 @@ public class ProjectService {
                 "共查询到" + records.size() + "条项目信息",
                 records
         );
+    }
+
+    /**
+     * 根据项目名称查询
+     *
+     * @param queryProjectListParam 查询项目列表参数，包括分页参数，要查询的项目名称
+     * @return 服务响应结果，包括按照分页、指定项目名称查询到的项目列表
+     */
+    public ServiceResult<List<Project>> getProjectsByName(@NonNull QueryProjectListParam queryProjectListParam) {
+        val projectName = queryProjectListParam.getProjectName();
+        if (projectName == null) {
+            return ServiceResult.of(
+                    ServiceResultCode.ILLEGAL_PARAM,
+                    "项目名称不能为空"
+            );
+        }
+
+        val records = projectMapper.selectPageByProjectName(queryProjectListParam).getRecords();
+
+        return ServiceResult.of(
+                ServiceResultCode.OK,
+                "共查询到" + records.size() + "条项目信息",
+                records
+        );
+    }
+
+    public ServiceResult<Project> addProject(@NonNull AddProjectParam addProjectParam) {
+        return null;
     }
 
 }
