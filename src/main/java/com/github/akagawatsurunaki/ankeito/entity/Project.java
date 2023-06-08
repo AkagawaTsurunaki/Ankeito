@@ -9,11 +9,11 @@ import java.util.Date;
 @Builder
 public class Project {
     String id;
-    String userId;
+    String personInCharge;
     String projectName;
     String projectContent;
     String createdBy;
     String lastUpdatedBy;
-    Date creationDate;
+    Date createTime;
     Date lastUpdateDate;
 }

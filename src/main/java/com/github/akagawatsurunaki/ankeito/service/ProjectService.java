@@ -86,12 +86,12 @@ public class ProjectService {
         val project = Project.builder()
                 .id(UUID.fastUUID().toString())
                 // TODO: 用户校验
-                .userId("TODO")
+                .personInCharge("TODO")
                 .projectName(addProjectParam.getProjectName())
                 .projectContent(addProjectParam.getProjectContent())
                 .createdBy(addProjectParam.getCreatedBy())
                 .lastUpdatedBy(addProjectParam.getLastUpdatedBy())
-                .creationDate(new Date())
+                .createTime(new Date())
                 .lastUpdateDate(new Date()).build();
 
         val insert = projectMapper.insert(project);
