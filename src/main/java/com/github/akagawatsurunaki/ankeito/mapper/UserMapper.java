@@ -1,6 +1,5 @@
 package com.github.akagawatsurunaki.ankeito.mapper;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.akagawatsurunaki.ankeito.entity.User;
