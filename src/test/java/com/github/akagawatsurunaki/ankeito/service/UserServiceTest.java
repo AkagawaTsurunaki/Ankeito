@@ -1,4 +1,4 @@
-package com.github.akagawatsurunaki.ankeito;
+package com.github.akagawatsurunaki.ankeito.service;
 
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyUserParam;
