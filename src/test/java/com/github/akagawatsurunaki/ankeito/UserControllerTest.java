@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 
-//@SpringBootTest
+@SpringBootTest
 public class UserControllerTest {
     @Autowired
     UserController userController;
@@ -52,7 +52,7 @@ public class UserControllerTest {
     @Test
     public void testDeleteUser() {
         val param = new DeleteUserParam();
-        param.setId("sdofs98df89df89");
+        param.setId("12697df6-4acb-7e7b-9912-df7e28eaf51d");
         userController.deleteUser(param);
     }
 
