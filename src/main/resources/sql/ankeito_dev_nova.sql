@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : ROOT
+ Source Server         : MySQL
  Source Server Type    : MySQL
- Source Server Version : 80029
+ Source Server Version : 80032 (8.0.32)
  Source Host           : localhost:3306
  Source Schema         : ankeito_dev
 
  Target Server Type    : MySQL
- Target Server Version : 80029
+ Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 08/06/2023 13:47:48
+ Date: 12/06/2023 17:40:48
 */
 
 SET NAMES utf8mb4;
@@ -31,7 +31,7 @@ CREATE TABLE `project`  (
   `create_time` datetime NOT NULL,
   `last_update_date` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of project
@@ -58,11 +58,14 @@ CREATE TABLE `user`  (
   `last_updated_by` char(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
   `last_update_time` date NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `username`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('82697df6-4acb-7e7b-8812-df7e28eaf51c', 'admin', '0000', '2023-06-08 13:19:38', '2023-06-30 13:19:41', 'ADMIN', 'ENABLE', '82697df6-4acb-7e7b-8812-df7e28eaf51c', '2023-06-08 13:19:55', '82697df6-4acb-7e7b-8812-df7e28eaf51c', '2023-06-08');
+INSERT INTO `user` VALUES ('11697df6-4acb-7e7b-8812-df7e28eaf51d', 'delete', '0000', '2023-06-12 17:37:51', '2023-06-12 17:37:53', 'NO_ROLE', 'ENABLE', 'admin', '2023-06-12 17:38:10', 'admin', '2023-06-12');
+INSERT INTO `user` VALUES ('12697df6-4acb-7e7b-9912-df7e28eaf51d', 'update', '0000', '2023-06-12 17:39:13', '2023-06-12 17:39:16', 'NO_ROLE', 'ENABLE', 'admin', '2023-06-12 17:39:37', 'admin', '2023-06-12');
+INSERT INTO `user` VALUES ('6ee25a91-fbfb-4bf6-958a-eb6760a14ad1', '好日子', '123', '2023-06-12 17:37:04', '2023-06-12 17:37:04', 'NO_ROLE', 'DISABLE', NULL, NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('82697df6-4acb-7e7b-8812-df7e28eaf51c', 'admin', '0000', '2023-06-08 13:19:38', '2023-06-30 13:19:41', 'ADMIN', 'ENABLE', 'admin', '2023-06-08 13:19:55', 'admin', '2023-06-08');
 
 SET FOREIGN_KEY_CHECKS = 1;
