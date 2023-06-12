@@ -100,14 +100,15 @@ public class ProjectService {
                 .createTime(new Date())
                 .lastUpdateDate(new Date()).build();
 
-        val insert = projectMapper.insert(project);
-
-        if (insert == 1) {
-            return ServiceResult.of(
-                    ServiceResultCode.OK,
-                    "成功增加1条项目信息",
-                    project);
-        }
+        try {
+            val insert = projectMapper.insert(project);
+            if (insert == 1) {
+                return ServiceResult.of(
+                        ServiceResultCode.OK,
+                        "成功增加1条项目信息",
+                        project);
+            }
+        } catch (Exception ignore) {}
         return ServiceResult.of(
                 ServiceResultCode.FAILED,
                 "增加项目信息失败"
