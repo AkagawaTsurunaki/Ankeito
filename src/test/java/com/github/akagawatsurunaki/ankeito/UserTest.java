@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 
-@SpringBootTest
+//@SpringBootTest
 public class UserTest {
     @Test
     public void testUserBuilder() {

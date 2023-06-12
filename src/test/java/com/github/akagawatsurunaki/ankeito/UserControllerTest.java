@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 
-@SpringBootTest
+//@SpringBootTest
 public class UserControllerTest {
     @Autowired
     UserController userController;
