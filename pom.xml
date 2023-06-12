@@ -83,6 +83,16 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<!-- exclude the test classes -->
+						<exclude>**/*Test.class</exclude>
+						<!-- exclude the target package -->
+						<exclude>com/github/akagawatsurunaki/ankeito/entity/**</exclude>
+						<exclude>com/github/akagawatsurunaki/ankeito/api/**</exclude>
+					</excludes>
+				</configuration>
+
 			</plugin>
 
 			<plugin>
