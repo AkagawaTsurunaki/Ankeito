@@ -96,6 +96,9 @@ public class ProjectServiceTest {
         deleteProjectParam.setId("000");
         projectService.deleteProject(deleteProjectParam);
 
+        projectService.deleteProject(new DeleteProjectParam());
+
+
     }
 
     @Test
@@ -119,6 +122,8 @@ public class ProjectServiceTest {
         Assertions.assertNotNull(modifyResult.getData(), "返回结果数据不应该为空");
         Assertions.assertEquals(modifyProjectParam.getProjectName(), modifyResult.getData().getProjectName(), "返回结果中的项目名称应该与更新的参数一致");
         Assertions.assertEquals(modifyProjectParam.getProjectContent(), modifyResult.getData().getProjectContent(), "返回结果中的项目内容应该与更新的参数一致");
+
+        projectService.modifyProject(new ModifyProjectParam());
     }
 
 }
