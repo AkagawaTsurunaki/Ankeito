@@ -6,5 +6,5 @@ import lombok.Data;
 public class QueryUserListParam {
     int pageNum;
     int pageSize;
-    String userName;
+    String username;
 }

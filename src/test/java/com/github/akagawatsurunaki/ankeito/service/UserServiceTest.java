@@ -74,7 +74,7 @@ public class UserServiceTest {
         val param = new QueryUserListParam();
         param.setPageNum(1);
         param.setPageSize(1);
-        param.setUserName("123");
+        param.setUsername("123");
         userService.getUserPageAsList(param);
     }
 
@@ -83,7 +83,7 @@ public class UserServiceTest {
     public void testGetUserByUsername() {
 
         val queryUserListParam = new QueryUserListParam();
-        queryUserListParam.setUserName("外那豚");
+        queryUserListParam.setUsername("外那豚");
         val userPageAsList = userService.getUserPageAsList(queryUserListParam);
         System.out.println("userPageAsList = " + userPageAsList);
     }

@@ -1,7 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.lang.UUID;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import cn.hutool.core.util.StrUtil;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.login.UserLoginParam;
@@ -40,22 +40,19 @@ public class UserService {
     public ServiceResult<List<User>> getUserPageAsList(@NonNull QueryUserListParam queryUserListParam) {
         List<User> result = new ArrayList<>();
 
-        if (queryUserListParam.getUserName() != null) {
-            val serviceResult = getUserByUsername(queryUserListParam.getUserName());
-            val userByUsername = getUserByUsername(queryUserListParam.getUserName()).getData();
+        if (StrUtil.isNotBlank(queryUserListParam.getUsername())) {
+            val serviceResult = getUserByUsername(queryUserListParam.getUsername());
+            val userByUsername = getUserByUsername(queryUserListParam.getUsername()).getData();
             result.add(userByUsername);
             return serviceResult.as(result);
         }
 
-        val userPage = userMapper.selectPage(
-                new Page<>(queryUserListParam.getPageNum(), queryUserListParam.getPageSize()),
-                null);
-        val records = userPage.getRecords();
+        val allUsers = userMapper.selectList(null);
 
         return ServiceResult.of(
                 ServiceResultCode.OK,
-                "共查询到" + records.size() + "条用户信息",
-                records);
+                "共查询到" + allUsers.size() + "条用户信息",
+                allUsers);
     }
 
     public ServiceResult<User> getUserByUsername(@NonNull String username) {
