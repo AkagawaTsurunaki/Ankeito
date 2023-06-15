@@ -35,4 +35,13 @@ public class ServiceResult<Data> {
         return new ServiceResult<>(code, message, data);
     }
 
+    public <T> ServiceResult<T> as(@NonNull T obj) {
+        return new ServiceResult<>(this.code, this.message, obj);
+    }
+
+    public static <Data> ServiceResult<Data> ofOK(@NonNull String message,
+                                                  @NonNull Data data) {
+        return new ServiceResult<>(ServiceResultCode.OK, message, data);
+    }
+
 }

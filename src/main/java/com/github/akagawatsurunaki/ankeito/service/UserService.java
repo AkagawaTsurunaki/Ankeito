@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -36,6 +38,15 @@ public class UserService {
      * @return 服务响应结果
      */
     public ServiceResult<List<User>> getUserPageAsList(@NonNull QueryUserListParam queryUserListParam) {
+        List<User> result = new ArrayList<>();
+
+        if (queryUserListParam.getUserName() != null) {
+            val serviceResult = getUserByUsername(queryUserListParam.getUserName());
+            val userByUsername = getUserByUsername(queryUserListParam.getUserName()).getData();
+            result.add(userByUsername);
+            return serviceResult.as(result);
+        }
+
         val userPage = userMapper.selectPage(
                 new Page<>(queryUserListParam.getPageNum(), queryUserListParam.getPageSize()),
                 null);
@@ -45,6 +56,12 @@ public class UserService {
                 ServiceResultCode.OK,
                 "共查询到" + records.size() + "条用户信息",
                 records);
+    }
+
+    private ServiceResult<User> getUserByUsername(@NonNull String username) {
+        return Optional.ofNullable(userMapper.selectByUsername(username)).map(
+                it -> ServiceResult.ofOK("根据名称" + username + "查询到 1 条用户信息", it)
+        ).orElse(ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "没有名为" + username + "的用户"));
     }
 
     /**
