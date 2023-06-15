@@ -4,8 +4,8 @@ import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
-import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.login.UserLoginParam;
+import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
@@ -58,7 +58,7 @@ public class UserService {
                 records);
     }
 
-    private ServiceResult<User> getUserByUsername(@NonNull String username) {
+    public ServiceResult<User> getUserByUsername(@NonNull String username) {
         return Optional.ofNullable(userMapper.selectByUsername(username)).map(
                 it -> ServiceResult.ofOK("根据名称" + username + "查询到 1 条用户信息", it)
         ).orElse(ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "没有名为" + username + "的用户"));
@@ -104,17 +104,22 @@ public class UserService {
                 .userStatus(UserStatus.DISABLE)
                 .build();
 
-        val insert = userMapper.insert(user);
-        if (insert == 1) {
+        try {
+            userMapper.insert(user);
+
             return ServiceResult.of(
                     ServiceResultCode.OK,
                     "成功增加1条用户信息",
                     user);
+
+        } catch (Exception ignore) {
         }
+
         return ServiceResult.of(
                 ServiceResultCode.FAILED,
                 "增加用户信息失败"
         );
+
     }
 
     /**
@@ -144,18 +149,11 @@ public class UserService {
             );
         }
 
-        val update = userMapper.updateById(user);
-        if (update == 1) {
-            return ServiceResult.of(
-                    ServiceResultCode.OK,
-                    "成功修改1条用户信息",
-                    user);
-        }
-
+        userMapper.updateById(user);
         return ServiceResult.of(
-                ServiceResultCode.FAILED,
-                "修改用户信息失败"
-        );
+                ServiceResultCode.OK,
+                "成功修改1条用户信息",
+                user);
     }
 
     /**
@@ -173,17 +171,12 @@ public class UserService {
                     "此用户不存在");
         }
 
-        val delete = userMapper.deleteById(id);
-        if (delete == 1) {
-            return ServiceResult.of(
-                    ServiceResultCode.OK,
-                    "成功删除1条用户信息",
-                    user);
-        }
+        userMapper.deleteById(id);
         return ServiceResult.of(
-                ServiceResultCode.FAILED,
-                "删除用户信息失败"
-        );
+                ServiceResultCode.OK,
+                "成功删除1条用户信息",
+                user);
+
     }
 
 }
