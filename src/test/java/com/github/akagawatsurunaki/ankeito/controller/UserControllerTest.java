@@ -41,6 +41,7 @@ public class UserControllerTest {
 
     @Test
     public void testAddUserInfo() {
+        init();
         val param = new AddUserParam();
         param.setUsername(username);
         param.setPassword(password);

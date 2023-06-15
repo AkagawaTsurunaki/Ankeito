@@ -101,18 +101,16 @@ public class ProjectService {
                 .lastUpdateDate(new Date()).build();
 
         try {
-            val insert = projectMapper.insert(project);
-            if (insert == 1) {
-                return ServiceResult.of(
-                        ServiceResultCode.OK,
-                        "成功增加1条项目信息",
-                        project);
-            }
-        } catch (Exception ignore) {}
-        return ServiceResult.of(
-                ServiceResultCode.FAILED,
-                "增加项目信息失败"
-        );
+            projectMapper.insert(project);
+
+            return ServiceResult.of(
+                    ServiceResultCode.OK,
+                    "成功增加1条项目信息",
+                    project);
+        } catch (Exception ignore) {
+        }
+
+        return ServiceResult.of(ServiceResultCode.FAILED, "项目信息增加失败");
     }
 
     /**
@@ -130,17 +128,13 @@ public class ProjectService {
                     "此项目不存在");
         }
 
-        val delete = projectMapper.deleteById(id);
-        if (delete == 1) {
-            return ServiceResult.of(
-                    ServiceResultCode.OK,
-                    "成功删除1条项目信息",
-                    project);
-        }
+        projectMapper.deleteById(id);
+
         return ServiceResult.of(
-                ServiceResultCode.FAILED,
-                "删除项目信息失败"
-        );
+                ServiceResultCode.OK,
+                "成功删除1条项目信息",
+                project);
+
     }
 
     public ServiceResult<Project> modifyProject(@NonNull ModifyProjectParam modifyProjectParam) {
@@ -156,18 +150,11 @@ public class ProjectService {
         project.setProjectContent(modifyProjectParam.getProjectContent());
         project.setProjectName(modifyProjectParam.getProjectName());
 
-        val update = projectMapper.updateById(project);
-
-        if (update == 1) {
-            return ServiceResult.of(
-                    ServiceResultCode.OK,
-                    "成功修改1条项目信息",
-                    project);
-        }
+        projectMapper.updateById(project);
         return ServiceResult.of(
-                ServiceResultCode.FAILED,
-                "修改项目信息失败"
-        );
+                ServiceResultCode.OK,
+                "成功修改1条项目信息",
+                project);
     }
 
 }

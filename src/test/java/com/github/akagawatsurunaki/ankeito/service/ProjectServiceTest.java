@@ -9,12 +9,10 @@ import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.Project;
 import lombok.val;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -38,6 +36,14 @@ public class ProjectServiceTest {
         projectService.getProjectPageAsList(queryProjectListParam);
 
         queryProjectListParam.setPageSize(1);
+        projectService.getProjectPageAsList(queryProjectListParam);
+
+        queryProjectListParam = new QueryProjectListParam();
+        queryProjectListParam.setPageNum(0);
+        queryProjectListParam.setPageSize(0);
+        queryProjectListParam.setProjectName("123");
+        queryProjectListParam.setCreatedBy("55665");
+
         projectService.getProjectPageAsList(queryProjectListParam);
     }
 
@@ -68,7 +74,8 @@ public class ProjectServiceTest {
         ServiceResult<Project> result = projectService.addProject(addProjectParam);
         Assertions.assertEquals(ServiceResultCode.OK, result.getCode(), "返回结果状态码应该为 OK");
         Assertions.assertNotNull(result.getData(), "返回结果数据不应该为空");
-        Assertions.assertEquals(addProjectParam.getProjectName(), result.getData().getProjectName(), "返回结果中的项目名称应该与添加的参数一致");
+        Assertions.assertEquals(addProjectParam.getProjectName(), result.getData().getProjectName(),
+                "返回结果中的项目名称应该与添加的参数一致");
 
         // 添加失败的异常
         projectService.addProject(new AddProjectParam());
@@ -96,8 +103,14 @@ public class ProjectServiceTest {
         deleteProjectParam.setId("000");
         projectService.deleteProject(deleteProjectParam);
 
-        projectService.deleteProject(new DeleteProjectParam());
-
+        val projectPageAsList = projectService.getProjectPageAsList(new QueryProjectListParam());
+        val project = projectPageAsList.getData().get(0);
+        val deleteProjectParam1 = new DeleteProjectParam();
+        deleteProjectParam1.setId(project.getId());
+        projectService.deleteProject(deleteProjectParam1);
+        new Thread(() -> {
+            projectService.deleteProject(deleteProjectParam1);
+        }).start();
 
     }
 
@@ -120,10 +133,16 @@ public class ProjectServiceTest {
         ServiceResult<Project> modifyResult = projectService.modifyProject(modifyProjectParam);
         Assertions.assertEquals(ServiceResultCode.OK, modifyResult.getCode(), "返回结果状态码应该为 OK");
         Assertions.assertNotNull(modifyResult.getData(), "返回结果数据不应该为空");
-        Assertions.assertEquals(modifyProjectParam.getProjectName(), modifyResult.getData().getProjectName(), "返回结果中的项目名称应该与更新的参数一致");
-        Assertions.assertEquals(modifyProjectParam.getProjectContent(), modifyResult.getData().getProjectContent(), "返回结果中的项目内容应该与更新的参数一致");
+        Assertions.assertEquals(modifyProjectParam.getProjectName(), modifyResult.getData().getProjectName(),
+                "返回结果中的项目名称应该与更新的参数一致");
+        Assertions.assertEquals(modifyProjectParam.getProjectContent(), modifyResult.getData().getProjectContent(),
+                "返回结果中的项目内容应该与更新的参数一致");
 
-        projectService.modifyProject(new ModifyProjectParam());
+        modifyProjectParam = new ModifyProjectParam();
+        modifyProjectParam.setId("456564464");
+        modifyProjectParam.setProjectName("TEst");
+        modifyProjectParam.setProjectContent("askjdfhasjikhdfjkaesh");
+        projectService.modifyProject(modifyProjectParam);
     }
 
 }
