@@ -3,7 +3,6 @@ package com.github.akagawatsurunaki.ankeito.param;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;
 import lombok.val;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 //@SpringBootTest
 public class QueryUserListParamTest {
@@ -17,12 +16,12 @@ public class QueryUserListParamTest {
             System.out.println("equal");
         }
 
-        param1.setUserName("test");
+        param1.setUsername("test");
         if (param1.hashCode() == param2.hashCode()) {
             System.out.println("equal");
         }
 
-        param2.setUserName("test");
+        param2.setUsername("test");
         if (param1.hashCode() == param2.hashCode()) {
             System.out.println("equal");
         }

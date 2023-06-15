@@ -11,7 +11,7 @@ const fetchUserList = () => {
   let params = {
     pageNum,
     pageSize: 10,
-    userName: $('#username').val()
+    username: $('#username').val()
   }
   $.ajax({
     url: API_BASE_URL + '/admin/queryUserList',
