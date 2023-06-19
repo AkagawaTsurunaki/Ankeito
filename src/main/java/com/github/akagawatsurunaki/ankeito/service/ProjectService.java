@@ -38,8 +38,7 @@ public class ProjectService {
         List<Project> records;
 
         // 是否执行分页查询
-        if (queryProjectListParam.getPageNum()
-                != 0 && queryProjectListParam.getPageSize() != 0) {
+        if (queryProjectListParam.getPageNum() != 0 && queryProjectListParam.getPageSize() != 0) {
             val projectPage = projectMapper.selectPage(
                     new Page<>(queryProjectListParam.getPageNum(), queryProjectListParam.getPageSize()),
                     null
@@ -47,7 +46,7 @@ public class ProjectService {
             records = projectPage.getRecords();
         } else {
             // 不执行分页查询
-            if (queryProjectListParam.getCreatedBy() != null && queryProjectListParam.getProjectName() != null && !queryProjectListParam.getProjectName().isBlank()) {
+            if (queryProjectListParam.getProjectName() != null) {
                 return getProjectsByName(queryProjectListParam);
             }
             records = projectMapper.selectList(null);

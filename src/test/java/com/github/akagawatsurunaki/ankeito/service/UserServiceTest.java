@@ -43,7 +43,7 @@ public class UserServiceTest {
     @Test
     @Order(2)
     public void testUserLogin() {
-        val param = new UserLoginParam();
+        var param = new UserLoginParam();
         param.setUsername(username);
         param.setPassword(password);
         var serviceResult = userService.userLogin(param);
@@ -52,6 +52,13 @@ public class UserServiceTest {
 
         param.setUsername("不存在用户");
         param.setPassword("123456");
+        serviceResult = userService.userLogin(param);
+        Assertions.assertEquals(ServiceResultCode.FAILED, serviceResult.getCode());
+        Assertions.assertEquals("用户名或密码错误", serviceResult.getMessage());
+
+        param = new UserLoginParam();
+        param.setUsername(username);
+        param.setPassword("123456888");
         serviceResult = userService.userLogin(param);
         Assertions.assertEquals(ServiceResultCode.FAILED, serviceResult.getCode());
         Assertions.assertEquals("用户名或密码错误", serviceResult.getMessage());
