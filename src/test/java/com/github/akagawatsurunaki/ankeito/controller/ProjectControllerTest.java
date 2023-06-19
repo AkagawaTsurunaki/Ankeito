@@ -1,30 +1,38 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectListParam;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.Project;
 import lombok.val;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootTest
 public class ProjectControllerTest {
 
-    private String projectName;
-    private String projectContent;
-    private String createdBy;
-    private String lastUpdatedBy;
+    static String projectName;
+    static String projectContent;
+    static String createdBy;
+    static String lastUpdatedBy;
+
+    static List<Project> projects;
 
     @Autowired
     private ProjectController projectController;
 
-    private void init() {
+    public void init() {
         projectName = RandomUtil.randomString(RandomUtil.BASE_CHAR, 16);
         projectContent = RandomUtil.randomString(RandomUtil.BASE_CHAR, 200);
         createdBy = RandomUtil.randomString(RandomUtil.BASE_CHAR, 8);
@@ -32,65 +40,87 @@ public class ProjectControllerTest {
     }
 
     @Test
+    @Order(1)
     public void testAddProjectInfo() {
         init();
-        val addProjectParam = new AddProjectParam();
-        addProjectParam.setProjectName(projectName);
-        addProjectParam.setProjectContent(projectContent);
-        addProjectParam.setLastUpdatedBy(lastUpdatedBy);
-        addProjectParam.setCreatedBy(createdBy);
-        projectController.addProjectInfo(addProjectParam);
+        var param = new AddProjectParam();
+        param.setProjectName(projectName);
+        param.setProjectContent(projectContent);
+        param.setLastUpdatedBy(lastUpdatedBy);
+        param.setCreatedBy(createdBy);
+        var httpResponseEntity = projectController.addProjectInfo(param);
+        // 断言 insert 成功
+        Assertions.assertEquals(String.valueOf(ServiceResultCode.OK.getValue()), httpResponseEntity.getCode());
+        Assertions.assertEquals("成功增加1条项目信息", httpResponseEntity.getMessage());
+        // 断言 insert 失败
+        param = new AddProjectParam();
+        httpResponseEntity = projectController.addProjectInfo(param);
+        Assertions.assertEquals(String.valueOf(ServiceResultCode.FAILED.getValue()), httpResponseEntity.getCode());
+        Assertions.assertEquals("项目信息增加失败", httpResponseEntity.getMessage());
+    }
+
+
+    @Test
+    @Order(2)
+    @SuppressWarnings("unchecked")
+    public void testQueryProjectList() {
+        val queryProjectListParam = new QueryProjectListParam();
+        val httpResponseEntity = projectController.queryProjectList(queryProjectListParam);
+        projects = ((List<Project>) httpResponseEntity.getData());
+        Assertions.assertEquals(String.valueOf(ServiceResultCode.OK.getValue()), httpResponseEntity.getCode());
+        Assertions.assertEquals("共查询到" + projects.size() + "条项目信息", httpResponseEntity.getMessage());
     }
 
     @Test
+    @Order(3)
+    @SuppressWarnings("unchecked")
     public void testModify() {
-        val queryProjectListParam = new QueryProjectListParam();
-        queryProjectListParam.setProjectName(projectName);
-        val httpResponseEntity = projectController.queryProjectList(queryProjectListParam);
-        val data = (List<Project>) httpResponseEntity.getData();
-        if (data != null && !data.isEmpty()) {
-            val project = data.get(0);
-            val modifyProjectParam = new ModifyProjectParam();
-            modifyProjectParam.setId(project.getId());
-            modifyProjectParam.setProjectContent(RandomUtil.randomString(RandomUtil.BASE_CHAR, 200));
-            modifyProjectParam.setProjectName(projectName);
-            projectController.modifyProjectInfo(modifyProjectParam);
+
+        val param = new ModifyProjectParam();
+        projects = ((List<Project>) projectController.queryProjectList(new QueryProjectListParam()).getData());
+        val project = projects.get(0);
+
+        param.setId(project.getId());
+        param.setProjectName(projectName);
+        param.setProjectContent(RandomUtil.randomString(RandomUtil.BASE_CHAR, 200));
+
+        val expectedProject = Project.builder().id(project.getId()).projectName(projectName).projectContent(param.getProjectContent()).build();
+
+        if (CollUtil.isNotEmpty(projects)) {
+            val httpResponseEntity = projectController.modifyProjectInfo(param);
+            Assertions.assertEquals(String.valueOf(ServiceResultCode.OK.getValue()), httpResponseEntity.getCode());
+            Assertions.assertEquals("成功修改1条项目信息", httpResponseEntity.getMessage());
+            Assertions.assertNotEquals(JSONObject.toJSONString(expectedProject), JSONObject.toJSONString(httpResponseEntity.getData()));
         }
+
+        param.setId(UUID.randomUUID().toString());
+
+        val httpResponseEntity = projectController.modifyProjectInfo(param);
+
+        Assertions.assertEquals(String.valueOf(ServiceResultCode.NO_SUCH_ENTITY.getValue()), httpResponseEntity.getCode());
+        Assertions.assertEquals("此项目不存在", httpResponseEntity.getMessage());
+        Assertions.assertNotEquals(JSONObject.toJSONString(expectedProject), JSONObject.toJSONString(httpResponseEntity.getData()));
     }
 
 
     @Test
-    public void testFindAndModify() {
-        var httpResponseEntity = projectController.queryProjectList(new QueryProjectListParam());
-
-        val queryProjectListParam = new QueryProjectListParam();
-        queryProjectListParam.setProjectName(projectName);
-        httpResponseEntity = projectController.queryProjectList(queryProjectListParam);
-        val projects = ((List<Project>) httpResponseEntity.getData());
-        val project = projects.get(0);
-
-        projectController.queryProjectList(new QueryProjectListParam());
-
-        val modifyProjectParam = new ModifyProjectParam();
-        modifyProjectParam.setId(modifyProjectParam.getId());
-        modifyProjectParam.setProjectName(projectName);
-        modifyProjectParam.setProjectContent(RandomUtil.randomString(RandomUtil.BASE_CHAR, 200));
-        projectController.modifyProjectInfo(modifyProjectParam);
-    }
-
-    @Test
+    @Order(4)
     public void testDelete() {
-        val queryProjectListParam = new QueryProjectListParam();
-        queryProjectListParam.setProjectName(projectName);
-        val httpResponseEntity = projectController.queryProjectList(queryProjectListParam);
-        val projects = ((List<Project>) httpResponseEntity.getData());
-        val project = projects.get(0);
+        val param = new DeleteProjectParam();
+        // 删除失败
+        param.setId(UUID.randomUUID().toString());
+        var httpResponseEntity = projectController.deleteProjectById(param);
 
-        projectController.deleteProjectById(new DeleteProjectParam());
+        Assertions.assertEquals(String.valueOf(ServiceResultCode.NO_SUCH_ENTITY.getValue()), httpResponseEntity.getCode());
+        Assertions.assertEquals("此项目不存在", httpResponseEntity.getMessage());
 
-        val deleteProjectParam = new DeleteProjectParam();
-        deleteProjectParam.setId(project.getId());
+        if (CollUtil.isNotEmpty(projects)) {
+            val project = projects.get(0);
+            param.setId(project.getId());
+            httpResponseEntity = projectController.deleteProjectById(param);
 
-        projectController.deleteProjectById(deleteProjectParam);
+            Assertions.assertEquals(String.valueOf(ServiceResultCode.OK.getValue()), httpResponseEntity.getCode());
+            Assertions.assertEquals("成功删除1条项目信息", httpResponseEntity.getMessage());
+        }
     }
 }
