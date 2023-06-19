@@ -32,7 +32,8 @@ public class ProjectControllerTest {
     }
 
     @Test
-    public void testAdd() {
+    public void testAddProjectInfo() {
+        init();
         val addProjectParam = new AddProjectParam();
         addProjectParam.setProjectName(projectName);
         addProjectParam.setProjectContent(projectContent);
@@ -41,11 +42,26 @@ public class ProjectControllerTest {
         projectController.addProjectInfo(addProjectParam);
     }
 
+    @Test
+    public void testModify() {
+        val queryProjectListParam = new QueryProjectListParam();
+        queryProjectListParam.setProjectName(projectName);
+        val httpResponseEntity = projectController.queryProjectList(queryProjectListParam);
+        val data = (List<Project>) httpResponseEntity.getData();
+        if (data != null && !data.isEmpty()) {
+            val project = data.get(0);
+            val modifyProjectParam = new ModifyProjectParam();
+            modifyProjectParam.setId(project.getId());
+            modifyProjectParam.setProjectContent(RandomUtil.randomString(RandomUtil.BASE_CHAR, 200));
+            modifyProjectParam.setProjectName(projectName);
+            projectController.modifyProjectInfo(modifyProjectParam);
+        }
+    }
+
 
     @Test
     public void testFindAndModify() {
         var httpResponseEntity = projectController.queryProjectList(new QueryProjectListParam());
-        System.out.println("httpResponseEntity = " + httpResponseEntity);
 
         val queryProjectListParam = new QueryProjectListParam();
         queryProjectListParam.setProjectName(projectName);
@@ -62,6 +78,7 @@ public class ProjectControllerTest {
         projectController.modifyProjectInfo(modifyProjectParam);
     }
 
+    @Test
     public void testDelete() {
         val queryProjectListParam = new QueryProjectListParam();
         queryProjectListParam.setProjectName(projectName);
