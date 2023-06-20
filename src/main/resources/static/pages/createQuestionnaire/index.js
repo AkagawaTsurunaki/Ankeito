@@ -88,7 +88,7 @@ const handleSelectProjName = () => {
             res.data.forEach((item, index) => {
                 const selector = $('#selectProjName');
                 if (item.id === selectProjectId) {
-                    selector.prepend(`<option value="0">${item.projectName}</option>`)
+                    selector.append(`<option value="${index + 1}" selected>${item.projectName}</option>`)
                 } else {
                     selector.append(`<option value="${index + 1}">${item.projectName}</option>`)
                 }
