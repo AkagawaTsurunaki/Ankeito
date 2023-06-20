@@ -8,6 +8,7 @@ import com.github.akagawatsurunaki.ankeito.api.dto.QuestionDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddOptionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQuestionParam;
+import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
@@ -101,8 +102,29 @@ public class QnnreService {
                 .orElseGet(() -> ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "问卷不存在"));
     }
 
+    public ServiceResult<QnnreDTO> deleteQnnre(@NonNull DeleteQnnreParam deleteQnnreParam) {
+        try {
+            val qnnreDTOServiceResult = get(deleteQnnreParam.getQnnreId());
+            Optional.ofNullable(qnnreDTOServiceResult.getData()).ifPresentOrElse(
+                    qnnre -> {
+                        qnnreMapper.deleteById(qnnre.getQnnre());
+                        qnnre.getQuestionDTOList().forEach(questionDTO -> {
+                            questionMapper.deleteById(questionDTO.getQuestion());
+                            questionDTO.getOptionList().forEach( option -> optionMapper.deleteById(option));
+                        });
+                    }, () -> {
+                        throw new NullPointerException("删除失败, 问卷不存在");
+                    }
+            );
+            return qnnreDTOServiceResult.with("问卷删除成功");
+        } catch (NullPointerException e1) {
+            return ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, e1.getMessage());
+        }
+    }
+
     public ServiceResult<QnnreDTO> save(@NonNull ModifyQnnreParam modifyQnnreParam) {
         try {
+            deleteQnnre(DeleteQnnreParam.builder().qnnreId(modifyQnnreParam.getQnnreId()).build());
             val modifyQnnreServiceResult = modifyQnnre(modifyQnnreParam.getQnnreId(),
                     modifyQnnreParam.getQnnreTitle(),
                     modifyQnnreParam.getQnnreDescription());
