@@ -10,6 +10,8 @@ public enum ServiceResultCode {
     NO_SUCH_ENTITY(0),
     DTO_TO_ENTITY_EXCEPTION(0),
     ILLEGAL_PARAM(0),
+
+    METHOD_DEPRECATED(-1)
     ;
 
     @Getter

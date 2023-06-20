@@ -38,10 +38,22 @@ public class ServiceResult<Data> {
     public <T> ServiceResult<T> as(@NonNull T obj) {
         return new ServiceResult<>(this.code, this.message, obj);
     }
+    public ServiceResult<Data> with(@NonNull String message) {
+        return new ServiceResult<Data>(this.code, message, this.data);
+    }
 
     public static <Data> ServiceResult<Data> ofOK(@NonNull String message,
                                                   @NonNull Data data) {
         return new ServiceResult<>(ServiceResultCode.OK, message, data);
     }
+
+    public static <Data> ServiceResult<Data> ofOK(@NonNull String message) {
+        return new ServiceResult<>(ServiceResultCode.OK, message, null);
+    }
+
+    public static <Data> ServiceResult<Data> ofDeprecated() {
+        return new ServiceResult<>(ServiceResultCode.METHOD_DEPRECATED, "请求的方法被弃用", null);
+    }
+
 
 }
