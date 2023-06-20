@@ -1,5 +1,6 @@
 let questionnaireTitle
 let questionnaireDescription
+let questionnaireId
 const problem = []
 
 onload = () => {
@@ -15,6 +16,7 @@ onload = () => {
         contentType: "application/json",
         success(res) {
             if (res.code === '666') {
+                questionnaireId = res.data.id
                 questionnaireTitle = res.data.name
                 questionnaireDescription = res.data.description
                 $('#qnnreTitle').text(questionnaireTitle)
@@ -73,7 +75,14 @@ const onAddQuestion = (type) => {
         $(".question").css('border', '1px solid #ffffff')
     })
 }
+/**
 
+ 更新问题选项内容
+ @param {number} problemIndex - 表示第几个问题选项
+ @param {number | null} optionIndex - 表示问题选项中的第几个选项，如果是填空题或矩阵题，则为null
+ @param {string} key - 需要更新的键名
+ @returns {void}
+ */
 const onInput = (problemIndex, optionIndex, key) => {
     if (optionIndex || optionIndex === 0)
         problem[problemIndex].option[optionIndex][key] = $(`#question${problemIndex} #optionItem${optionIndex} #${key}`)[0].value
@@ -196,6 +205,7 @@ const handleDelete = (problemIndex) => {
 }
 
 const handleAddSingleChoice = () => {
+    problem.type = 'SINGLE_CHOICE_QUESTION'
     return `
     <div class="question" id="question${problem.length}" data-type="1" data-problemIndex="${problem.length}">
       <div class="top">
@@ -232,35 +242,8 @@ const singleChoiceAddOption = (problemIndex) => {
       <span class="option-del" onclick="singleChoiceDelOption(${problemIndex}, ${problem[problemIndex].option.length})">删除</span>
     </div>
   `)
-}
-
-const databaseAddQuestion = (problemIndex) => {
     problem[problemIndex].option.push({})
-    let params = {
-        no: problemIndex,
-        qnnreId: $util.getPageParam('qnnreId'),
-        content: $(`#problemName`).val(),
-        required: $(`#mustAnswer`).text(),
-        type: 'SINGLE_CHOICE_QUESTION'
-    }
-
-    $.ajax({
-        url: '/addSingleChoice', // 增加一个单选题
-        type: 'POST',
-        data: JSON.stringify(params),
-        dataType: "json",
-        contentType: "application/json",
-        success(res) {
-            if (res.code !== '666') {
-                alert(res.message)
-            } else {
-                databaseAddOptions(problemIndex)
-
-            }
-        }
-    });
 }
-
 const singleChoiceDelOption = (problemIndex, optionIndex) => {
     $(`#question${problemIndex} .option-item`)[optionIndex].remove()
     problem[problemIndex].option.splice(optionIndex, 1)
@@ -270,14 +253,10 @@ const singleChoiceDelOption = (problemIndex, optionIndex) => {
 }
 
 const singleChoiceEditFinish = (problemIndex) => {
-
-    let questionTitleSelector = $(`#question${problemIndex} #questionTitle`)
-    let bottom2Selector = $(`#question${problemIndex} .bottom2`)
-
     $(`#question${problemIndex} .bottom`).css('display', 'none')
-    bottom2Selector.css('display', 'inline')
-    questionTitleSelector.text(`${problemIndex + 1}.${problem[problemIndex].problemName}`)
-    bottom2Selector.html('')
+    $(`#question${problemIndex} .bottom2`).css('display', 'inline')
+    $(`#question${problemIndex} #questionTitle`).text(`${problemIndex + 1}.${problem[problemIndex].problemName}`)
+    $(`#question${problemIndex} .bottom2`).html('')
     problem[problemIndex].option.map(item => {
         $(`#question${problemIndex} .bottom2`).append(`
       <div style="display: flex; align-items: center;">
@@ -288,11 +267,10 @@ const singleChoiceEditFinish = (problemIndex) => {
     `)
     })
 }
-
 const databaseAddOptions = (problemIndex) => {
     let contentArr = []
 
-    $("#problem #question" + problemIndex).find('.option-item').each(function() {
+    $("#problem #question" + problemIndex).find('.option-item').each(function () {
         let optionText = $(this).find('input').val(); // 获取当前选项的文本值
         contentArr.push(optionText); // 将文本值保存到数组中
     });
@@ -317,6 +295,7 @@ const databaseAddOptions = (problemIndex) => {
 }
 
 const handleAddMultipleChoice = () => {
+    problem.type = 'MULTIPLE_CHOICE_QUESTION'
     return `
     <div class="question" id="question${problem.length}" data-type="2" data-problemIndex="${problem.length}">
       <div class="top">
@@ -581,31 +560,43 @@ const handleModifyTitle = () => {
     $('#questionnaireDescription').val(questionnaireDescription)
 }
 
+/**
 
+ handleEditFinish函数用于编辑完问卷后保存问卷信息
+ @author AkagawaTsurunaki
+ @returns {void} */
 const handleEditFinish = () => {
 
-    //
-    // problem.forEach(
-    //
-    // )
-    // let addQuestionParam = {
-    //     id: ,
-    //     qnnreId: ,
-    //     content: ,
-    //     required: ,
-    //     type: ;
-    // }
-
-    let addOptionParams = {
-
-    }
+    let addQuestionParams = []
+    let addOptionParams = []
+    problem.forEach(
+        it => {
+            let index = problem.indexOf(it);
+            addQuestionParams.push(
+                {
+                    index: index,
+                    problemName: it.problemName,
+                    mustAnswer: it.mustAnswer,
+                    type: it.type
+                }
+            );
+            addOptionParams.push(
+                {
+                    questionId: index,
+                    content: it.option
+                }
+            )
+        }
+    )
 
     let modifyQnnreParam = {
+        qnnreId: questionnaireId,
         qnnreTitle: questionnaireTitle,
         qnnreDescription: questionnaireDescription,
-        addQuestionParams: [],
-        addOptionParams: []
+        addQuestionParams: addQuestionParams,
+        addOptionParams: addOptionParams
     }
+
     $.ajax({
         url: API_BASE_URL + '/modifyQuestionnaire',
         type: "POST",

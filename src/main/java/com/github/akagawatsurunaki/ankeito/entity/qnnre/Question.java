@@ -4,15 +4,14 @@ import com.github.akagawatsurunaki.ankeito.common.enumeration.QuestionType;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.Required;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
 @Data
 @Builder
+@FieldNameConstants
 public class Question {
     Integer id;
-    String qnnrId;
-    /**
-     * 问卷内部标号
-     */
+    String qnnreId;
     String content;
     Required required;
     QuestionType type;
