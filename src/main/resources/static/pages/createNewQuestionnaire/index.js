@@ -42,7 +42,10 @@ const handleCreateNewQnnre = () => {
         dataType: "json",
         contentType: "application/json",
         success(res) {
+            // 如果创建成功了
             if (res.code === '666') {
+                $util.setPageParam('qnnreId', res.data.id)
+                alert(res.message + res.data.id)
                 location.href = "/pages/designQuestionnaire/index.html"
             } else {
                 alert(res.message)
