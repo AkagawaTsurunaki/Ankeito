@@ -1,6 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.common.enumeration;
 
 public enum QuestionType {
-    MULTIPLE_CHOICE_QUESTION,
-    MULTIPLE_RESPONSE_QUESTION;
+    SINGLE_CHOICE_QUESTION,
+    MULTIPLE_CHOICE_QUESTION;
 }

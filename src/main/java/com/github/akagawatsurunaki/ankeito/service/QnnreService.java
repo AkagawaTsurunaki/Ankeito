@@ -98,7 +98,7 @@ public class QnnreService {
                     .no(addQuestionParam.getNo())
                     .content(Optional.ofNullable(addQuestionParam.getContent()).orElseThrow(() -> new IllegalArgumentException("题目标题不能为空")))
                     .required(Optional.ofNullable(addQuestionParam.getRequired()).map(Required::get).orElse(Required.OPTIONAL))
-                    .type(Optional.ofNullable(addQuestionParam.getType()).map(QuestionType::valueOf).orElse(QuestionType.MULTIPLE_CHOICE_QUESTION))
+                    .type(Optional.ofNullable(addQuestionParam.getType()).map(QuestionType::valueOf).orElse(QuestionType.SINGLE_CHOICE_QUESTION))
                     .build();
             mcqMapper.insert(question);
             return ServiceResult.ofOK("成功添加1道选择题目", question);
