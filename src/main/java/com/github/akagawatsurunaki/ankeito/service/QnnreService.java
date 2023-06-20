@@ -101,6 +101,65 @@ public class QnnreService {
                 .orElseGet(() -> ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "问卷不存在"));
     }
 
+    public ServiceResult<QnnreDTO> save(@NonNull ModifyQnnreParam modifyQnnreParam) {
+        try {
+            val modifyQnnreServiceResult = modifyQnnre(modifyQnnreParam.getQnnreId(),
+                    modifyQnnreParam.getQnnreTitle(),
+                    modifyQnnreParam.getQnnreDescription());
+            if (ObjectUtil.notEqual(ServiceResultCode.OK, modifyQnnreServiceResult.getCode())) {
+                return modifyQnnreServiceResult;
+            }
+            modifyQnnreParam.getAddQuestionParams().forEach(this::addMultipleChoiceQuestion);
+            modifyQnnreParam.getAddOptionParams().forEach(this::addOptions);
+            return get(modifyQnnreParam.getQnnreId()).with("问卷修改保存成功");
+        } catch (IllegalArgumentException e) {
+            return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
+        }
+    }
+
+    public ServiceResult<QnnreDTO> get(@NonNull String qnnreId) {
+        try {
+            List<QuestionDTO> questionDTOList = new ArrayList<>();
+            val qnnre =
+                    Optional.ofNullable(qnnreMapper.selectById(qnnreId)).orElseThrow(() -> new NullPointerException(
+                            "此问卷不存在"));
+            // 获取该问卷下的所有问题
+            val questions =
+                    Optional.ofNullable(questionMapper.selectByQnnrId(qnnreId)).orElseThrow(() -> new NullPointerException("此问题不存在"));
+            questions.forEach(
+                    question -> questionDTOList.add(QuestionDTO.builder()
+                            .question(question)
+                            .optionList(Optional.ofNullable(optionMapper.selectByQuestionId(question.getId()))
+                                    .orElseThrow(() -> new NullPointerException("此问题下的选项不存在")))
+                            .build())
+            );
+            val data = QnnreDTO.builder().qnnre(qnnre).questionDTOList(questionDTOList).build();
+            return ServiceResult.ofOK("成功获取问卷", data);
+
+        } catch (NullPointerException e) {
+            return ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, e.getMessage());
+        }
+    }
+
+    private void addOptions(@NonNull AddOptionParam addOptionParam) throws IllegalArgumentException {
+        List<Option> options = new ArrayList<>();
+        Optional.ofNullable(addOptionParam.getContent()).ifPresentOrElse(
+                contents -> Arrays.stream(contents).forEach(
+                        content -> options.add(
+                                Option.builder()
+                                        .id(ArrayUtil.indexOf(contents, content))
+                                        .content(content)
+                                        .questionId(Optional.ofNullable(addOptionParam.getQuestionId()).orElseThrow(() -> new IllegalArgumentException("选项必须依赖于指定的问题")))
+                                        .build()
+                        )
+                ),
+                () -> {
+                    throw new IllegalArgumentException("必须至少有1个选项");
+                }
+        );
+        options.forEach(optionMapper::insert);
+    }
+
     private void addMultipleChoiceQuestion(@NonNull AddQuestionParam addQuestionParam) throws IllegalArgumentException {
         val question = Question.builder()
                 .id(Optional.ofNullable(addQuestionParam.getIndex()).orElseThrow(() -> new
@@ -139,65 +198,6 @@ public class QnnreService {
         } catch (NullPointerException e1) {
             return ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, e1.getMessage());
         }
-    }
-
-    public ServiceResult<QnnreDTO> save(@NonNull ModifyQnnreParam modifyQnnreParam) {
-        try {
-            val modifyQnnreServiceResult = modifyQnnre(modifyQnnreParam.getQnnreId(),
-                    modifyQnnreParam.getQnnreTitle(),
-                    modifyQnnreParam.getQnnreDescription());
-            if (ObjectUtil.notEqual(ServiceResultCode.OK, modifyQnnreServiceResult.getCode())) {
-                return modifyQnnreServiceResult;
-            }
-            modifyQnnreParam.getAddQuestionParams().forEach(this::addMultipleChoiceQuestion);
-            modifyQnnreParam.getAddOptionParams().forEach(this::addOptions);
-            return get(modifyQnnreParam.getQnnreId()).with("问卷修改保存成功");
-        } catch (IllegalArgumentException e) {
-            return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
-        }
-    }
-
-    public ServiceResult<QnnreDTO> get(@NonNull String qnnreId) {
-        try {
-            List<QuestionDTO> questionDTOList = new ArrayList<>();
-            val qnnre =
-                    Optional.ofNullable(qnnreMapper.selectById(qnnreId)).orElseThrow(()->new NullPointerException(
-                            "此问卷不存在"));
-            // 获取该问卷下的所有问题
-            val questions =
-                    Optional.ofNullable(questionMapper.selectByQnnrId(qnnreId)).orElseThrow(()->new NullPointerException("此问题不存在"));
-            questions.forEach(
-                    question -> questionDTOList.add(QuestionDTO.builder()
-                            .question(question)
-                            .optionList(Optional.ofNullable(optionMapper.selectByQuestionId(question.getId()))
-                                    .orElseThrow(() -> new NullPointerException("此问题下的选项不存在")))
-                            .build())
-            );
-            val data = QnnreDTO.builder().qnnre(qnnre).questionDTOList(questionDTOList).build();
-            return ServiceResult.ofOK("成功获取问卷", data);
-
-        } catch (NullPointerException e) {
-            return ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, e.getMessage());
-        }
-    }
-
-    private void addOptions(@NonNull AddOptionParam addOptionParam) throws IllegalArgumentException {
-        List<Option> options = new ArrayList<>();
-        Optional.ofNullable(addOptionParam.getContent()).ifPresentOrElse(
-                contents -> Arrays.stream(contents).forEach(
-                        content -> options.add(
-                                Option.builder()
-                                        .id(ArrayUtil.indexOf(contents, content))
-                                        .content(content)
-                                        .questionId(Optional.ofNullable(addOptionParam.getQuestionId()).orElseThrow(() -> new IllegalArgumentException("选项必须依赖于指定的问题")))
-                                        .build()
-                        )
-                ),
-                () -> {
-                    throw new IllegalArgumentException("必须至少有1个选项");
-                }
-        );
-        options.forEach(optionMapper::insert);
     }
 
 }
