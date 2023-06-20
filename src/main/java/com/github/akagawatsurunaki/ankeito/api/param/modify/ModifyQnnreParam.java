@@ -4,16 +4,15 @@ import com.github.akagawatsurunaki.ankeito.api.param.add.AddOptionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQuestionParam;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class ModifyQnnreParam {
+
+    AddQuestionParam[] addQuestionParams;
+
+    AddOptionParam[] addOptionParams;
+
     String qnnreId;
     String qnnreTitle;
     String qnnreDescription;
-
-    List<AddQuestionParam> addQuestionParams;
-
-    List<AddOptionParam> addOptionParams;
 
 }

@@ -109,8 +109,11 @@ public class QnnreService {
             if (ObjectUtil.notEqual(ServiceResultCode.OK, modifyQnnreServiceResult.getCode())) {
                 return modifyQnnreServiceResult;
             }
-            modifyQnnreParam.getAddQuestionParams().forEach(this::addMultipleChoiceQuestion);
-            modifyQnnreParam.getAddOptionParams().forEach(this::addOptions);
+            Arrays.stream(modifyQnnreParam.getAddQuestionParams()).forEach(addQuestionParam -> {
+                addQuestionParam.setQnnreId(modifyQnnreParam.getQnnreId());
+                QnnreService.this.addMultipleChoiceQuestion(addQuestionParam);
+            });
+            Arrays.stream(modifyQnnreParam.getAddOptionParams()).forEach(this::addOptions);
             return get(modifyQnnreParam.getQnnreId()).with("问卷修改保存成功");
         } catch (IllegalArgumentException e) {
             return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());

@@ -42,8 +42,8 @@ public class QnnreController {
     }
 
     @RequestMapping(path = "/modifyQuestionnaire", method = RequestMethod.POST, headers = "Accept=application/json")
-    public HttpResponseEntity modifyQuestionnaire(@RequestBody ModifyQnnreParam queryQnnreListParam) {
-        val serviceResult = qnnreService.save(queryQnnreListParam);
+    public HttpResponseEntity modifyQuestionnaire(@RequestBody ModifyQnnreParam modifyQnnreParam) {
+        val serviceResult = qnnreService.save(modifyQnnreParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 }
