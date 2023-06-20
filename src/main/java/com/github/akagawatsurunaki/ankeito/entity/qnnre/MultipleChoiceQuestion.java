@@ -1,10 +1,12 @@
 package com.github.akagawatsurunaki.ankeito.entity.qnnre;
 
+import lombok.Data;
+
 /**
  * 单选题
  */
-public class MultipleChoiceQuestion {
-    String id;
-    String content;
+@Data
+public class MultipleChoiceQuestion extends Question {
+
 
 }
