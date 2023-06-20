@@ -580,10 +580,14 @@ const handleEditFinish = () => {
                     type: it.type
                 }
             );
+            let content = []
+            it.option.forEach(opt => {
+                content.push(opt.chooseTerm)
+            })
             addOptionParams.push(
                 {
                     questionId: index,
-                    content: it.option
+                    content: content
                 }
             )
         }
@@ -598,7 +602,7 @@ const handleEditFinish = () => {
     }
 
     $.ajax({
-        url: API_BASE_URL + '/modifyQuestionnaire',
+        url: '/modifyQuestionnaire',
         type: "POST",
         data: JSON.stringify(modifyQnnreParam),
         dataType: "json",
