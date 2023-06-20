@@ -2,7 +2,6 @@ let questionnaireTitle
 let questionnaireDescription
 const problem = []
 
-
 onload = () => {
     let params = {
         id: $util.getPageParam('qnnreId')
@@ -265,7 +264,7 @@ const singleChoiceEditFinish = (problemIndex) => {
         qnnreId: $util.getPageParam('qnnreId'),
         content: $(`#problemName`).val(),
         required: $(`#mustAnswer`).text(),
-        type: 'MULTIPLE_CHOICE_QUESTION'
+        type: 'SINGLE_CHOICE_QUESTION'
     }
 
     $.ajax({
