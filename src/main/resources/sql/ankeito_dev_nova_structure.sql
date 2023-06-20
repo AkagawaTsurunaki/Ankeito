@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 20/06/2023 13:23:41
+ Date: 20/06/2023 13:38:43
 */
 
 SET NAMES utf8mb4;
@@ -50,9 +50,11 @@ CREATE TABLE `project`  (
 DROP TABLE IF EXISTS `qnnre`;
 CREATE TABLE `qnnre`  (
   `id` char(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `projectId` char(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `project_id` char(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `start_time` datetime NOT NULL,
+  `stop_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 

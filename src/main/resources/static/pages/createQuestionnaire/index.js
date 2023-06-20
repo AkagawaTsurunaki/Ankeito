@@ -1,7 +1,7 @@
 onload = () => {
     $('#headerUsername').text($util.getItem('userInfo').username)
     $('#headerDivB').text('创建问卷')
-    selectProjectId = $util.getPageParam('selectProj')
+    selectProjectId = $util.getPageParam('selectProjectId')
     handleSelectProjName()
     handleSelectQtnreType()
 }
