@@ -6,9 +6,13 @@ import com.github.akagawatsurunaki.ankeito.api.param.add.AddQuestionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreType;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.QuestionType;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.Required;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
+import com.github.akagawatsurunaki.ankeito.entity.qnnre.MultipleChoiceQuestion;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Question;
+import com.github.akagawatsurunaki.ankeito.mapper.qnnre.MCQMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.qnnre.QnnreMapper;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +29,18 @@ public class QnnreService {
 
     QnnreMapper qnnreMapper;
 
+    MCQMapper mcqMapper;
+
     /**
      * 使用QnnreMapper进行依赖注入
      *
      * @param qnnreMapper QnnreMapper对象
      */
     @Autowired
-    QnnreService(QnnreMapper qnnreMapper) {
+    QnnreService(QnnreMapper qnnreMapper,
+                 MCQMapper mcqMapper) {
         this.qnnreMapper = qnnreMapper;
+        this.mcqMapper = mcqMapper;
     }
 
     /**
@@ -84,10 +92,20 @@ public class QnnreService {
     }
 
     public ServiceResult<Question> addMultipleChoiceQuestion(@NonNull AddQuestionParam addQuestionParam) {
-
-        return null;
-
-
+        try {
+            val question = MultipleChoiceQuestion.builder()
+                    .id(UUID.randomUUID().toString())
+                    .qnnrId(Optional.ofNullable(addQuestionParam.getQnnrId()).orElseThrow(() -> new IllegalArgumentException("问卷必须依赖于一个已有的项目")))
+                    .no(addQuestionParam.getNo())
+                    .content(Optional.ofNullable(addQuestionParam.getContent()).orElseThrow(() -> new IllegalArgumentException("题目标题不能为空")))
+                    .required(Optional.ofNullable(addQuestionParam.getRequired()).map(Required::get).orElse(Required.OPTIONAL))
+                    .type(Optional.ofNullable(addQuestionParam.getType()).map(QuestionType::valueOf).orElse(QuestionType.MULTIPLE_CHOICE_QUESTION))
+                    .build();
+            mcqMapper.insert((MultipleChoiceQuestion) question);
+            return ServiceResult.ofOK("成功添加1道选择题目", question);
+        } catch (IllegalArgumentException e) {
+            return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
+        }
     }
 
 }

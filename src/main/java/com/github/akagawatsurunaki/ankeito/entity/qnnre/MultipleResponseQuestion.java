@@ -1,11 +1,11 @@
 package com.github.akagawatsurunaki.ankeito.entity.qnnre;
 
-import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 多选题
  */
-@Data
+@SuperBuilder
 public class MultipleResponseQuestion extends Question {
 
 }
