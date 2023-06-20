@@ -1,6 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQnnreParam;
+import com.github.akagawatsurunaki.ankeito.api.param.add.AddQuestionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
 import com.github.akagawatsurunaki.ankeito.common.convertor.ServiceResultConvertor;
@@ -36,6 +37,12 @@ public class QnnreController {
     @RequestMapping(path = "/getQnnre", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity getQnnre(@RequestBody QueryQnnreListParam queryQnnreListParam) {
         val serviceResult = qnnreService.getQnnre(queryQnnreListParam);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
+
+    @RequestMapping(path = "/addMcq", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity addMultipleChoiceQuestion(@RequestBody AddQuestionParam queryQnnreListParam) {
+        val serviceResult = qnnreService.addMultipleChoiceQuestion(queryQnnreListParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 }

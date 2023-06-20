@@ -5,7 +5,7 @@ const problem = []
 
 onload = () => {
     let params = {
-        id : $util.getPageParam('qnnreId')
+        id: $util.getPageParam('qnnreId')
     }
 
     $.ajax({
@@ -57,7 +57,8 @@ const onAddQuestion = (type) => {
     problem.push({problemName: '', mustAnswer: true, option: [{}]})
 
     $(".question").hover(() => {
-        let problemIndex = $('.question:hover').attr('data-problemIndex')
+        let hoverSelector = $('.question:hover')
+        let problemIndex = hoverSelector.attr('data-problemIndex')
         let ele = `
       <div class="operation">
       <div class="button" onclick="handleMoveUp(${problemIndex})">上移</div>
@@ -66,7 +67,7 @@ const onAddQuestion = (type) => {
         <div class="button" onclick="handleDelete(${problemIndex})">删除</div>
       </div>
     `
-        $('.question:hover').append(ele)
+        hoverSelector.append(ele)
         $(".question:hover").css('border', '1px solid #fdb553')
     }, () => {
         $('.question > .operation').remove()
@@ -116,58 +117,65 @@ const moveCommon = () => {
         item.setAttribute('data-problemIndex', index)
         let type = +$(`#question${index}`).attr('data-type')
         let value;
-        value = $(`#question${index} #problemName`).attr('oninput').replace(/\(\d+,/g, `(${index},`)
-        $(`#question${index} #problemName`).attr('oninput', value)
+        let problemNameSelector = $(`#question${index} #problemName`)
+        let chooseTermSelector = $(`#question${index} #chooseTerm`)
+        let optionDelSelector = $(`#question${index} .option-del`)
+        let btnAddOptionSelector = $(`#question${index} .btn-add-option`)
+        let editFinishSelector = $(`#question${index} #editFinish`)
+        let leftTitleSelector = $(`#question${index} #leftTitle`)
+
+        value = problemNameSelector.attr('oninput').replace(/\(\d+,/g, `(${index},`)
+        problemNameSelector.attr('oninput', value)
         $(`#question${index} #mustAnswer`).attr('onclick', `onMustAnswerClick(${index})`)
         $(`#question${index} #cancelEdit`).attr('onclick', `cancelEdit(${index})`)
         switch (type) {
             case 1:
-                $(`#question${index} #chooseTerm`).map(((chooseTermIndex, chooseTermItem) => {
+                chooseTermSelector.map(((chooseTermIndex, chooseTermItem) => {
                     chooseTermItem.oninput = onInput.bind(this, index, chooseTermIndex, 'chooseTerm')
                 }))
-                $(`#question${index} .option-del`).map(((delIndex, delItem) => {
+                optionDelSelector.map(((delIndex, delItem) => {
                     delItem.oninput = onInput.bind(this, index, delIndex, 'chooseTerm')
                 }))
-                $(`#question${index} .btn-add-option`).attr('onclick', `singleChoiceAddOption(${index})`)
-                $(`#question${index} #editFinish`).attr('onclick', `singleChoiceEditFinish(${index})`)
+                btnAddOptionSelector.attr('onclick', `singleChoiceAddOption(${index})`)
+                editFinishSelector.attr('onclick', `singleChoiceEditFinish(${index})`)
                 break;
             case 2:
-                $(`#question${index} #chooseTerm`).map(((chooseTermIndex, chooseTermItem) => {
+                chooseTermSelector.map(((chooseTermIndex, chooseTermItem) => {
                     chooseTermItem.oninput = onInput.bind(this, index, chooseTermIndex, 'chooseTerm')
                 }))
-                $(`#question${index} .option-del`).map(((delIndex, delItem) => {
+                optionDelSelector.map(((delIndex, delItem) => {
                     delItem.oninput = onInput.bind(this, index, delIndex, 'chooseTerm')
                 }))
-                $(`#question${index} .btn-add-option`).attr('onclick', `multipleChoiceAddOption(${index})`)
-                $(`#question${index} #editFinish`).attr('onclick', `multipleChoiceEditFinish(${index})`)
+                btnAddOptionSelector.attr('onclick', `multipleChoiceAddOption(${index})`)
+                editFinishSelector.attr('onclick', `multipleChoiceEditFinish(${index})`)
                 break;
             case 3:
-                $(`#question${index} #editFinish`).attr('onclick', `fillBlanksEditFinish(${index})`)
+                editFinishSelector.attr('onclick', `fillBlanksEditFinish(${index})`)
                 break;
             case 4:
-                $(`#question${index} #chooseTerm`).map(((chooseTermIndex, chooseTermItem) => {
+                chooseTermSelector.map(((chooseTermIndex, chooseTermItem) => {
                     chooseTermItem.oninput = onInput.bind(this, index, chooseTermIndex, 'chooseTerm')
                 }))
-                $(`#question${index} .option-del`).map(((delIndex, delItem) => {
+                optionDelSelector.map(((delIndex, delItem) => {
                     delItem.oninput = onInput.bind(this, index, delIndex, 'chooseTerm')
                 }))
-                value = $(`#question${index} #leftTitle`).attr('oninput').replace(/\(\d+,/g, `(${index},`)
-                $(`#question${index} #leftTitle`).attr('oninput', value)
-                $(`#question${index} .btn-add-option`).attr('onclick', `matrixAddOption(${index})`)
-                $(`#question${index} #editFinish`).attr('onclick', `matrixEditFinish(${index})`)
+                value = leftTitleSelector.attr('oninput').replace(/\(\d+,/g, `(${index},`)
+                leftTitleSelector.attr('oninput', value)
+                btnAddOptionSelector.attr('onclick', `matrixAddOption(${index})`)
+                editFinishSelector.attr('onclick', `matrixEditFinish(${index})`)
                 break;
             case 5:
-                $(`#question${index} #chooseTerm`).map(((chooseTermIndex, chooseTermItem) => {
+                chooseTermSelector.map(((chooseTermIndex, chooseTermItem) => {
                     chooseTermItem.oninput = onInput.bind(this, index, chooseTermIndex, 'chooseTerm')
                 }))
                 $(`#question${index} #fraction`).map(((fractionIndex, fractionItem) => {
                     fractionItem.oninput = onInput.bind(this, index, fractionIndex, 'chooseTerm')
                 }))
-                $(`#question${index} .option-del`).map(((delIndex, delItem) => {
+                optionDelSelector.map(((delIndex, delItem) => {
                     delItem.oninput = onInput.bind(this, index, delIndex, 'chooseTerm')
                 }))
-                $(`#question${index} .btn-add-option`).attr('onclick', `gaugeAddOption(${index})`)
-                $(`#question${index} #editFinish`).attr('onclick', `gaugeEditFinish(${index})`)
+                btnAddOptionSelector.attr('onclick', `gaugeAddOption(${index})`)
+                editFinishSelector.attr('onclick', `gaugeEditFinish(${index})`)
                 break;
             default:
                 break;
@@ -186,7 +194,7 @@ const handleDelete = (problemIndex) => {
 }
 
 const handleAddSingleChoice = () => {
-    let ele = `
+    return `
     <div class="question" id="question${problem.length}" data-type="1" data-problemIndex="${problem.length}">
       <div class="top">
         <span class="question-title" id="questionTitle">1.请编辑问题？</span>
@@ -213,7 +221,6 @@ const handleAddSingleChoice = () => {
       </div>
     </div>
   `
-    return ele
 }
 
 const singleChoiceAddOption = (problemIndex) => {
@@ -235,10 +242,14 @@ const singleChoiceDelOption = (problemIndex, optionIndex) => {
 }
 
 const singleChoiceEditFinish = (problemIndex) => {
+
+    let questionTitleSelector = $(`#question${problemIndex} #questionTitle`)
+    let bottom2Selector = $(`#question${problemIndex} .bottom2`)
+
     $(`#question${problemIndex} .bottom`).css('display', 'none')
-    $(`#question${problemIndex} .bottom2`).css('display', 'inline')
-    $(`#question${problemIndex} #questionTitle`).text(`${problemIndex + 1}.${problem[problemIndex].problemName}`)
-    $(`#question${problemIndex} .bottom2`).html('')
+    bottom2Selector.css('display', 'inline')
+    questionTitleSelector.text(`${problemIndex + 1}.${problem[problemIndex].problemName}`)
+    bottom2Selector.html('')
     problem[problemIndex].option.map(item => {
         $(`#question${problemIndex} .bottom2`).append(`
       <div style="display: flex; align-items: center;">
@@ -248,10 +259,31 @@ const singleChoiceEditFinish = (problemIndex) => {
       </div>
     `)
     })
+
+    let params = {
+        no: problemIndex,
+        content: $(`#{problemName}`).text(),
+        required: $(`#{mustAnswer}`).text(),
+        type: 'MULTIPLE_CHOICE_QUESTION'
+    }
+
+    $.ajax({
+        url: '/addMcq', // 接口地址
+        type: 'POST',
+        data: JSON.stringify(params),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+            if (res.code !== '666') {
+                alert(res.message)
+            }
+        }
+    });
+
 }
 
 const handleAddMultipleChoice = () => {
-    let ele = `
+    return `
     <div class="question" id="question${problem.length}" data-type="2" data-problemIndex="${problem.length}">
       <div class="top">
         <span class="question-title" id="questionTitle">1.请编辑问题？</span>
@@ -278,7 +310,6 @@ const handleAddMultipleChoice = () => {
       </div>
     </div>
   `
-    return ele
 }
 
 const multipleChoiceAddOption = (problemIndex) => {
@@ -300,10 +331,12 @@ const multipleChoiceDelOption = (problemIndex, optionIndex) => {
 }
 
 const multipleChoiceEditFinish = (problemIndex) => {
+    let bottom2Selector = $(`#question${problemIndex} .bottom2`)
+
     $(`#question${problemIndex} .bottom`).css('display', 'none')
-    $(`#question${problemIndex} .bottom2`).css('display', 'inline')
+    bottom2Selector.css('display', 'inline')
     $(`#question${problemIndex} #questionTitle`).text(`${problemIndex + 1}.${problem[problemIndex].problemName}`)
-    $(`#question${problemIndex} .bottom2`).html('')
+    bottom2Selector.html('')
     problem[problemIndex].option.map(item => {
         $(`#question${problemIndex} .bottom2`).append(`
       <div style="display: flex; align-items: center;">
@@ -316,7 +349,7 @@ const multipleChoiceEditFinish = (problemIndex) => {
 }
 
 const handleAddFillBlanks = () => {
-    let ele = `
+    return `
     <div class="question" id="question${problem.length}" data-type="3" data-problemIndex="${problem.length}">
       <div class="top">
         <span class="question-title" id="questionTitle">1.请编辑问题？</span>
@@ -334,7 +367,6 @@ const handleAddFillBlanks = () => {
       </div>
     </div>
   `
-    return ele
 }
 
 const fillBlanksEditFinish = (problemIndex) => {
@@ -347,7 +379,7 @@ const fillBlanksEditFinish = (problemIndex) => {
 }
 
 const handleAddMatrix = () => {
-    let ele = `
+    return `
     <div class="question" id="question${problem.length}" data-type="4" data-problemIndex="${problem.length}">
       <div class="top">
         <span class="question-title" id="questionTitle">1.请编辑问题？</span>
@@ -374,7 +406,6 @@ const handleAddMatrix = () => {
       <div class="bottom2" style="display: none; padding-left: 80px;"></div>
     </div>
   `
-    return ele
 }
 
 const matrixAddOption = (problemIndex) => {
@@ -436,7 +467,7 @@ const matrixEditFinish = (problemIndex) => {
 }
 
 const handleAddGauge = () => {
-    let ele = `
+    return `
     <div class="question" id="question${problem.length}" data-type="5" data-problemIndex="${problem.length}">
       <div class="top">
         <span class="question-title" id="questionTitle">1.请编辑问题？</span>
@@ -467,7 +498,6 @@ const handleAddGauge = () => {
       <div class="bottom2" style="display: none; align-items: center; justify-content: space-between;"></div>
     </div>
   `
-    return ele
 }
 
 const gaugeAddOption = (problemIndex) => {
