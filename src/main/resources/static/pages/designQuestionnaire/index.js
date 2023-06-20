@@ -188,8 +188,11 @@ const handleEdit = (problemIndex) => {
 }
 
 const handleDelete = (problemIndex) => {
-    $(`#question${problemIndex}`).remove()
+    let questionSelector = $(`#question${problemIndex}`);
+
+    questionSelector.remove()
     problem.splice(problemIndex, 1)
+
 }
 
 const handleAddSingleChoice = () => {
@@ -229,7 +232,33 @@ const singleChoiceAddOption = (problemIndex) => {
       <span class="option-del" onclick="singleChoiceDelOption(${problemIndex}, ${problem[problemIndex].option.length})">删除</span>
     </div>
   `)
+}
+
+const databaseAddQuestion = (problemIndex) => {
     problem[problemIndex].option.push({})
+    let params = {
+        no: problemIndex,
+        qnnreId: $util.getPageParam('qnnreId'),
+        content: $(`#problemName`).val(),
+        required: $(`#mustAnswer`).text(),
+        type: 'SINGLE_CHOICE_QUESTION'
+    }
+
+    $.ajax({
+        url: '/addSingleChoice', // 增加一个单选题
+        type: 'POST',
+        data: JSON.stringify(params),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+            if (res.code !== '666') {
+                alert(res.message)
+            } else {
+                databaseAddOptions(problemIndex)
+
+            }
+        }
+    });
 }
 
 const singleChoiceDelOption = (problemIndex, optionIndex) => {
@@ -258,33 +287,9 @@ const singleChoiceEditFinish = (problemIndex) => {
       </div>
     `)
     })
-
-    let params = {
-        no: problemIndex,
-        qnnreId: $util.getPageParam('qnnreId'),
-        content: $(`#problemName`).val(),
-        required: $(`#mustAnswer`).text(),
-        type: 'SINGLE_CHOICE_QUESTION'
-    }
-
-    $.ajax({
-        url: '/addSingleChoice', // 增加一个单选题
-        type: 'POST',
-        data: JSON.stringify(params),
-        dataType: "json",
-        contentType: "application/json",
-        success(res) {
-            if (res.code !== '666') {
-                alert(res.message)
-            } else {
-                alert(res.data.id)
-                saveSingleChoice(problemIndex, res.data.id)
-            }
-        }
-    });
 }
 
-const saveSingleChoice = (problemIndex, questionId) => {
+const databaseAddOptions = (problemIndex) => {
     let contentArr = []
 
     $("#problem #question" + problemIndex).find('.option-item').each(function() {
@@ -293,12 +298,12 @@ const saveSingleChoice = (problemIndex, questionId) => {
     });
 
     let addOptionParam = {
-        questionId: questionId,
+        questionId: problemIndex,
         content: contentArr
     }
 
     $.ajax({
-        url: '/option/addOptions', // 增加一个单选题
+        url: '/option/addOptions',
         type: 'POST',
         data: JSON.stringify(addOptionParam),
         dataType: "json",
