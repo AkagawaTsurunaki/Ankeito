@@ -8,12 +8,11 @@ import lombok.Data;
 @Data
 @Builder
 public class Question {
-    String id;
+    Integer id;
     String qnnrId;
     /**
      * 问卷内部标号
      */
-    Integer no;
     String content;
     Required required;
     QuestionType type;
