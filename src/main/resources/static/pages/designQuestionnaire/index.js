@@ -267,7 +267,6 @@ const singleChoiceEditFinish = (problemIndex) => {
         type: 'SINGLE_CHOICE_QUESTION'
     }
 
-    let questionId
     $.ajax({
         url: '/addSingleChoice', // 增加一个单选题
         type: 'POST',
@@ -277,8 +276,8 @@ const singleChoiceEditFinish = (problemIndex) => {
         success(res) {
             if (res.code !== '666') {
                 alert(res.message)
-                questionId = res.data.id
             } else {
+                alert(res.data.id)
                 saveSingleChoice(problemIndex, res.data.id)
             }
         }
