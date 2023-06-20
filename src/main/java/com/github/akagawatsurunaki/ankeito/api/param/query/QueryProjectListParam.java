@@ -8,4 +8,5 @@ public class QueryProjectListParam {
     int pageSize;
     String createdBy;
     String projectName;
+    String id;
 }
