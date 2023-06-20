@@ -1,7 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.lang.UUID;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
@@ -9,6 +8,7 @@ import com.github.akagawatsurunaki.ankeito.api.param.login.UserLoginParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreType;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserRole;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
@@ -34,12 +34,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public ServiceResult<List<String>> getUserRole() {
-        val data = Arrays.stream(UserRole.values())
-                .filter(userRole -> ObjectUtil.notEqual(userRole, UserRole.ADMIN))
-                .map(userRole -> userRole.chinese).toList();
-        return ServiceResult.ofOK("查询到" + data.size() + "用户身份", data);
-    }
+
 
     /**
      * 获取所有用户列表

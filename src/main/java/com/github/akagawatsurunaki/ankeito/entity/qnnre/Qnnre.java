@@ -6,7 +6,7 @@ import lombok.Data;
 public class Qnnre {
     String id;
     String projectId;
+
     String name;
     String description;
-
 }
