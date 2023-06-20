@@ -2,11 +2,13 @@ package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.date.DateUtil;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQnnreParam;
+import com.github.akagawatsurunaki.ankeito.api.param.add.AddQuestionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreType;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
+import com.github.akagawatsurunaki.ankeito.entity.qnnre.Question;
 import com.github.akagawatsurunaki.ankeito.mapper.qnnre.QnnreMapper;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +83,11 @@ public class QnnreService {
                 .orElseGet(() -> ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "问卷不存在"));
     }
 
+    public ServiceResult<Question> addMultipleChoiceQuestion(@NonNull AddQuestionParam addQuestionParam) {
+
+        return null;
+
+
+    }
 
 }
