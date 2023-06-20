@@ -8,8 +8,7 @@ import lombok.Data;
 @Builder
 @TableName("`option`")
 public class Option {
-    String id;
-    Integer no;
+    Integer id;
     String questionId;
     String content;
 }
