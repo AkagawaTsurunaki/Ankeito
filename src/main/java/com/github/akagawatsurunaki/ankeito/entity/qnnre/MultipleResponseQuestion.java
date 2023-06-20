@@ -6,7 +6,6 @@ import lombok.Data;
  * 多选题
  */
 @Data
-public class MultipleResponseQuestion {
-    String id;
-    String content;
+public class MultipleResponseQuestion extends Question {
+
 }
