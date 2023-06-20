@@ -122,9 +122,28 @@ public class QnnreService {
         }
     }
 
+    public ServiceResult<QnnreDTO> clearQnnre(@NonNull DeleteQnnreParam deleteQnnreParam) {
+        try {
+            val qnnreDTOServiceResult = get(deleteQnnreParam.getQnnreId());
+            Optional.ofNullable(qnnreDTOServiceResult.getData()).ifPresentOrElse(
+                    qnnre -> {
+                        qnnre.getQuestionDTOList().forEach(questionDTO -> {
+                            questionMapper.deleteById(questionDTO.getQuestion());
+                            questionDTO.getOptionList().forEach( option -> optionMapper.deleteById(option));
+                        });
+                    }, () -> {
+                        throw new NullPointerException("删除失败, 问卷不存在");
+                    }
+            );
+            return qnnreDTOServiceResult.with("问卷删除成功");
+        } catch (NullPointerException e1) {
+            return ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, e1.getMessage());
+        }
+    }
+
     public ServiceResult<QnnreDTO> save(@NonNull ModifyQnnreParam modifyQnnreParam) {
         try {
-            deleteQnnre(DeleteQnnreParam.builder().qnnreId(modifyQnnreParam.getQnnreId()).build());
+            clearQnnre(DeleteQnnreParam.builder().qnnreId(modifyQnnreParam.getQnnreId()).build());
             val modifyQnnreServiceResult = modifyQnnre(modifyQnnreParam.getQnnreId(),
                     modifyQnnreParam.getQnnreTitle(),
                     modifyQnnreParam.getQnnreDescription());
