@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjectService {
@@ -36,7 +38,17 @@ public class ProjectService {
      * @return 服务响应结果，包括按照分页查询到的项目列表
      */
     public ServiceResult<List<Project>> getProjectPageAsList(@NonNull QueryProjectListParam queryProjectListParam) {
-        List<Project> records;
+        List<Project> records = new ArrayList<>();
+
+        if (StrUtil.isNotBlank(queryProjectListParam.getId())) {
+            val project = projectMapper.selectById(queryProjectListParam.getId());
+            Optional.ofNullable(project).ifPresent(records::add);
+            return ServiceResult.of(
+                    ServiceResultCode.OK,
+                    "共查询到" + records.size() + "条项目信息",
+                    records
+            );
+        }
 
         // 是否执行分页查询
         if (queryProjectListParam.getPageNum() != 0 && queryProjectListParam.getPageSize() != 0) {

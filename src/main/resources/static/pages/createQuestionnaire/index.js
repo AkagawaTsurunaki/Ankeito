@@ -1,9 +1,12 @@
 onload = () => {
     $('#headerUsername').text($util.getItem('userInfo').username)
     $('#headerDivB').text('创建问卷')
+    selectProjectId = $util.getPageParam('selectProj')
     handleSelectProjName()
     handleSelectQtnreType()
 }
+
+let selectProjectId
 
 const onCreateTemplate = () => {
     location.href = "/pages/createNewQuestionnaire/index.html"
@@ -46,7 +49,7 @@ const surveyTypeTemplate = () => {
     </div>
     <div class="template-item">
       <div class="item-t">
-        <img class="img" src="../../static/images/blank_template.png">
+        <img class="img" src="../../static/images/blank_template.png" alt="">
         <div>
           <div class="title">测试</div>
           <div></div>
@@ -82,12 +85,14 @@ const handleSelectProjName = () => {
             projectList = res.data
 
             let i = 1;
-            res.data.map(item => {
-                $('#selectProjName').append(`
-                <option value="${i}">${item.projectName}</option>
-                `)
-                i++;
-            })
+            res.data.forEach((item, index) => {
+                const selector = $('#selectProjName');
+                if (item.id === selectProjectId) {
+                    selector.prepend(`<option value="0">${item.projectName}</option>`)
+                } else {
+                    selector.append(`<option value="${index + 1}">${item.projectName}</option>`)
+                }
+            });
         }
     });
 }
