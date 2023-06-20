@@ -93,9 +93,8 @@ public class QnnreService {
     public ServiceResult<Question> addMultipleChoiceQuestion(@NonNull AddQuestionParam addQuestionParam) {
         try {
             val question = Question.builder()
-                    .id(UUID.randomUUID().toString())
+                    .id(addQuestionParam.getId())
                     .qnnrId(Optional.ofNullable(addQuestionParam.getQnnreId()).orElseThrow(() -> new IllegalArgumentException("问卷必须依赖于一个已有的项目")))
-                    .no(addQuestionParam.getNo())
                     .content(Optional.ofNullable(addQuestionParam.getContent()).orElseThrow(() -> new IllegalArgumentException("题目标题不能为空")))
                     .required(Optional.ofNullable(addQuestionParam.getRequired()).map(Required::get).orElse(Required.OPTIONAL))
                     .type(Optional.ofNullable(addQuestionParam.getType()).map(QuestionType::valueOf).orElse(QuestionType.SINGLE_CHOICE_QUESTION))

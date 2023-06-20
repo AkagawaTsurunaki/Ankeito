@@ -45,4 +45,11 @@ public class QnnreController {
         val serviceResult = qnnreService.addMultipleChoiceQuestion(queryQnnreListParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
+
+    //    modifyQuestionnaire
+    @RequestMapping(path = "/modifyQuestionnaire", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity modifyQuestionnaire(@RequestBody AddQuestionParam queryQnnreListParam) {
+        val serviceResult = qnnreService.addMultipleChoiceQuestion(queryQnnreListParam);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
 }

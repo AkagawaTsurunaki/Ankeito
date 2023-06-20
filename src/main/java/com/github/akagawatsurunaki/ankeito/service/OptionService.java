@@ -40,8 +40,7 @@ public class OptionService {
                     contents -> Arrays.stream(contents).forEach(
                             content -> options.add(
                                     Option.builder()
-                                            .id(UUID.randomUUID().toString())
-                                            .no(ArrayUtil.indexOf(contents, content) + 1)
+                                            .id(ArrayUtil.indexOf(contents, content))
                                             .content(content)
                                             .questionId(Optional.ofNullable(addOptionParam.getQuestionId()).orElseThrow(() -> new IllegalArgumentException("选项必须依赖于指定的问题")))
                                             .build()
