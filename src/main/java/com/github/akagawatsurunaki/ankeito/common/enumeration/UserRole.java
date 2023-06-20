@@ -5,9 +5,10 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum UserRole {
     ADMIN(1, "管理员"),
-    NO_ROLE(0, "无身份");
+    STUDENT(0, "学生"),
+    TEACHER(2, "老师");
 
-    final int value;
-    final String chinese;
+    public final int value;
+    public final String chinese;
 
 }

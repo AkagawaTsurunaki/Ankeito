@@ -6,8 +6,6 @@ import lombok.Data;
 public class QueryProjectListParam {
     int pageNum;
     int pageSize;
-
     String createdBy;
-
     String projectName;
 }

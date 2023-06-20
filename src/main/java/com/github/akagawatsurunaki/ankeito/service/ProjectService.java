@@ -1,6 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteProjectParam;
@@ -46,7 +47,7 @@ public class ProjectService {
             records = projectPage.getRecords();
         } else {
             // 不执行分页查询
-            if (queryProjectListParam.getProjectName() != null) {
+            if (StrUtil.isNotBlank(queryProjectListParam.getProjectName())) {
                 return getProjectsByName(queryProjectListParam);
             }
             records = projectMapper.selectList(null);
