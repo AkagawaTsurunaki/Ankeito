@@ -1,6 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteUserParam;
@@ -19,6 +20,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,13 @@ public class UserService {
     @Autowired
     public UserService(UserMapper userMapper) {
         this.userMapper = userMapper;
+    }
+
+    public ServiceResult<List<String>> getUserRole() {
+        val data = Arrays.stream(UserRole.values())
+                .filter(userRole -> ObjectUtil.notEqual(userRole, UserRole.ADMIN))
+                .map(userRole -> userRole.chinese).toList();
+        return ServiceResult.ofOK("查询到" + data.size() + "用户身份", data);
     }
 
     /**
@@ -95,7 +104,7 @@ public class UserService {
                 .id(UUID.fastUUID().toString())
                 .username(addUserParam.getUsername())
                 .password(addUserParam.getPassword())
-                .userRole(UserRole.NO_ROLE)
+                .userRole(UserRole.STUDENT)
                 .startTime(addUserParam.getStartTime())
                 .stopTime(addUserParam.getStopTime())
                 .userStatus(UserStatus.DISABLE)

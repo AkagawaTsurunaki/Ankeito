@@ -1,16 +1,18 @@
 onload = () => {
-  $('#headerUsername').text($util.getItem('userInfo').username)
-  $('#headerDivB').text('创建问卷')
+    $('#headerUsername').text($util.getItem('userInfo').username)
+    $('#headerDivB').text('创建问卷')
+    handleSelectProjName()
+    handleSelectQtnreType()
 }
 
 const onCreateTemplate = () => {
-  location.href = "/pages/createNewQuestionnaire/index.html"
+    location.href = "/pages/createNewQuestionnaire/index.html"
 }
 
 const importHistoryQuestionnaire = () => {
-  $('#divider').css('display', 'flex')
-  $('#templateB').html('')
-  $('#templateB').append(`
+    $('#divider').css('display', 'flex')
+    $('#templateB').html('')
+    $('#templateB').append(`
     <div class="template-item">
       <div class="item-t">
         <img class="img" src="../../static/images/blank_template.png">
@@ -27,9 +29,9 @@ const importHistoryQuestionnaire = () => {
 }
 
 const surveyTypeTemplate = () => {
-  $('#divider').css('display', 'flex')
-  $('#templateB').html('')
-  $('#templateB').append(`
+    $('#divider').css('display', 'flex')
+    $('#templateB').html('')
+    $('#templateB').append(`
     <div class="template-item">
       <div class="item-t">
         <img class="img" src="../../static/images/blank_template.png">
@@ -59,9 +61,59 @@ const surveyTypeTemplate = () => {
 }
 
 const createTemplate = () => {
-  $('#createTemplateModal').modal('show')
+    $('#createTemplateModal').modal('show')
 }
 
 const handleEdit = () => {
-  open('/pages/designQuestionnaire/index.html')
+    open('/pages/designQuestionnaire/index.html')
+}
+
+const handleSelectProjName = () => {
+    let params = {}
+
+    $.ajax({
+        url: API_BASE_URL + '/queryProjectList', // 接口地址
+        type: 'POST',
+        data: JSON.stringify(params),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+
+            projectList = res.data
+
+            let i = 1;
+            res.data.map(item => {
+                $('#selectProjName').append(`
+                <option value="${i}">${item.projectName}</option>
+                `)
+                i++;
+            })
+        }
+    });
+}
+
+let userRoleList = []
+
+const handleSelectQtnreType = () => {
+    let params = {}
+
+    $.ajax({
+        url: API_BASE_URL + '/queryUserRole', // 接口地址
+        type: 'POST',
+        data: JSON.stringify(params),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+
+            userRoleList = res.data
+
+            let i = 1;
+            res.data.map(item => {
+                $('#selectQtnreType').append(`
+                <option value="${i}">${item}</option>
+                `)
+                i++;
+            })
+        }
+    });
 }
