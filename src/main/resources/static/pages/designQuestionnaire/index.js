@@ -267,10 +267,41 @@ const singleChoiceEditFinish = (problemIndex) => {
         type: 'SINGLE_CHOICE_QUESTION'
     }
 
+    let questionId
     $.ajax({
-        url: '/addMcq', // 接口地址
+        url: '/addSingleChoice', // 增加一个单选题
         type: 'POST',
         data: JSON.stringify(params),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+            if (res.code !== '666') {
+                alert(res.message)
+                questionId = res.data.id
+            } else {
+                saveSingleChoice(problemIndex, res.data.id)
+            }
+        }
+    });
+}
+
+const saveSingleChoice = (problemIndex, questionId) => {
+    let contentArr = []
+
+    $("#problem #question" + problemIndex).find('.option-item').each(function() {
+        let optionText = $(this).find('input').val(); // 获取当前选项的文本值
+        contentArr.push(optionText); // 将文本值保存到数组中
+    });
+
+    let addOptionParam = {
+        questionId: questionId,
+        content: contentArr
+    }
+
+    $.ajax({
+        url: '/option/addOptions', // 增加一个单选题
+        type: 'POST',
+        data: JSON.stringify(addOptionParam),
         dataType: "json",
         contentType: "application/json",
         success(res) {
@@ -279,7 +310,6 @@ const singleChoiceEditFinish = (problemIndex) => {
             }
         }
     });
-
 }
 
 const handleAddMultipleChoice = () => {

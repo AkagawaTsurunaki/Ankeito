@@ -2,6 +2,8 @@ package com.github.akagawatsurunaki.ankeito.mapper.qnnre;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Option;
+import org.apache.ibatis.annotations.Mapper;
 
-public interface ItemMapper extends BaseMapper<Option> {
+@Mapper
+public interface OptionMapper extends BaseMapper<Option> {
 }
