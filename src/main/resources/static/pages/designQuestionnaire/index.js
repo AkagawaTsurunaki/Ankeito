@@ -262,6 +262,7 @@ const singleChoiceEditFinish = (problemIndex) => {
 
     let params = {
         no: problemIndex,
+        qnnreId: $util.getPageParam('qnnreId'),
         content: $(`#problemName`).val(),
         required: $(`#mustAnswer`).text(),
         type: 'MULTIPLE_CHOICE_QUESTION'
