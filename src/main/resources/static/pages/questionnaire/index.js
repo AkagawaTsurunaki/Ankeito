@@ -47,7 +47,7 @@ const onCreatePrject = () => {
 }
 
 const onCreateQuestionnaire = (id) => {
-  $util.setPageParam('selectProj', id)
+  $util.setPageParam('selectProjectId', id)
   location.href = "/pages/createQuestionnaire/index.html"
 }
 

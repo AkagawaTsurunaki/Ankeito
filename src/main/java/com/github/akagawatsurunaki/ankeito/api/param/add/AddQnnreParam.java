@@ -1,14 +1,11 @@
-package com.github.akagawatsurunaki.ankeito.entity.qnnre;
+package com.github.akagawatsurunaki.ankeito.api.param.add;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-@Builder
-public class Qnnre {
-    String id;
+public class AddQnnreParam {
     String projectId;
     String name;
     String description;
