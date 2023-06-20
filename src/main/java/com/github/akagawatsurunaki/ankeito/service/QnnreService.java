@@ -2,6 +2,7 @@ package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.date.DateUtil;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQnnreParam;
+import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreType;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
@@ -65,6 +66,19 @@ public class QnnreService {
         } catch (IllegalArgumentException e) {
             return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
         }
+    }
+
+    /**
+     * 根据问卷ID获取问卷对象
+     *
+     * @param queryQnnreListParam 查询问卷所需参数
+     * @return 返回ServiceResult对象，其中包含执行结果信息和查询的问卷对象（如果存在）
+     */
+    public ServiceResult<Qnnre> getQnnre(@NonNull QueryQnnreListParam queryQnnreListParam) {
+        return Optional.ofNullable(queryQnnreListParam.getId())
+                .map(id -> qnnreMapper.selectById(id))
+                .map(value -> ServiceResult.ofOK("查询到指定的问卷", value))
+                .orElseGet(() -> ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "问卷不存在"));
     }
 
 
