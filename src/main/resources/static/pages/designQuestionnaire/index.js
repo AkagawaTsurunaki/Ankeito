@@ -583,13 +583,35 @@ const handleModifyTitle = () => {
 
 
 const handleEditFinish = () => {
-    let params = {}
+
+    //
+    // problem.forEach(
+    //
+    // )
+    // let addQuestionParam = {
+    //     id: ,
+    //     qnnreId: ,
+    //     content: ,
+    //     required: ,
+    //     type: ;
+    // }
+
+    let addOptionParams = {
+
+    }
+
+    let modifyQnnreParam = {
+        qnnreTitle: questionnaireTitle,
+        qnnreDescription: questionnaireDescription,
+        addQuestionParams: [],
+        addOptionParams: []
+    }
     $.ajax({
         url: API_BASE_URL + '/modifyQuestionnaire',
         type: "POST",
-        data: JSON.stringify(params),
+        data: JSON.stringify(modifyQnnreParam),
         dataType: "json",
-        contentType: "application/jsoresn",
+        contentType: "application/json",
         success(res) {
             console.log(res)
         }
