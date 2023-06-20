@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AddQuestionParam {
     Integer no;
-    String qnnrId;
+    String qnnreId;
     String content;
     String required;
     String type;
