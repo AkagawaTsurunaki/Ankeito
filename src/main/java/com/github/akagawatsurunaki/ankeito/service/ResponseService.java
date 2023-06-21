@@ -60,7 +60,7 @@ public class ResponseService {
      * @param queryResponseSheetParam 包含查询参数的实体类，其中 qnnreId 表示所需查询的问卷 ID
      * @return 返回 ServiceResult 对象，其中包含查询结果的 List<ResponseSheet> 类型数据，以及返回的操作信息
      */
-    public ServiceResult<List<ResponseSheet>> getByQnnreId(@NonNull QueryResponseSheetParam queryResponseSheetParam) {
+    public ServiceResult<List<ResponseSheet>> getResponseSheet(@NonNull QueryResponseSheetParam queryResponseSheetParam) {
         val data = (Optional.ofNullable(queryResponseSheetParam.getQnnreId()).map(
                 qnnreId -> responseSheetMapper.selectByQnnreId(qnnreId)
         ).orElse(new ArrayList<>()));
