@@ -1,7 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQnnreParam;
-import com.github.akagawatsurunaki.ankeito.api.param.add.AddQuestionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
@@ -44,7 +43,7 @@ public class QnnreController {
 
     @RequestMapping(path = "/deleteQnnre", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity deleteQnnre(@RequestBody DeleteQnnreParam deleteQnnreParam) {
-        val serviceResult = qnnreService.deleteQnnre(deleteQnnreParam);
+        val serviceResult = qnnreService.softDeleteQnnre(deleteQnnreParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 
