@@ -1,32 +1,43 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import com.github.akagawatsurunaki.ankeito.api.dto.ResponseSheetDTO;
+import com.github.akagawatsurunaki.ankeito.api.param.add.AddResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetDetailParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.answer.ResponseSheet;
+import com.github.akagawatsurunaki.ankeito.mapper.UserMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.answer.ResponseSheetMapper;
+import com.github.akagawatsurunaki.ankeito.mapper.qnnre.QnnreMapper;
 import lombok.val;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ResponseService {
     ResponseSheetMapper responseSheetMapper;
     QnnreService qnnreService;
+    QnnreMapper qnnreMapper;
+    UserMapper userMapper;
 
-    ResponseService(ResponseSheetMapper responseSheetMapper, QnnreService qnnreService) {
+    ResponseService(ResponseSheetMapper responseSheetMapper,
+                    QnnreService qnnreService,
+                    QnnreMapper qnnreMapper,
+                    UserMapper userMapper) {
         this.responseSheetMapper = responseSheetMapper;
         this.qnnreService = qnnreService;
+        this.qnnreMapper = qnnreMapper;
+        this.userMapper = userMapper;
     }
 
     /**
      * 根据指定的答卷 ID 查询详细的答卷信息
+     *
+     * @param queryResponseSheetDetailParam 包含查询参数的实体类，其中 responseSheetId 表示所需查询的答卷 ID
+     * @return 返回 ServiceResult 对象，其中包含查询结果的 ResponseSheetDTO 类型数据，以及返回的操作信息
      */
     public ServiceResult<ResponseSheetDTO> getResponseSheetDetail(@NonNull QueryResponseSheetDetailParam queryResponseSheetDetailParam) {
         try {
@@ -65,6 +76,32 @@ public class ResponseService {
                 qnnreId -> responseSheetMapper.selectByQnnreId(qnnreId)
         ).orElse(new ArrayList<>()));
         return ServiceResult.ofOK("成功查询到" + data.size() + "份答卷", data);
+    }
+
+    /**
+     * 新增一份答卷
+     *
+     * @param addResponseSheetParam 包含新增参数的实体类，其中 respondentId 表示答卷填写人 ID，qnnreId 表示所属问卷 ID
+     * @return 返回 ServiceResult 对象，其中包含新增的 ResponseSheet 类型数据，以及返回的操作信息
+     */
+    public ServiceResult<ResponseSheet> addResponseSheet(@NonNull AddResponseSheetParam addResponseSheetParam) {
+        val user =
+                Optional.ofNullable(addResponseSheetParam.getRespondentId()).map(getRespondentId -> userMapper.selectById(getRespondentId));
+        val qnnre =
+                Optional.ofNullable(addResponseSheetParam.getQnnreId()).map(qnnreId -> qnnreMapper.selectById(qnnreId));
+
+        if (user.isPresent() && qnnre.isPresent()) {
+            val data = ResponseSheet.builder()
+                    .id(UUID.randomUUID().toString())
+                    .qnnreId(user.get().getId())
+                    .qnnreName(qnnre.get().getName())
+                    .respondentId(user.get().getId())
+                    .respondentName(user.get().getUsername())
+                    .finishedTime(new Date())
+                    .build();
+            return ServiceResult.ofOK("成功增加一张问卷", data);
+        }
+        return ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "用户或问卷不存在");
     }
 
 }
