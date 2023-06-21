@@ -12,10 +12,7 @@ import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
-import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreType;
-import com.github.akagawatsurunaki.ankeito.common.enumeration.QuestionType;
-import com.github.akagawatsurunaki.ankeito.common.enumeration.Required;
-import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.*;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Option;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Question;
@@ -79,6 +76,8 @@ public class QnnreService {
                     .projectId(Optional.ofNullable(addQnnreParam.getProjectId()).orElseThrow(() -> new IllegalArgumentException("项目ID必须被指定")))
                     .description(Optional.ofNullable(addQnnreParam.getDescription()).orElse("未填写调查说明"))
                     .startTime(Optional.ofNullable(addQnnreParam.getStartTime()).orElse(new Date()))
+                    // 新建的问卷默认为草稿状态
+                    .qnnreStatus(QnnreStatus.DRAFT)
                     // 如果用户没填写, 自动设定结束时间为次月
                     .stopTime(Optional.ofNullable(addQnnreParam.getStopTime()).orElse(DateUtil.nextMonth())).build();
             qnnreMapper.insert(qnnre);
