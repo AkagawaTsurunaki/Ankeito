@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 21/06/2023 21:18:46
+ Date: 21/06/2023 22:38:07
 */
 
 SET NAMES utf8mb4;
@@ -134,6 +134,7 @@ CREATE TABLE `response_sheet`  (
 -- ----------------------------
 -- Records of response_sheet
 -- ----------------------------
+INSERT INTO `response_sheet` VALUES ('1eee2956-d4e9-2096-6b50-661846c86b6c', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', '815fc4ca-c344-26eb-980a-5f755f76eeca', '张三', '2023-06-21 21:40:55');
 INSERT INTO `response_sheet` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', 'at2023', 'AkagawaTsurunaki', '2023-06-21 20:46:37');
 
 -- ----------------------------
@@ -175,6 +176,7 @@ CREATE TABLE `user`  (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'admin', '0', '2023-06-20 13:31:17', '2023-06-22 13:31:22', 'ADMIN', 'ENABLE', NULL, NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('815fc4ca-c344-26eb-980a-5f755f76eeca', '张三', '132', '2023-06-21 21:40:25', '2023-06-30 21:40:29', 'NO_ROLE', 'ENABLE', NULL, NULL, NULL, NULL);
 INSERT INTO `user` VALUES ('at2023', 'AkagawaTsurunaki', '123', '2023-06-21 20:42:40', '2023-06-21 20:42:43', 'ADMIN', 'ENABLE', NULL, NULL, NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
