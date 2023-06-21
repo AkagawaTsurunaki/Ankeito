@@ -3,6 +3,7 @@ package com.github.akagawatsurunaki.ankeito.service;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.github.akagawatsurunaki.ankeito.api.dto.OptionDTO;
 import com.github.akagawatsurunaki.ankeito.api.dto.QnnreDTO;
 import com.github.akagawatsurunaki.ankeito.api.dto.QuestionDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddOptionParam;
@@ -109,7 +110,7 @@ public class QnnreService {
                         qnnreMapper.deleteById(qnnre.getQnnre());
                         qnnre.getQuestionDTOList().forEach(questionDTO -> {
                             questionMapper.deleteById(questionDTO.getQuestion());
-                            questionDTO.getOptionList().forEach( option -> optionMapper.deleteById(option));
+                            questionDTO.getOptionList().forEach(option -> optionMapper.deleteById(option.getOption()));
                         });
                     }, () -> {
                         throw new NullPointerException("删除失败, 问卷不存在");
@@ -128,7 +129,7 @@ public class QnnreService {
                     qnnre -> {
                         qnnre.getQuestionDTOList().forEach(questionDTO -> {
                             questionMapper.deleteById(questionDTO.getQuestion());
-                            questionDTO.getOptionList().forEach( option -> optionMapper.deleteById(option));
+                            questionDTO.getOptionList().forEach(option -> optionMapper.deleteById(option.getOption()));
                         });
                     }, () -> {
                         throw new NullPointerException("删除失败, 问卷不存在");
@@ -172,8 +173,8 @@ public class QnnreService {
             questions.forEach(
                     question -> questionDTOList.add(QuestionDTO.builder()
                             .question(question)
-                            .optionList(Optional.ofNullable(optionMapper.selectByQuestionId(question.getId()))
-                                    .orElseThrow(() -> new NullPointerException("此问题下的选项不存在")))
+                            .optionList(optionMapper.selectByQuestionId(question.getId()).stream()
+                                    .map(it -> OptionDTO.builder().option(it).build()).toList())
                             .build())
             );
             val data = QnnreDTO.builder().qnnre(qnnre).questionDTOList(questionDTOList).build();
