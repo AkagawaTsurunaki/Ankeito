@@ -1,7 +1,10 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
+import com.github.akagawatsurunaki.ankeito.api.dto.ResponseSheetDTO;
+import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetDetailParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.answer.ResponseSheet;
 import com.github.akagawatsurunaki.ankeito.mapper.answer.ResponseSheetMapper;
 import lombok.val;
@@ -10,23 +13,46 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class ResponseService {
     ResponseSheetMapper responseSheetMapper;
+    QnnreService qnnreService;
 
-    ResponseService(ResponseSheetMapper responseSheetMapper) {
+    ResponseService(ResponseSheetMapper responseSheetMapper, QnnreService qnnreService) {
         this.responseSheetMapper = responseSheetMapper;
+        this.qnnreService = qnnreService;
     }
 
     /**
      * 根据指定的答卷 ID 查询详细的答卷信息
      */
-//    public ServiceResult<Objects> getDetail() {
-//
-//    }
+    public ServiceResult<ResponseSheetDTO> getResponseSheetDetail(@NonNull QueryResponseSheetDetailParam queryResponseSheetDetailParam) {
+        try {
+            val responseSheetDTO = Optional.ofNullable(queryResponseSheetDetailParam.getResponseSheetId()).map(
+                    sheetId -> {
+                        val responseSheet = responseSheetMapper.selectById(sheetId);
+                        return Optional.ofNullable(responseSheet).map(
+                                it -> {
+                                    val qnnreId = it.getQnnreId();
+                                    val qnnreDTO =
+                                            Optional.ofNullable(qnnreService.get(qnnreId).getData()).orElseThrow(() -> new NullPointerException("问卷不存在"));
+                                    return ResponseSheetDTO.builder().qnnreDTO(qnnreDTO).responseSheet(it).build();
+                                }
+                        ).orElseThrow(() -> new NullPointerException("答卷不存在"));
+                    }
+            ).orElseThrow(() -> new IllegalArgumentException("答卷ID未指定"));
+
+            return ServiceResult.ofOK("查询到指定答卷", responseSheetDTO);
+
+        } catch (NullPointerException e) {
+            return ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, e.getMessage());
+        } catch (IllegalArgumentException e1) {
+            return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e1.getMessage());
+        }
+    }
+
 
     /**
      * 根据指定的问卷 ID 查询所有的答卷 ResponseSheet
