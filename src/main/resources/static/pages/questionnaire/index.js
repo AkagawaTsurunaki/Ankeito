@@ -30,6 +30,7 @@ const fetchProjectList = () => {
                 <button type="button" class="btn btn-link" onclick="onSeeProject('${item.id}')">查看</button>
                 <button type="button" class="btn btn-link" onclick="onEditProject('${item.id}')">编辑</button>
                 <button type="button" class="btn btn-link" onclick="onDelProject('${item.id}')">删除</button>
+                <button type="button" class="btn btn-link" onclick="onProjectStatistics('${item.id}')">统计</button>
               </div>
             </div>
             <div class="list-footer">
@@ -40,6 +41,11 @@ const fetchProjectList = () => {
       })
     }
   })
+}
+
+const onProjectStatistics = (id) => {
+  $util.setPageParam('onProjectStatistics', id)
+  location.href = "/pages/onProjectStatistics/index.html"
 }
 
 const onCreatePrject = () => {
