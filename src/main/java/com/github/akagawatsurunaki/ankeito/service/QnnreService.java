@@ -34,7 +34,6 @@ import java.util.*;
 public class QnnreService {
 
     QnnreMapper qnnreMapper;
-
     QuestionMapper questionMapper;
     OptionMapper optionMapper;
 
@@ -102,7 +101,13 @@ public class QnnreService {
                 .orElseGet(() -> ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "问卷不存在"));
     }
 
-    public ServiceResult<QnnreDTO> deleteQnnre(@NonNull DeleteQnnreParam deleteQnnreParam) {
+    /**
+     * 根据指定的问卷ID删除问卷及其下的所有问题和选项。
+     *
+     * @param deleteQnnreParam 删除问卷参数，包括问卷ID。
+     * @return 删除结果 ServiceResult<QnnreDTO>，返回值中带有提示信息。
+     */
+    public ServiceResult<QnnreDTO> hardDeleteQnnre(@NonNull DeleteQnnreParam deleteQnnreParam) {
         try {
             val qnnreDTOServiceResult = get(deleteQnnreParam.getQnnreId());
             Optional.ofNullable(qnnreDTOServiceResult.getData()).ifPresentOrElse(
@@ -122,6 +127,26 @@ public class QnnreService {
         }
     }
 
+    /**
+     * 问卷软删除服务，将指定问卷的状态设置为 DELETED，并且保留其数据记录。
+     */
+    public ServiceResult<Object> softDeleteQnnre(@NonNull DeleteQnnreParam deleteQnnreParam) {
+        return Optional.ofNullable(deleteQnnreParam.getQnnreId()).map(
+                qnnreId -> {
+                    if (qnnreMapper.updateQnnreStatusById(qnnreId, QnnreStatus.DELETED) == 1) {
+                        return ServiceResult.ofOK("问卷删除成功");
+                    }
+                    return ServiceResult.of(ServiceResultCode.FAILED, "问卷删除失败");
+                }
+        ).orElse(ServiceResult.of(ServiceResultCode.FAILED, "内部服务器异常"));
+    }
+
+    /**
+     * 根据指定的问卷ID清除该问卷下的所有问题和选项，不包含问卷本身。
+     *
+     * @param deleteQnnreParam 清空问卷参数，包括问卷ID。
+     * @return 清空结果 ServiceResult<QnnreDTO>，返回值中带有提示信息。
+     */
     public ServiceResult<QnnreDTO> clearQnnre(@NonNull DeleteQnnreParam deleteQnnreParam) {
         try {
             val qnnreDTOServiceResult = get(deleteQnnreParam.getQnnreId());
@@ -141,12 +166,21 @@ public class QnnreService {
         }
     }
 
+    /**
+     * 保存并修改一个问卷，先清空原有的问卷内容，再根据新的参数重建问卷及其下的问题和选项。
+     *
+     * @param modifyQnnreParam 修改问卷参数，包括问卷ID、名称、描述、问题列表和选项列表等。
+     * @return 修改结果 ServiceResult<QnnreDTO>，返回值中带有提示信息。
+     */
     public ServiceResult<QnnreDTO> save(@NonNull ModifyQnnreParam modifyQnnreParam) {
         try {
+            // 试图清空原有的问卷内容
             clearQnnre(DeleteQnnreParam.builder().qnnreId(modifyQnnreParam.getQnnreId()).build());
+            // 尝试修改问卷的名称和描述
             val modifyQnnreServiceResult = modifyQnnre(modifyQnnreParam.getQnnreId(),
                     modifyQnnreParam.getQnnreTitle(),
                     modifyQnnreParam.getQnnreDescription());
+            // 如果修改失败, 则服务终止
             if (ObjectUtil.notEqual(ServiceResultCode.OK, modifyQnnreServiceResult.getCode())) {
                 return modifyQnnreServiceResult;
             }
@@ -161,6 +195,12 @@ public class QnnreService {
         }
     }
 
+    /**
+     * 根据指定的问卷ID获取问卷及其下所有问题和选项。
+     *
+     * @param qnnreId 问卷ID。
+     * @return 获取结果 ServiceResult<QnnreDTO>，返回值中带有问卷及其下的问题和选项信息。
+     */
     public ServiceResult<QnnreDTO> get(@NonNull String qnnreId) {
         try {
             List<QuestionDTO> questionDTOList = new ArrayList<>();
@@ -185,6 +225,12 @@ public class QnnreService {
         }
     }
 
+    /**
+     * 添加一个选项。
+     *
+     * @param addOptionParam 添加选项参数，包括选项内容、所属问题ID和问卷ID等。
+     * @throws IllegalArgumentException 参数不合法时抛出此异常。
+     */
     private void addOptions(@NonNull AddOptionParam addOptionParam) throws IllegalArgumentException {
         List<Option> options = new ArrayList<>();
         Optional.ofNullable(addOptionParam.getContent()).ifPresentOrElse(
@@ -194,6 +240,7 @@ public class QnnreService {
                                         .id(ArrayUtil.indexOf(contents, content))
                                         .content(content)
                                         .questionId(Optional.ofNullable(addOptionParam.getQuestionId()).orElseThrow(() -> new IllegalArgumentException("选项必须依赖于指定的问题")))
+                                        .qnnreId(Optional.ofNullable(addOptionParam.getQnnreId()).orElseThrow(() -> new IllegalArgumentException("选项必须依赖于指定的问卷")))
                                         .build()
                         )
                 ),
@@ -204,6 +251,12 @@ public class QnnreService {
         options.forEach(optionMapper::insert);
     }
 
+    /**
+     * 添加一个单选或多选问题。
+     *
+     * @param addQuestionParam 添加问题参数，包括题目ID、所属问卷ID、题目内容、是否必答和类型等。
+     * @throws IllegalArgumentException 参数不合法时抛出此异常。
+     */
     private void addMultipleChoiceQuestion(@NonNull AddQuestionParam addQuestionParam) throws IllegalArgumentException {
         val question = Question.builder()
                 .id(Optional.ofNullable(addQuestionParam.getIndex()).orElseThrow(() -> new
@@ -220,6 +273,14 @@ public class QnnreService {
         questionMapper.insert(question);
     }
 
+    /**
+     * 修改一个问卷的名称和描述。
+     *
+     * @param qnnreId          问卷ID。
+     * @param qnnreTitle       问卷名称。
+     * @param qnnreDescription 问卷描述。
+     * @return 修改结果 ServiceResult<QnnreDTO>，返回值中带有提示信息。
+     */
     private ServiceResult<QnnreDTO> modifyQnnre(String qnnreId, String qnnreTitle, String qnnreDescription) {
         try {
             Optional.ofNullable(qnnreId).ifPresent(
