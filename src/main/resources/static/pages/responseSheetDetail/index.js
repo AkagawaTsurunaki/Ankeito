@@ -62,8 +62,6 @@ onload = () => {
             }
         }
     });
-    //load()
-
 }
 
 const load = () => {
@@ -101,10 +99,10 @@ const singleChoice = (questionDTO) => {
     `
     $('#problem').append(ele)
     questionDTO.optionList.map(optionDTO => {
-        $(`#question${question.id} .bottom2`).append(`
+    $(`#question${question.id} .bottom2`).append(`
       <div style="display: flex; align-items: center;">
         <label class="radio-inline">
-          <input type="radio" ${optionDTO.selected ? 'checked' : ''}>${optionDTO.option.content}
+          <input type="radio" ${optionDTO.selected ? 'checked' : ''} disabled>${optionDTO.option.content}
         </label>
       </div>
     `)

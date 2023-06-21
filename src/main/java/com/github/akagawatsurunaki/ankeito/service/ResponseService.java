@@ -1,5 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.akagawatsurunaki.ankeito.api.dto.ResponseSheetDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetDetailParam;
@@ -9,6 +11,7 @@ import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.answer.ResponseSheet;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
 import com.github.akagawatsurunaki.ankeito.mapper.UserMapper;
+import com.github.akagawatsurunaki.ankeito.mapper.answer.ResponseOptionMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.answer.ResponseSheetMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.qnnre.QnnreMapper;
 import lombok.val;
@@ -23,15 +26,18 @@ public class ResponseService {
     QnnreService qnnreService;
     QnnreMapper qnnreMapper;
     UserMapper userMapper;
+    ResponseOptionMapper responseOptionMapper;
 
     ResponseService(ResponseSheetMapper responseSheetMapper,
                     QnnreService qnnreService,
                     QnnreMapper qnnreMapper,
-                    UserMapper userMapper) {
+                    UserMapper userMapper,
+                    ResponseOptionMapper responseOptionMapper) {
         this.responseSheetMapper = responseSheetMapper;
         this.qnnreService = qnnreService;
         this.qnnreMapper = qnnreMapper;
         this.userMapper = userMapper;
+        this.responseOptionMapper = responseOptionMapper;
     }
 
     /**
@@ -55,6 +61,26 @@ public class ResponseService {
                         ).orElseThrow(() -> new NullPointerException("答卷不存在"));
                     }
             ).orElseThrow(() -> new IllegalArgumentException("答卷ID未指定"));
+
+            val responseOptions =
+                    responseOptionMapper.selectByResponseSheetId(responseSheetDTO.getResponseSheet().getId());
+            responseOptions.forEach(
+                    responseOption ->
+                            responseSheetDTO.getQnnreDTO().getQuestionDTOList().forEach(
+                            questionDTO ->
+                                    questionDTO.getOptionList().forEach(
+                                    optionDTO -> {
+                                        val option = optionDTO.getOption();
+                                        if (option.getQuestionId().equals(responseOption.getQuestionId())
+                                                && option.getQnnreId().equals(responseOption.getQnnreId())
+                                                && option.getId().equals(responseOption.getOptionId())
+                                        ) {
+                                            optionDTO.setSelected(true);
+                                        }
+                                    }
+                            )
+                    )
+            );
 
             return ServiceResult.ofOK("查询到指定答卷", responseSheetDTO);
 
