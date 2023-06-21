@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class AddOptionParam {
     String questionId;
+    String qnnreId;
     String[] content;
 }

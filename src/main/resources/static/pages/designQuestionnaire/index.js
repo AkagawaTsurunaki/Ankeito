@@ -586,6 +586,7 @@ const handleEditFinish = () => {
             })
             addOptionParams.push(
                 {
+                    qnnreId: questionnaireId,
                     questionId: index,
                     content: content
                 }
@@ -608,7 +609,7 @@ const handleEditFinish = () => {
         dataType: "json",
         contentType: "application/json",
         success(res) {
-            console.log(res)
+            console.log(res.data.message)
         }
     })
 }
