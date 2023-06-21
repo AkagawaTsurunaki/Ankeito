@@ -14,6 +14,7 @@ class ResponseSheet {
         this.finishedTime = finishedTime;
     }
 }
+
 let responseSheet
 
 const onClickDetail = (id) => {
@@ -22,11 +23,13 @@ const onClickDetail = (id) => {
 }
 
 const fetchResponseSheetList = () => {
-
+    let selectedProjectId = $util.getPageParam('onProjectStatistics')
     $.ajax({
         url: API_BASE_URL + '/response/getResponseSheet',
         type: 'POST',
-        data: JSON.stringify({}),
+        data: JSON.stringify({
+            projectId: selectedProjectId
+        }),
         dataType: 'json',
         contentType: 'application/json',
         success(res) {
