@@ -7,6 +7,7 @@ import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetPar
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.answer.ResponseSheet;
+import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
 import com.github.akagawatsurunaki.ankeito.mapper.UserMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.answer.ResponseSheetMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.qnnre.QnnreMapper;
@@ -66,16 +67,25 @@ public class ResponseService {
 
 
     /**
-     * 根据指定的问卷 ID 查询所有的答卷 ResponseSheet
+     * 根据指定的项目 ID 查询所有的答卷 ResponseSheet
      *
-     * @param queryResponseSheetParam 包含查询参数的实体类，其中 qnnreId 表示所需查询的问卷 ID
+     * @param queryResponseSheetParam 包含查询参数的实体类，其中 projectId 表示所需查询的项目 ID
      * @return 返回 ServiceResult 对象，其中包含查询结果的 List<ResponseSheet> 类型数据，以及返回的操作信息
      */
     public ServiceResult<List<ResponseSheet>> getResponseSheet(@NonNull QueryResponseSheetParam queryResponseSheetParam) {
-        val data = (Optional.ofNullable(queryResponseSheetParam.getQnnreId()).map(
-                qnnreId -> responseSheetMapper.selectByQnnreId(qnnreId)
-        ).orElse(new ArrayList<>()));
-        return ServiceResult.ofOK("成功查询到" + data.size() + "份答卷", data);
+
+        try {
+            val qnnreList = qnnreMapper.selectByProjectId(Optional.ofNullable(queryResponseSheetParam.getProjectId())
+                    .orElseThrow(() -> new IllegalArgumentException("ProjectId必须被指定")));
+
+            List<ResponseSheet> result = new ArrayList<>();
+            qnnreList.stream().map(Qnnre::getId).forEach(qnnreId -> result.addAll(responseSheetMapper.selectByQnnreId(qnnreId)));
+
+            return ServiceResult.ofOK("成功查询到" + result.size() + "份答卷", result);
+        } catch (IllegalArgumentException e) {
+            return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
+        }
+
     }
 
     /**
