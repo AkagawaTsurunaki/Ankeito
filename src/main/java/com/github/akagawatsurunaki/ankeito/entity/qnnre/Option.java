@@ -11,4 +11,5 @@ public class Option {
     Integer id;
     String questionId;
     String content;
+    String qnnreId;
 }

@@ -43,6 +43,7 @@ public class OptionService {
                                             .id(ArrayUtil.indexOf(contents, content))
                                             .content(content)
                                             .questionId(Optional.ofNullable(addOptionParam.getQuestionId()).orElseThrow(() -> new IllegalArgumentException("选项必须依赖于指定的问题")))
+                                            .qnnreId(addOptionParam.getQnnreId())
                                             .build()
                             )
                     ),
