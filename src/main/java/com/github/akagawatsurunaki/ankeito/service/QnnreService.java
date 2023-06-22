@@ -115,7 +115,24 @@ public class QnnreService {
             // 去除掉其中被标记为删除的问卷
             val result =
                     qnnres.stream().filter(qnnre -> ObjectUtil.notEqual(QnnreStatus.DELETED, qnnre.getQnnreStatus())).toList();
-            return ServiceResult.ofOK("成功查询到" + result.size() + "份问卷");
+            return ServiceResult.ofOK("成功查询到" + result.size() + "份问卷", result);
+        } catch (IllegalArgumentException e) {
+            return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
+        }
+    }
+
+    /**
+     * 发布问卷的服务方法。将指定ID的问卷状态更新为已发布。
+     *
+     * @param modifyQnnreParam 修改问卷参数对象，包含待更新问卷的ID。
+     * @return 返回一个ServiceResult对象，表示服务执行结果。成功时返回包含“成功发布问卷”消息的ServiceResult对象，失败时返回包含错误码和错误消息的ServiceResult对象。
+     */
+    public ServiceResult<Object> publishQnnre(@NonNull ModifyQnnreParam modifyQnnreParam) {
+        try {
+            qnnreMapper.updateQnnreStatusById(
+                    Optional.ofNullable(modifyQnnreParam.getQnnreId()).orElseThrow(() -> new IllegalArgumentException("问卷ID必须被指定")),
+                    QnnreStatus.PUBLISHED);
+            return ServiceResult.ofOK("成功发布问卷");
         } catch (IllegalArgumentException e) {
             return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
         }
@@ -196,7 +213,9 @@ public class QnnreService {
     public ServiceResult<QnnreDTO> save(@NonNull ModifyQnnreParam modifyQnnreParam) {
         try {
             // 试图清空原有的问卷内容
-            clearQnnre(DeleteQnnreParam.builder().qnnreId(modifyQnnreParam.getQnnreId()).build());
+            val deleteQnnreParam = new DeleteQnnreParam();
+            deleteQnnreParam.setQnnreId(modifyQnnreParam.getQnnreId());
+            clearQnnre(deleteQnnreParam);
             // 尝试修改问卷的名称和描述
             val modifyQnnreServiceResult = modifyQnnre(modifyQnnreParam.getQnnreId(),
                     modifyQnnreParam.getQnnreTitle(),

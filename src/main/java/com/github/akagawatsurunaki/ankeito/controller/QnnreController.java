@@ -58,4 +58,10 @@ public class QnnreController {
         val serviceResult = qnnreService.save(modifyQnnreParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
+
+    @RequestMapping(path = "/publishQnnre", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity publishQnnre(@RequestBody ModifyQnnreParam modifyQnnreParam) {
+        val serviceResult = qnnreService.publishQnnre(modifyQnnreParam);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
 }

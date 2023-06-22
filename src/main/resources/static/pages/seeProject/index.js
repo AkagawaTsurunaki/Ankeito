@@ -36,9 +36,10 @@ const fetchQnnreInfo = (selectedProjectId) => {
         contentType: "application/json",
         success(res) {
             let index = 0
+            console.log(res)
             res.data.forEach(qnnre => {
-                    addRow(index, qnnre)
                     index++;
+                    addRow(index, qnnre)
                 }
             )
         }
@@ -47,18 +48,20 @@ const fetchQnnreInfo = (selectedProjectId) => {
 
 const addRow = (index, qnnre) => {
     let tbody = $('table > tbody');
-    let tr = $('<tr>')
-        .append($('<td>').text(index)
-            .append($('<td>').text(qnnre.name))
-            .append($('<td>').text(qnnre.startTime))
-            .append($('<td>')
-                .append($('<button>').prop('type', 'button').addClass('btn btn-link').text('预览')).on('click', function () {handlePreviewQnnre(qnnre.id)})
-                .append($('<button>').prop('type', 'button').addClass('btn btn-link').text('发布')).on('click', function () {})
-                .append($('<button>').prop('type', 'button').addClass('btn btn-link btn-red').text('删除')).on('click', function () {handleDeleteQnnre(qnnre.id)})
-                .append($('<button>').prop('type', 'button').addClass('btn btn-link btn-red').text('统计'))
-            ));
 
-    tbody.append(tr);
+    let ele = `
+    <tr>
+        <td>${index}</td>
+        <td>${qnnre.name}</td>
+        <td>${qnnre.startTime}</td>
+        <td>
+            <button type="button" class="btn btn-link" onclick="handlePreviewQnnre('${qnnre.id}')">预览</button>
+            <button type="button" class="btn btn-link" onclick="handlePublishQnnre('${qnnre.id}')">发布</button>
+            <button type="button" class="btn btn-link btn-red" onclick="handleDeleteQnnre('${qnnre.id}')">删除</button>
+            <button type="button" class="btn btn-link btn-red">统计</button>
+        </td>
+    </tr>`
+    tbody.append(ele);
 }
 
 const handlePreviewQnnre = (qnnreId) => {
@@ -67,20 +70,31 @@ const handlePreviewQnnre = (qnnreId) => {
 }
 
 const handlePublishQnnre = (qnnreId) => {
-    $util.setPageParam('selectedQnnreId', qnnreId)
-    location.href = '/pages/qnnrePreview/index.html'
+    // $util.setPageParam('selectedQnnreId', qnnreId)
+    // location.href = '/pages/qnnrePreview/index.html'
+    let param = {qnnreId: qnnreId}
+    $.ajax({
+        url: API_BASE_URL + '/publishQnnre',
+        type: "POST",
+        data: JSON.stringify(param),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+            alert(res.message)
+        }
+    })
+
 }
 
 const handleDeleteQnnre = (qnnreId) => {
     $.ajax({
-        url: API_BASE_URL + '/deleteQnnre',
+        url: '/deleteQnnre',
         type: "POST",
         data: JSON.stringify({qnnreId: qnnreId}),
         dataType: "json",
         contentType: "application/json",
         success(res) {
             alert(res.message)
-            location.href = '/pages/seeProject/index.html'
         }
     })
 }
