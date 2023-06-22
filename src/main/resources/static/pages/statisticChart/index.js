@@ -32,52 +32,36 @@ onload = () => {
                 questionStatisticDTOList.forEach(
                     questionStatisticDTO => {
                         table(questionStatisticDTO)
+                        pie(questionStatisticDTO)
+                        ring(questionStatisticDTO)
+                        bar(questionStatisticDTO)
                     }
                 )
             }
-            alert(res.message)
         }
     });
 
 }
-
-// const fun = (questionId, questionName) => {
-//     let ele = `
-//     <div class="question" id="question${questionId}" data-type="1" data-problemIndex="${questionId}">
-//         <div class="top">
-//             <span class="question-title">第${questionId + 1}题</span>
-//             <span class="question-title" id="questionTitle">${questionName}</span>
-//         </div>
-//         <div class="bottom2" style="display: inline;" >
-//
-//         </div>
-//     </div>
-//     `
-//
-//     $('#problem').append(ele)
-//     questionDTO.optionList.map(optionDTO => {
-//         $(`#question${question.id} .bottom2`).append(`
-//       <div style="display: flex; align-items: center;">
-//         <label class="radio-inline">
-//           <input type="radio" id="radio-${question.id}-${optionDTO.option.id}" name="radio-${question.id}" ${optionDTO.selected ? 'checked' : ''}>${optionDTO.option.content}
-//         </label>
-//       </div>
-//     `)
-//     });
-// }
 
 const table = (questionStatisticDTO) => {
     let questionId = questionStatisticDTO.questionId
 
     let ele = `
     <div class="problem" id="problem${questionId}">
-        <table id="table-question-${questionId}" class="table table-bordered table-striped">
+        <div id="tableStatistic${questionId}">
+        <table id="tableQuestion${questionId}" class="table table-bordered table-striped">
             <tr id="tr${questionId}">
                 <th>选项</th>
                 <th>小计</th>
                 <th>比例</th>
             </tr>
         </table>
+        </div>
+        <div id="pieStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
+        <div id="ringStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
+        <div id="barStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
+        <div id="chartContain2er" class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
+        <div id="chartContaine2r" class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
         <div style="text-align: right">
             <button type="button" class="btn btn-default">表格</button>
             <button type="button" class="btn btn-default">饼状</button>
@@ -86,7 +70,6 @@ const table = (questionStatisticDTO) => {
             <button type="button" class="btn btn-default">条形</button>
             <button type="button" class="btn btn-default">折线</button>
         </div>
-<!--        <div id="chartContainer" style="width: 600px; height: 400px;"></div>-->
     </div>
     `
 
@@ -118,8 +101,145 @@ const table = (questionStatisticDTO) => {
                 <td></td>
             </tr>
     `
-    $(`#table-question-${questionId} tr:last`).after(questionCountEle)
+    $(`#tableQuestion${questionId} tr:last`).after(questionCountEle)
 
 
+}
 
+const pie = (questionStatisticDTO) => {
+    let questionId = questionStatisticDTO.questionId
+    let chartDom = document.getElementById(`pieStatistic${questionId}`)
+    let myChart = echarts.init(chartDom);
+    let option;
+
+    let data = []
+    questionStatisticDTO.optionList.forEach(
+        innerOption => {
+            data.push(
+                {
+                    value: innerOption.count,
+                    name: innerOption.optionContent
+                }
+            )
+        }
+    )
+
+    option = {
+        title: {
+            text: `${questionStatisticDTO.questionName}`,
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                type: 'pie',
+                radius: '50%',
+                data: data,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    option && myChart.setOption(option);
+}
+
+const ring = (questionStatisticDTO) => {
+    let questionId = questionStatisticDTO.questionId
+    let chartDom = document.getElementById(`ringStatistic${questionId}`);
+    let myChart = echarts.init(chartDom);
+    let option;
+
+    let data = []
+    questionStatisticDTO.optionList.forEach(
+        innerOption => {
+            data.push(
+                {
+                    value: innerOption.count,
+                    name: innerOption.optionContent
+                }
+            )
+        }
+    )
+
+    option = {
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: 40,
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: data
+            }
+        ]
+    };
+    option && myChart.setOption(option);
+}
+
+const bar = (questionStatisticDTO) =>{
+    let chartDom = document.getElementById(`barStatistic${questionId}`);
+    let myChart = echarts.init(chartDom);
+    let option;
+
+    let dataX = []
+    let dataY = []
+    questionStatisticDTO.optionList.forEach(
+        innerOption => {
+            dataX.push(innerOption.optionContent)
+            dataY.push(innerOption.count)
+        }
+    )
+
+    option = {
+        xAxis: {
+            type: 'category',
+            data: dataX
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: dataY,
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                }
+            }
+        ]
+    };
+
+    option && myChart.setOption(option);
 }

@@ -56,3 +56,11 @@ body {
     margin-top: 60px;
     margin-bottom: 60px;
 }
+
+.chartContainer {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    height: 100vh;   /* 可根据需要设置高度 */
+}
