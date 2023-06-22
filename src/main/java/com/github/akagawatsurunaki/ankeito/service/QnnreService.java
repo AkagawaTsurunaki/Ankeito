@@ -94,12 +94,33 @@ public class QnnreService {
      * @param queryQnnreListParam 查询问卷所需参数
      * @return 返回ServiceResult对象，其中包含执行结果信息和查询的问卷对象（如果存在）
      */
-    public ServiceResult<Qnnre> getQnnre(@NonNull QueryQnnreListParam queryQnnreListParam) {
+    public ServiceResult<Qnnre> getQnnreById(@NonNull QueryQnnreListParam queryQnnreListParam) {
         return Optional.ofNullable(queryQnnreListParam.getId())
                 .map(id -> qnnreMapper.selectById(id))
                 .map(value -> ServiceResult.ofOK("查询到指定的问卷", value))
                 .orElseGet(() -> ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "问卷不存在"));
     }
+
+    /**
+     * 根据查询参数获取问卷列表，其中去掉了被标记为删除的问卷。
+     *
+     * @param queryQnnreListParam 查询参数
+     * @return 返回一个 ServiceResult<List<Qnnre>> 对象，其中包含查询到的问卷列表和相关信息。
+     * 如果查询参数中的项目名为空或者不存在对应的问卷，会返回一个包含错误代码和错误消息的 ServiceResult 对象。
+     */
+    public ServiceResult<List<Qnnre>> getQnnresExcludeDeletedQnnre(@NonNull QueryQnnreListParam queryQnnreListParam) {
+        try {
+            val qnnres =
+                    qnnreMapper.selectByProjectId(Optional.ofNullable(queryQnnreListParam.getProjectId()).orElseThrow(() -> new IllegalArgumentException("项目名必须被指定")));
+            // 去除掉其中被标记为删除的问卷
+            val result =
+                    qnnres.stream().filter(qnnre -> ObjectUtil.notEqual(QnnreStatus.DELETED, qnnre.getQnnreStatus())).toList();
+            return ServiceResult.ofOK("成功查询到" + result.size() + "份问卷");
+        } catch (IllegalArgumentException e) {
+            return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
+        }
+    }
+
 
     /**
      * 根据指定的问卷ID删除问卷及其下的所有问题和选项。
