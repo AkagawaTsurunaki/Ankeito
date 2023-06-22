@@ -12,6 +12,6 @@ public class ResponseOption {
      * id 和 questionId是选项的主键
      */
     Integer optionId;
-    String questionId;
+    Integer questionId;
     String qnnreId;
 }

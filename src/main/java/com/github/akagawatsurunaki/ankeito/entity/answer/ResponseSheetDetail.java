@@ -21,6 +21,6 @@ public class ResponseSheetDetail {
      * 问题ID 为了防止有其他类型的问题
      */
 
-    String questionId;
+    Integer questionId;
 
 }
