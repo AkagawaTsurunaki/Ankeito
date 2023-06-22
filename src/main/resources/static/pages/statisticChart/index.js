@@ -35,6 +35,8 @@ onload = () => {
                         pie(questionStatisticDTO)
                         ring(questionStatisticDTO)
                         bar(questionStatisticDTO)
+                        tiao(questionStatisticDTO)
+                        line(questionStatisticDTO)
                     }
                 )
             }
@@ -60,8 +62,8 @@ const table = (questionStatisticDTO) => {
         <div id="pieStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
         <div id="ringStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
         <div id="barStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
-        <div id="chartContain2er" class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
-        <div id="chartContaine2r" class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
+        <div id="yBarStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px;"></div>
+        <div id="lineStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px;"></div>
         <div style="text-align: right">
             <button type="button" class="btn btn-default">表格</button>
             <button type="button" class="btn btn-default">饼状</button>
@@ -208,6 +210,7 @@ const ring = (questionStatisticDTO) => {
 }
 
 const bar = (questionStatisticDTO) =>{
+    let questionId = questionStatisticDTO.questionId
     let chartDom = document.getElementById(`barStatistic${questionId}`);
     let myChart = echarts.init(chartDom);
     let option;
@@ -242,4 +245,75 @@ const bar = (questionStatisticDTO) =>{
     };
 
     option && myChart.setOption(option);
+}
+
+const tiao = (questionStatisticDTO) =>{
+    let questionId = questionStatisticDTO.questionId
+    let chartDom = document.getElementById(`yBarStatistic${questionId}`);
+    let myChart = echarts.init(chartDom);
+    let option;
+
+    let dataX = []
+    let dataY = []
+    questionStatisticDTO.optionList.forEach(
+        innerOption => {
+            dataX.push(innerOption.optionContent)
+            dataY.push(innerOption.count)
+        }
+    )
+
+    option = {
+        yAxis: {
+            type: 'category',
+            data: dataX
+        },
+        xAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: dataY,
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                }
+            }
+        ]
+    };
+
+    option && myChart.setOption(option);
+}
+
+const line = (questionStatisticDTO) => {
+    let questionId = questionStatisticDTO.questionId
+    let chartDom = document.getElementById(`lineStatistic${questionId}`);
+    let myChart = echarts.init(chartDom);
+    let option;
+    let dataX = []
+    let dataY = []
+    questionStatisticDTO.optionList.forEach(
+        innerOption => {
+            dataX.push(innerOption.optionContent)
+            dataY.push(innerOption.count)
+        }
+    )
+    option = {
+        xAxis: {
+            type: 'category',
+            data: dataX
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: dataY,
+                type: 'line'
+            }
+        ]
+    };
+
+    option && myChart.setOption(option);
+
 }
