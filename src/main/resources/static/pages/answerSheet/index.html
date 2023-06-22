@@ -13,14 +13,15 @@
 <body>
 
   <div class="container">
-    <h3 class="questionnaire-title">问卷标题</h3>
-    <h4 class="questionnaire-description">问卷说明</h4>
+    <h3 class="questionnaire-title" id="qnnreTitle">问卷标题</h3>
+    <h4 class="questionnaire-description" id="qnnreDescription">问卷说明</h4>
     <div class="problem" id="problem"></div>
     <div class="btn-div">
-      <button type="button" class="btn btn-primary">提 交</button>
+      <button type="button" class="btn btn-primary" onclick="handleSubmmit()">提 交</button>
     </div>
   </div>
 
+  <script type="module" src="../../utils/index.js"></script>
   <script src="./index.js"></script>
 </body>
 </html>
