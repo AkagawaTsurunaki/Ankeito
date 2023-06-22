@@ -2,9 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统计</title>
+    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="../../static/bootstrap-3.4.1/css/bootstrap.min.css">
+    <script src="../../static/jquery-3.5.1/jquery-3.5.1.min.js"></script>
+    <script src="../../static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 
+<div class="container">
+    <h3 class="questionnaire-title" id="qnnreTitle">问卷标题</h3>
+    <h4 class="questionnaire-description" id="qnnreDescription">问卷说明</h4>
+    <div class="problem" id="problem">
+        <div id="testChart" style="width: 600px;height:400px;"></div>
+    </div>
+</div>
+
+
+
+<script type="module" src="../../utils/index.js"></script>
+<script src="../common/header/index.js"></script>
+<script src="./index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
 </body>
 </html>
