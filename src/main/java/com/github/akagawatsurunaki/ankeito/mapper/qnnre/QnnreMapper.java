@@ -25,4 +25,5 @@ public interface QnnreMapper extends BaseMapper<Qnnre> {
         return selectList(new QueryWrapper<Qnnre>().lambda().eq(Qnnre::getProjectId, projectId));
     }
 
+
 }
