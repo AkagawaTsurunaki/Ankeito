@@ -151,6 +151,18 @@ const singleMultiple = (questionDTO) => {
     })
 }
 
-const handleSubmmit = () => {
-    alert("提交成功")
+const handleSubmit = () => {
+    $.ajax({
+        url: '/response/submitResponseSheet', // 接口地址
+        type: 'POST',
+        data: JSON.stringify(responseSheetDTO),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+            if (res.code === '666') {
+
+            }
+            alert(res.message)
+        }
+    });
 }
