@@ -169,13 +169,17 @@ public class QnnreService {
      * 问卷软删除服务，将指定问卷的状态设置为 DELETED，并且保留其数据记录。
      */
     public ServiceResult<Object> softDeleteQnnre(@NonNull DeleteQnnreParam deleteQnnreParam) {
-        return Optional.ofNullable(deleteQnnreParam.getQnnreId()).map(
-                qnnreId -> {
-                    if (qnnreMapper.updateQnnreStatusById(qnnreId, QnnreStatus.DELETED) == 1) {
-                        return ServiceResult.ofOK("问卷删除成功");
-                    }
-                    return ServiceResult.of(ServiceResultCode.FAILED, "问卷删除失败");
-                }
+        return Optional.ofNullable(deleteQnnreParam.getQnnreId()).flatMap(
+                qnnreId ->
+                        Optional.ofNullable(qnnreMapper.selectById(qnnreId)).map(
+                                qnnre -> {
+                                    if (qnnre.getQnnreStatus().equals(QnnreStatus.PUBLISHED)) {
+                                        return ServiceResult.of(ServiceResultCode.FAILED, "问卷删除失败：不能删除一个正在进行的问卷");
+                                    }
+                                    qnnreMapper.updateQnnreStatusById(qnnreId, QnnreStatus.DELETED);
+                                    return ServiceResult.ofOK("问卷删除成功");
+                                }
+                        )
         ).orElse(ServiceResult.of(ServiceResultCode.FAILED, "内部服务器异常"));
     }
 
