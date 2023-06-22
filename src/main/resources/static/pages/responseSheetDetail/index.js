@@ -71,7 +71,7 @@ const load = () => {
                 singleChoice(questionDTO)
                 break;
             case 'MULTIPLE_CHOICE_QUESTION':
-                singleM(questionDTO)
+                singleMultiple(questionDTO)
                 break;
             default:
                 break;
@@ -95,8 +95,8 @@ const singleChoice = (questionDTO) => {
         <div class="bottom2" style="display: inline;">
         
         </div>
-    </div>
-    `
+    </div>`
+
     $('#problem').append(ele)
     questionDTO.optionList.map(optionDTO => {
     $(`#question${question.id} .bottom2`).append(`
@@ -107,4 +107,31 @@ const singleChoice = (questionDTO) => {
       </div>
     `)
     })
+}
+
+const singleMultiple = (questionDTO) => {
+    let question = questionDTO.question
+    let ele = `
+    <div class="question" id="question${question.id}" data-type="2" data-problemIndex="${question.id}">
+        <div class="top">
+            <span class="question-title" id="questionTitle">${question.content}</span>
+            <span class="must-answer" id="mustAnswer">${question.required === 'REQUIRED' ? '必答题' : '非必答题'}</span>
+        </div>
+        <div class="bottom2" style="display: inline;">
+        
+        </div>
+    </div>`
+
+    $('#problem').append(ele)
+
+    questionDTO.optionList.map(optionDTO => {
+        $(`#question${question.id} .bottom2`).append(`
+      <div style="display: flex; align-items: center;">
+        <label class="checkbox-inline">
+          <input type="checkbox" ${optionDTO.selected ? 'checked' : ''} disabled>${optionDTO.option.content}
+        </label>
+      </div>
+    `)
+    })
+
 }
