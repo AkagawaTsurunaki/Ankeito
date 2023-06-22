@@ -37,7 +37,13 @@ public class QnnreController {
 
     @RequestMapping(path = "/getQnnre", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity getQnnre(@RequestBody QueryQnnreListParam queryQnnreListParam) {
-        val serviceResult = qnnreService.getQnnre(queryQnnreListParam);
+        val serviceResult = qnnreService.getQnnreById(queryQnnreListParam);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
+
+    @RequestMapping(path = "/getQnnresExcludeDeletedQnnre", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity getQnnresExcludeDeletedQnnre(@RequestBody QueryQnnreListParam queryQnnreListParam) {
+        val serviceResult = qnnreService.getQnnresExcludeDeletedQnnre(queryQnnreListParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 
