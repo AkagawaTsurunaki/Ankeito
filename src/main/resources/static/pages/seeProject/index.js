@@ -58,10 +58,15 @@ const addRow = (index, qnnre) => {
             <button type="button" class="btn btn-link" onclick="handlePreviewQnnre('${qnnre.id}')">预览</button>
             <button type="button" class="btn btn-link" onclick="handlePublishQnnre('${qnnre.id}')">发布</button>
             <button type="button" class="btn btn-link btn-red" onclick="handleDeleteQnnre('${qnnre.id}')">删除</button>
-            <button type="button" class="btn btn-link btn-red">统计</button>
+            <button type="button" class="btn btn-link btn-red" onclick="handleStatistic('${qnnre.id}')">统计</button>
         </td>
     </tr>`
     tbody.append(ele);
+}
+
+const handleStatistic = (qnnreId) => {
+    $util.setPageParam('selectedQnnreId', qnnreId)
+    location.href = '/pages/statisticChart/index.html'
 }
 
 const handlePreviewQnnre = (qnnreId) => {
