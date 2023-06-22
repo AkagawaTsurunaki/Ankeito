@@ -1,6 +1,5 @@
 onload = () => {
     $('#headerDivB').text('项目详情')
-
     let projectId = $util.getPageParam('seeProject')
     fetchProjectInfo(projectId)
     fetchQnnreInfo(projectId)
