@@ -65,7 +65,7 @@ public class StatisticService {
      * 获取指定问卷下的问题统计信息。
      *
      * @param qnnreId 问卷ID
-     * @return 问题统计DTO列表(List<QuestionStatisticDTO>)
+     * @return 问题统计DTO列表(List < QuestionStatisticDTO >)
      * @throws NullPointerException 如果问卷下没有问题，则抛出空指针异常
      */
     private List<QuestionStatisticDTO> getQuestionStatisticDTOS(@NonNull String qnnreId) throws NullPointerException {
@@ -93,19 +93,22 @@ public class StatisticService {
 
         val options =
                 Optional.ofNullable(optionMapper.selectByQuestionId(questionId)).orElseThrow(() -> new NullPointerException("该问题下没有选项"));
-
         val innerOptionList = options.stream()
                 .map(option -> {
                     int innerOptionCount = (int) responseOptionMapper.countByQnnreIdAndQuestionIdAndOptionId(qnnreId,
                             questionId, option.getId());
-                    float percent = (float) innerOptionCount / questionCount;
                     return InnerOption.builder()
                             .optionId(option.getId())
                             .optionContent(option.getContent())
-                            .percent(percent)
                             .count(innerOptionCount)
                             .build();
                 }).toList();
+
+        // 计算percent
+        val sum = innerOptionList.stream().mapToInt(InnerOption::getCount).sum();
+        innerOptionList.forEach(
+                innerOption -> innerOption.setPercent(((float) innerOption.getCount()) / ((float) sum))
+        );
 
         return QuestionStatisticDTO.builder()
                 .questionId(questionId)
