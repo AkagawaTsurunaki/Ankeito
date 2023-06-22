@@ -1,5 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
+import com.github.akagawatsurunaki.ankeito.api.param.add.AddResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetDetailParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
@@ -17,14 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class ResponseController {
 
     ResponseService responseService;
+
     @Autowired
-    ResponseController (ResponseService responseService) {
+    ResponseController(ResponseService responseService) {
         this.responseService = responseService;
     }
 
     @RequestMapping(path = "/getResponseSheet", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity getResponseSheet(@RequestBody QueryResponseSheetParam queryResponseSheetParam) {
         val serviceResult = responseService.getResponseSheet(queryResponseSheetParam);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
+
+    @RequestMapping(path = "/createEmptyResponseSheet", method = RequestMethod.POST, headers = "Accept=application" +
+            "/json")
+    public HttpResponseEntity createEmptyResponseSheet(@RequestBody AddResponseSheetParam addResponseSheetParam) {
+        val serviceResult = responseService.createEmptyResponseSheet(addResponseSheetParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 

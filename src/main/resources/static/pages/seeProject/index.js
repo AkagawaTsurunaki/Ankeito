@@ -66,7 +66,7 @@ const addRow = (index, qnnre) => {
 
 const handlePreviewQnnre = (qnnreId) => {
     $util.setPageParam('selectedQnnreId', qnnreId)
-    location.href = '/pages/qnnrePreview/index.html'
+    location.href = '/pages/answerSheet/index.html'
 }
 
 const handlePublishQnnre = (qnnreId) => {

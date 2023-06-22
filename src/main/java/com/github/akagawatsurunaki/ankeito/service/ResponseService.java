@@ -1,13 +1,13 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.github.akagawatsurunaki.ankeito.api.dto.ResponseSheetDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetDetailParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
+import com.github.akagawatsurunaki.ankeito.entity.User;
 import com.github.akagawatsurunaki.ankeito.entity.answer.ResponseSheet;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
 import com.github.akagawatsurunaki.ankeito.mapper.UserMapper;
@@ -67,19 +67,19 @@ public class ResponseService {
             responseOptions.forEach(
                     responseOption ->
                             responseSheetDTO.getQnnreDTO().getQuestionDTOList().forEach(
-                            questionDTO ->
-                                    questionDTO.getOptionList().forEach(
-                                    optionDTO -> {
-                                        val option = optionDTO.getOption();
-                                        if (option.getQuestionId().equals(responseOption.getQuestionId())
-                                                && option.getQnnreId().equals(responseOption.getQnnreId())
-                                                && option.getId().equals(responseOption.getOptionId())
-                                        ) {
-                                            optionDTO.setSelected(true);
-                                        }
-                                    }
+                                    questionDTO ->
+                                            questionDTO.getOptionList().forEach(
+                                                    optionDTO -> {
+                                                        val option = optionDTO.getOption();
+                                                        if (option.getQuestionId().equals(responseOption.getQuestionId())
+                                                                && option.getQnnreId().equals(responseOption.getQnnreId())
+                                                                && option.getId().equals(responseOption.getOptionId())
+                                                        ) {
+                                                            optionDTO.setSelected(true);
+                                                        }
+                                                    }
+                                            )
                             )
-                    )
             );
 
             return ServiceResult.ofOK("查询到指定答卷", responseSheetDTO);
@@ -114,30 +114,49 @@ public class ResponseService {
 
     }
 
+    public ServiceResult<ResponseSheetDTO> createEmptyResponseSheet(@NonNull AddResponseSheetParam addResponseSheetParam) {
+        try {
+            val responseSheet =
+                    Optional.ofNullable(addResponseSheet(addResponseSheetParam)).orElseThrow(() -> new NullPointerException(
+                            "新建的答卷不存在"));
+            // 这里由于答卷是空白的, 所以不需要加载选项选择情况
+            val responseSheetDTO = Optional.ofNullable(responseSheet.getId()).map(
+                    sheetId -> Optional.of(responseSheet).map(
+                            it -> {
+                                val qnnreId = it.getQnnreId();
+                                val qnnreDTO =
+                                        Optional.ofNullable(qnnreService.get(qnnreId).getData()).orElseThrow(() -> new NullPointerException("问卷不存在"));
+                                return ResponseSheetDTO.builder().qnnreDTO(qnnreDTO).responseSheet(it).build();
+                            }
+                    ).orElseThrow(() -> new NullPointerException("答卷不存在"))
+            ).orElseThrow(() -> new IllegalArgumentException("答卷ID未指定"));
+
+            return ServiceResult.ofOK("新建答卷成功", responseSheetDTO);
+        } catch (NullPointerException e) {
+            return ServiceResult.of(ServiceResultCode.FAILED, e.getMessage());
+        }
+    }
+
+
     /**
      * 新增一份答卷
      *
      * @param addResponseSheetParam 包含新增参数的实体类，其中 respondentId 表示答卷填写人 ID，qnnreId 表示所属问卷 ID
-     * @return 返回 ServiceResult 对象，其中包含新增的 ResponseSheet 类型数据，以及返回的操作信息
      */
-    public ServiceResult<ResponseSheet> addResponseSheet(@NonNull AddResponseSheetParam addResponseSheetParam) {
+    private ResponseSheet addResponseSheet(@NonNull AddResponseSheetParam addResponseSheetParam) {
         val user =
                 Optional.ofNullable(addResponseSheetParam.getRespondentId()).map(getRespondentId -> userMapper.selectById(getRespondentId));
         val qnnre =
                 Optional.ofNullable(addResponseSheetParam.getQnnreId()).map(qnnreId -> qnnreMapper.selectById(qnnreId));
-
-        if (user.isPresent() && qnnre.isPresent()) {
-            val data = ResponseSheet.builder()
-                    .id(UUID.randomUUID().toString())
-                    .qnnreId(user.get().getId())
-                    .qnnreName(qnnre.get().getName())
-                    .respondentId(user.get().getId())
-                    .respondentName(user.get().getUsername())
-                    .finishedTime(new Date())
-                    .build();
-            return ServiceResult.ofOK("成功增加一张问卷", data);
-        }
-        return ServiceResult.of(ServiceResultCode.NO_SUCH_ENTITY, "用户或问卷不存在");
+        val data = ResponseSheet.builder()
+                .id(UUID.randomUUID().toString())
+                .qnnreId(qnnre.map(Qnnre::getId).orElseThrow(() -> new NullPointerException("必须指定问卷ID")))
+                .qnnreName(qnnre.map(Qnnre::getName).orElseThrow(() -> new NullPointerException("必须指定问卷名称")))
+                .respondentId(user.map(User::getId).orElse(UUID.randomUUID().toString()))
+                .respondentName(user.map(User::getUsername).orElse("TempUser" + RandomUtil.randomNumbers(20)))
+                .finishedTime(new Date())
+                .build();
+        return responseSheetMapper.insert(data) == 1 ? data : null;
     }
 
 }
