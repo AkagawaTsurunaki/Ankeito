@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 21/06/2023 22:38:07
+ Date: 22/06/2023 11:14:32
 */
 
 SET NAMES utf8mb4;
@@ -79,6 +79,7 @@ CREATE TABLE `qnnre`  (
 -- Records of qnnre
 -- ----------------------------
 INSERT INTO `qnnre` VALUES ('26114385-1ae2-4679-91ee-b146b5869d3b', '3a64b27a-2f52-4cfa-82eb-115abbf7de41', '测试调查问卷', '这是一段调查问卷说明', '2023-06-21 08:00:00', '2023-06-30 08:00:00', 'DRAFT');
+INSERT INTO `qnnre` VALUES ('b8030ee6-b95a-4102-b00e-f3edd66dfe6d', '3a64b27a-2f52-4cfa-82eb-115abbf7de41', '如来真来了吗', '中国人认为, 宇宙万法...', '2023-05-31 08:00:00', '2023-06-29 08:00:00', 'DRAFT');
 
 -- ----------------------------
 -- Table structure for question
@@ -97,7 +98,7 @@ CREATE TABLE `question`  (
 -- Records of question
 -- ----------------------------
 INSERT INTO `question` VALUES (0, '你是人类吗?', 'REQUIRED', 'SINGLE_CHOICE_QUESTION', '26114385-1ae2-4679-91ee-b146b5869d3b');
-INSERT INTO `question` VALUES (1, '下列哪个字词组合不是人类可读的?', 'REQUIRED', 'SINGLE_CHOICE_QUESTION', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `question` VALUES (1, '下列哪个字词组合不是人类可读的?', 'OPTIONAL', 'SINGLE_CHOICE_QUESTION', '26114385-1ae2-4679-91ee-b146b5869d3b');
 
 -- ----------------------------
 -- Table structure for response_option
@@ -113,9 +114,9 @@ CREATE TABLE `response_option`  (
 -- ----------------------------
 -- Records of response_option
 -- ----------------------------
-INSERT INTO `response_option` VALUES ('41675c81-4464-8b26-2332-b7376203e026', 3, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
-INSERT INTO `response_option` VALUES ('41675c81-4464-8b26-2332-b7376203e026', 3, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
-INSERT INTO `response_option` VALUES ('41675c81-4464-8b26-2332-b7376203e026', 3, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', 2, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', 0, '0', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', 3, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
 
 -- ----------------------------
 -- Table structure for response_sheet
@@ -145,13 +146,15 @@ CREATE TABLE `response_sheet_detail`  (
   `response_sheet_id` char(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `qnnre_id` char(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `question_id` char(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  PRIMARY KEY (`response_sheet_id`) USING BTREE
+  PRIMARY KEY (`response_sheet_id`, `qnnre_id`, `question_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of response_sheet_detail
 -- ----------------------------
-INSERT INTO `response_sheet_detail` VALUES ('41675c81-4464-8b26-2332-b7376203e026', '26114385-1ae2-4679-91ee-b146b5869d3b', '0');
+INSERT INTO `response_sheet_detail` VALUES ('1eee2956-d4e9-2096-6b50-661846c86b6c', '26114385-1ae2-4679-91ee-b146b5869d3b', '1');
+INSERT INTO `response_sheet_detail` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', '26114385-1ae2-4679-91ee-b146b5869d3b', '0');
+INSERT INTO `response_sheet_detail` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', '26114385-1ae2-4679-91ee-b146b5869d3b', '1');
 
 -- ----------------------------
 -- Table structure for user
