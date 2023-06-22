@@ -157,6 +157,7 @@ public class ResponseService {
                             "答卷不存在"));
             val responseSheetId = Optional.ofNullable(responseSheet.getId()).orElseThrow(() -> new NullPointerException(
                     "答卷ID不存在"));
+
             // 更新 ResponseSheetDetail 表
             responseSheetDTO.getQnnreDTO().getQuestionDTOList().forEach(
                     questionDTO -> {
