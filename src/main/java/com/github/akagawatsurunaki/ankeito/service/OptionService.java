@@ -26,10 +26,11 @@ public class OptionService {
         this.questionMapper = questionMapper;
     }
 
-    private void deleteOptions(@NonNull String questionId) {
+    private void deleteOptions(@NonNull Integer questionId) {
         questionMapper.delete(Wrappers.<Question>query().lambda().eq(Question::getId, questionId));
     }
 
+    @Deprecated
     public ServiceResult<List<Option>> addOptions(@NonNull AddOptionParam addOptionParam) {
         try {
             List<Option> options = new ArrayList<>();

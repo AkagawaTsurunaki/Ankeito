@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class AddOptionParam {
-    String questionId;
+    Integer questionId;
     String qnnreId;
     String[] content;
 }

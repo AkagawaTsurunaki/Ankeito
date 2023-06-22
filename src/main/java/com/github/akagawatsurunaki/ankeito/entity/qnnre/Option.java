@@ -9,7 +9,7 @@ import lombok.Data;
 @TableName("`option`")
 public class Option {
     Integer id;
-    String questionId;
+    Integer questionId;
     String content;
     String qnnreId;
 }
