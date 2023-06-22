@@ -1,6 +1,5 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
-import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryStatisticParam;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
 import com.github.akagawatsurunaki.ankeito.common.convertor.ServiceResultConvertor;
