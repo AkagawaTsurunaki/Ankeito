@@ -95,6 +95,7 @@ const handleDeleteQnnre = (qnnreId) => {
         contentType: "application/json",
         success(res) {
             alert(res.message)
+            location.href = '/pages/seeProject/index.html'
         }
     })
 }
