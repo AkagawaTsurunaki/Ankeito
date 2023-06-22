@@ -70,8 +70,6 @@ const handlePreviewQnnre = (qnnreId) => {
 }
 
 const handlePublishQnnre = (qnnreId) => {
-    // $util.setPageParam('selectedQnnreId', qnnreId)
-    // location.href = '/pages/qnnrePreview/index.html'
     let param = {qnnreId: qnnreId}
     $.ajax({
         url: API_BASE_URL + '/publishQnnre',
@@ -80,7 +78,7 @@ const handlePublishQnnre = (qnnreId) => {
         dataType: "json",
         contentType: "application/json",
         success(res) {
-            alert(res.message)
+            alert(res.message + `\n您可以将此链接复制给需要填写问卷的人！\n${API_BASE_URL + '/pages/answerSheet/index.html'}`)
         }
     })
 
