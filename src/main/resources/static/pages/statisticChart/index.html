@@ -10,17 +10,81 @@
     <script src="../../static/jquery-3.5.1/jquery-3.5.1.min.js"></script>
     <script src="../../static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
 </head>
+<style>
+    .progress-bar {
+        width: 300px;
+        height: 20px;
+        background-color: rgb(224, 224, 224);
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background-color: rgb(61, 147, 245);
+    }
+</style>
 <body>
 
 <div class="container">
     <h3 class="questionnaire-title" id="qnnreTitle">问卷标题</h3>
     <h4 class="questionnaire-description" id="qnnreDescription">问卷说明</h4>
     <div class="problem" id="problem">
-        <div id="testChart" style="width: 600px;height:400px;"></div>
+        <!--        <div id="testChart" style="width: 600px;height:400px; "></div>-->
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>选项</th>
+                <th>小计</th>
+                <th>比例</th>
+            </tr>
+            <tr>
+                <td>选项1</td>
+                <td>66</td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 15.07%;"></div>
+                    </div>
+                    15.07%
+                </td>
+            </tr>
+            <tr>
+                <td>选项2</td>
+                <td>302</td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 68.95%;"></div>
+                    </div>
+                    68.95%
+                </td>
+            </tr>
+            <tr>
+                <td>选项3</td>
+                <td>70</td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 15.98%;"></div>
+                    </div>
+                    15.98%
+                </td>
+            </tr>
+            <tr>
+                <td>本题有效填写人次</td>
+                <td>438</td>
+                <td></td>
+            </tr>
+
+        </table>
+        <div style="text-align: right">
+            <button type="button" class="btn btn-default">表格</button>
+            <button type="button" class="btn btn-default">饼状</button>
+            <button type="button" class="btn btn-default">圆环</button>
+            <button type="button" class="btn btn-default">柱状</button>
+            <button type="button" class="btn btn-default">条形</button>
+            <button type="button" class="btn btn-default">折线</button>
+        </div>
+        <div id="chartContainer" style="width: 600px; height: 400px;"></div>
     </div>
 </div>
-
-
 
 <script type="module" src="../../utils/index.js"></script>
 <script src="../common/header/index.js"></script>

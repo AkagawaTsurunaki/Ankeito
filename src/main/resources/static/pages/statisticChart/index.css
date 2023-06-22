@@ -46,3 +46,8 @@ body {
 .btn {
     padding: 6px 40px !important;
 }
+
+.table th,
+.table td {
+    text-align: center;
+}
