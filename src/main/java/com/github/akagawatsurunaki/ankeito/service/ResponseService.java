@@ -1,6 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.util.RandomUtil;
+import com.github.akagawatsurunaki.ankeito.api.dto.OptionDTO;
 import com.github.akagawatsurunaki.ankeito.api.dto.ResponseSheetDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetDetailParam;
@@ -8,10 +9,13 @@ import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetPar
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.User;
+import com.github.akagawatsurunaki.ankeito.entity.answer.ResponseOption;
 import com.github.akagawatsurunaki.ankeito.entity.answer.ResponseSheet;
+import com.github.akagawatsurunaki.ankeito.entity.answer.ResponseSheetDetail;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
 import com.github.akagawatsurunaki.ankeito.mapper.UserMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.answer.ResponseOptionMapper;
+import com.github.akagawatsurunaki.ankeito.mapper.answer.ResponseSheetDetailMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.answer.ResponseSheetMapper;
 import com.github.akagawatsurunaki.ankeito.mapper.qnnre.QnnreMapper;
 import lombok.val;
@@ -27,17 +31,20 @@ public class ResponseService {
     QnnreMapper qnnreMapper;
     UserMapper userMapper;
     ResponseOptionMapper responseOptionMapper;
+    ResponseSheetDetailMapper responseSheetDetailMapper;
 
     ResponseService(ResponseSheetMapper responseSheetMapper,
                     QnnreService qnnreService,
                     QnnreMapper qnnreMapper,
                     UserMapper userMapper,
-                    ResponseOptionMapper responseOptionMapper) {
+                    ResponseOptionMapper responseOptionMapper,
+                    ResponseSheetDetailMapper responseSheetDetailMapper) {
         this.responseSheetMapper = responseSheetMapper;
         this.qnnreService = qnnreService;
         this.qnnreMapper = qnnreMapper;
         this.userMapper = userMapper;
         this.responseOptionMapper = responseOptionMapper;
+        this.responseSheetDetailMapper = responseSheetDetailMapper;
     }
 
     /**
@@ -137,6 +144,59 @@ public class ResponseService {
         }
     }
 
+    public ServiceResult<ResponseSheetDTO> submitResponseSheetDTO(@NonNull ResponseSheetDTO responseSheetDTO) {
+        try {
+            val qnnreDTO =
+                    Optional.ofNullable(responseSheetDTO.getQnnreDTO()).orElseThrow(() -> new NullPointerException(
+                            "QnnreDTO不存在"));
+            val qnnre = Optional.ofNullable(qnnreDTO.getQnnre()).orElseThrow(() -> new NullPointerException("问卷不存在"));
+            val qnnreId = Optional.ofNullable(qnnre.getId()).orElseThrow(() -> new NullPointerException("问卷ID不存在"));
+
+            val responseSheet =
+                    Optional.ofNullable(responseSheetDTO.getResponseSheet()).orElseThrow(() -> new NullPointerException(
+                            "答卷不存在"));
+            val responseSheetId = Optional.ofNullable(responseSheet.getId()).orElseThrow(() -> new NullPointerException(
+                    "答卷ID不存在"));
+            // 更新 ResponseSheetDetail 表
+            responseSheetDTO.getQnnreDTO().getQuestionDTOList().forEach(
+                    questionDTO -> {
+                        val question =
+                                Optional.ofNullable(questionDTO.getQuestion()).orElseThrow(() -> new NullPointerException(
+                                        "问题不存在"));
+                        val questionId =
+                                Optional.ofNullable(question.getId()).orElseThrow(() -> new NullPointerException(
+                                        "问题ID不存在"));
+                        responseSheetDetailMapper.insert(ResponseSheetDetail.builder()
+                                .responseSheetId(responseSheetId)
+                                .qnnreId(qnnreId)
+                                .questionId(questionId)
+                                .build());
+                        // 更新 ResponseOption 表
+                        questionDTO.getOptionList()
+                                .stream().filter(OptionDTO::isSelected)
+                                .forEach(
+                                        optionDTO -> {
+                                            val option =
+                                                    Optional.ofNullable(optionDTO.getOption()).orElseThrow(() -> new NullPointerException("选项DTO不存在"));
+                                            val optionId =
+                                                    Optional.ofNullable(option.getId()).orElseThrow(() -> new NullPointerException(
+                                                            "选项的ID不存在"));
+                                            responseOptionMapper.insert(ResponseOption.builder()
+                                                    .optionId(optionId)
+                                                    .responseSheetId(responseSheetId)
+                                                    .qnnreId(qnnreId)
+                                                    .questionId(questionId)
+                                                    .build());
+                                        }
+                                );
+                    }
+            );
+            return ServiceResult.ofOK("成功提交答卷", responseSheetDTO);
+
+        } catch (NullPointerException e) {
+            return ServiceResult.of(ServiceResultCode.FAILED, e.getMessage());
+        }
+    }
 
     /**
      * 新增一份答卷

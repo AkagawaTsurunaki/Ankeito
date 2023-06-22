@@ -1,5 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
+import com.github.akagawatsurunaki.ankeito.api.dto.ResponseSheetDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddResponseSheetParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetDetailParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryResponseSheetParam;
@@ -43,4 +44,9 @@ public class ResponseController {
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 
+    @RequestMapping(path = "/submitResponseSheet", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity submitResponseSheet(@RequestBody ResponseSheetDTO sheetDTO) {
+        val serviceResult = responseService.submitResponseSheetDTO(sheetDTO);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
 }
