@@ -51,3 +51,8 @@ body {
 .table td {
     text-align: center;
 }
+
+.problem {
+    margin-top: 60px;
+    margin-bottom: 60px;
+}

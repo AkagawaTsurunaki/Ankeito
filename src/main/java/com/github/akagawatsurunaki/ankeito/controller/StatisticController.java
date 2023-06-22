@@ -22,8 +22,8 @@ public class StatisticController {
         this.statisticService = statisticService;
     }
 
-    @RequestMapping(path = "/getResponseSheet", method = RequestMethod.POST, headers = "Accept=application/json")
-    public HttpResponseEntity getResponseSheet(@RequestBody QueryStatisticParam queryStatisticParam) {
+    @RequestMapping(path = "/getQuestionStatistic", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity getQuestionStatistic(@RequestBody QueryStatisticParam queryStatisticParam) {
         val serviceResult = statisticService.getQuestionStatistic(queryStatisticParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
