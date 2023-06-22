@@ -15,4 +15,14 @@ public interface ResponseOptionMapper extends BaseMapper<ResponseOption> {
         return selectList(new QueryWrapper<ResponseOption>().lambda().eq(ResponseOption::getResponseSheetId,
                 responseSheetId));
     }
+
+    default long countByQnnreIdAndQuestionIdAndOptionId(@NonNull String qnnreId,
+                                                        @NonNull Integer questionId,
+                                                        @NonNull Integer optionId) {
+        return selectCount(new QueryWrapper<ResponseOption>().lambda()
+                .eq(ResponseOption::getQnnreId, qnnreId)
+                .eq(ResponseOption::getQuestionId, questionId)
+                .eq(ResponseOption::getOptionId, optionId));
+    }
+
 }
