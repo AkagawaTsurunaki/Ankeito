@@ -229,7 +229,7 @@ public class QnnreService {
                 return modifyQnnreServiceResult;
             }
             val addQuestionParams =
-                    Optional.ofNullable(modifyQnnreParam.getAddQuestionParams()).orElseThrow(()->new NullPointerException("问题参数列表不能为空"));
+                    Optional.ofNullable(modifyQnnreParam.getAddQuestionParams()).orElseThrow(() -> new NullPointerException("问题参数列表不能为空"));
             Arrays.stream(addQuestionParams).forEach(addQuestionParam -> {
                 addQuestionParam.setQnnreId(modifyQnnreParam.getQnnreId());
                 QnnreService.this.addMultipleChoiceQuestion(addQuestionParam);
@@ -259,7 +259,7 @@ public class QnnreService {
             questions.forEach(
                     question -> questionDTOList.add(QuestionDTO.builder()
                             .question(question)
-                            .optionList(optionMapper.selectByQuestionId(question.getId()).stream()
+                            .optionList(optionMapper.selectByQnnreIdAndQuestionId(qnnreId, question.getId()).stream()
                                     .map(it -> OptionDTO.builder().option(it).build()).toList())
                             .build())
             );
