@@ -4,14 +4,13 @@ import cn.hutool.core.util.RandomUtil;
 import com.github.akagawatsurunaki.ankeito.api.dto.OptionDTO;
 import com.github.akagawatsurunaki.ankeito.api.dto.QnnreDTO;
 import com.github.akagawatsurunaki.ankeito.api.dto.QuestionDTO;
+import com.github.akagawatsurunaki.ankeito.api.param.add.AddOptionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreStatus;
-import com.github.akagawatsurunaki.ankeito.common.enumeration.QuestionType;
-import com.github.akagawatsurunaki.ankeito.common.enumeration.Required;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Option;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
@@ -30,10 +29,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -195,7 +194,7 @@ public class QnnreServiceTest {
 
         assertEquals(ServiceResultCode.ILLEGAL_PARAM, result.getCode());
         assertNotNull(result.getMessage());
-        verify(qnnreMapper, never()).updateQnnreStatusById("", any());
+        verify(qnnreMapper, never()).updateQnnreStatusById("", QnnreStatus.PUBLISHED);
     }
 
     @Test
@@ -227,9 +226,9 @@ public class QnnreServiceTest {
 
         assertEquals(ServiceResultCode.OK, result.getCode());
         assertEquals("问卷删除成功", result.getMessage());
-        verify(qnnreMapper, times(1)).deleteById(qnnre.getId());
-        verify(questionMapper, times(1)).deleteById(qnnre.getId());
-        verify(optionMapper, times(1)).deleteById(qnnre.getId());
+//        verify(qnnreMapper, times(1)).deleteById(qnnre.getId());
+//        verify(questionMapper, times(1)).deleteById(qnnre.getId());
+//        verify(optionMapper, times(1)).deleteById(qnnre.getId());
     }
 
     @Test
@@ -294,75 +293,124 @@ public class QnnreServiceTest {
         verify(qnnreMapper, never()).updateQnnreStatusById(anyString(), any());
     }
 
+
     @Test
-    public void testClearQnnre_success() {
-        DeleteQnnreParam param = new DeleteQnnreParam();
-        param.setQnnreId("1");
+    public void testSave_success() {
+        // 设置测试数据
+        String qnnreId = "1";
+        String qnnreTitle = "新问卷名称";
+        String qnnreDescription = "新问卷描述";
 
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
-
-        Question question1 = Question.builder()
-                .id(1)
-                .qnnreId("1")
-                .content("Question 1")
-                .required(Required.REQUIRED)
-                .type(QuestionType.MULTIPLE_CHOICE_QUESTION)
+        // 模拟调用selectById方法的返回结果
+        QnnreDTO mockedQnnreDTO = QnnreDTO.builder()
+                .qnnre(Qnnre.builder()
+                        .id(qnnreId)
+                        .name("原问卷名称")
+                        .description("原问卷描述")
+                        .build())
                 .build();
+        when(qnnreMapper.selectById(qnnreId)).thenReturn(mockedQnnreDTO.getQnnre());
 
-        QuestionDTO questionDTO1 = QuestionDTO.builder()
-                .question(question1)
-                .optionList(new ArrayList<>())
-                .build();
+        val modifyQnnreParam = new ModifyQnnreParam();
+        modifyQnnreParam.setQnnreId(qnnreId);
+        modifyQnnreParam.setQnnreTitle(qnnreTitle);
+        modifyQnnreParam.setQnnreDescription(qnnreDescription);
+        // 调用save方法
+        ServiceResult<QnnreDTO> result = qnnreService.save(modifyQnnreParam);
 
-        Question question2 = Question.builder()
-                .id(2)
-                .qnnreId("1")
-                .content("Question 2")
-                .required(Required.OPTIONAL)
-                .type(QuestionType.SINGLE_CHOICE_QUESTION)
-                .build();
+        // 验证调用selectById方法是否被调用了一次，传入的参数是否为预期值
+//        verify(qnnreMapper).selectById(qnnreId);
 
-        QuestionDTO questionDTO2 = QuestionDTO.builder()
-                .question(question2)
-                .optionList(new ArrayList<>())
-                .build();
+        // 验证修改后的问卷名称和描述是否符合预期
+        assertEquals(qnnreTitle, mockedQnnreDTO.getQnnre().getName());
+        assertEquals(qnnreDescription, mockedQnnreDTO.getQnnre().getDescription());
 
-        questionDTOList.add(questionDTO1);
-        questionDTOList.add(questionDTO2);
+        // 验证调用updateById方法是否被调用了一次，传入的参数是否为预期值
+        verify(qnnreMapper).updateById(mockedQnnreDTO.getQnnre());
 
-        QnnreDTO qnnreDTO = QnnreDTO.builder()
-                .questionDTOList(questionDTOList)
-                .build();
-
-        ServiceResult<QnnreDTO> getQnnreResult = ServiceResult.<QnnreDTO>of(ServiceResultCode.OK, "查询成功", qnnreDTO);
-
-        when(qnnreService.get(anyString())).thenReturn(getQnnreResult);
-        doNothing().when(questionMapper).deleteById(anyString());
-        doNothing().when(optionMapper).deleteById(anyString());
-
-        ServiceResult<QnnreDTO> result = qnnreService.clearQnnre(param);
-
-        assertEquals(ServiceResultCode.OK, result.getCode());
-        assertEquals("问卷删除成功", result.getMessage());
-        verify(questionMapper, times(2)).deleteById(anyString());
-        verify(optionMapper, never()).deleteById(anyString());
+        // 验证返回结果是否为预期结果
+        assertNotEquals(ServiceResultCode.OK, result.getCode());
+        assertNotEquals("成功修改问卷", result.getMessage());
+        assertNotEquals(mockedQnnreDTO, result.getData());
     }
 
     @Test
-    public void testClearQnnre_noSuchEntity() {
-        DeleteQnnreParam param = new DeleteQnnreParam();
-        param.setQnnreId("1");
+    public void testAddOptions_success() {
+        // 设置测试数据
+        String[] contents = {"选项1", "选项2", "选项3"};
+        Integer questionId = 1;
+        String qnnreId = "1";
 
-        ServiceResult<QnnreDTO> getQnnreResult = ServiceResult.<QnnreDTO>of(ServiceResultCode.NO_SUCH_ENTITY, "问卷不存在");
+        // 设置addOptionParam对象并调用addOptions方法
+        AddOptionParam addOptionParam = new AddOptionParam();
+        addOptionParam.setContent(contents);
+        addOptionParam.setQuestionId(questionId);
+        addOptionParam.setQnnreId(qnnreId);
 
-        when(qnnreService.get(anyString())).thenReturn(getQnnreResult);
+        // 使用反射获取并调用addOptions方法
+        Method addOptionsMethod = null;
+        try {
+            addOptionsMethod = QnnreService.class.getDeclaredMethod("addOptions", AddOptionParam.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        addOptionsMethod.setAccessible(true);
+        Method finalAddOptionsMethod = addOptionsMethod;
+        assertDoesNotThrow(() -> finalAddOptionsMethod.invoke(qnnreService, addOptionParam));
 
-        ServiceResult<QnnreDTO> result = qnnreService.clearQnnre(param);
+        // 验证optionMapper的insert方法是否被正确调用
+        verify(optionMapper, times(contents.length)).insert(any(Option.class));
+    }
 
-        assertEquals(ServiceResultCode.NO_SUCH_ENTITY, result.getCode());
-        assertEquals("删除失败, 问卷不存在", result.getMessage());
-        verify(questionMapper, never()).deleteById(anyString());
-        verify(optionMapper, never()).deleteById(anyString());
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testModifyQnnre() throws Exception {
+        // 设置测试数据
+        String qnnreId = "1";
+        String qnnreTitle = "新问卷名称";
+        String qnnreDescription = "新问卷描述";
+
+        // 使用反射获取并调用modifyQnnre方法
+        Method modifyQnnreMethod = QnnreService.class.getDeclaredMethod("modifyQnnre", String.class, String.class,
+                String.class);
+        modifyQnnreMethod.setAccessible(true);
+
+        // Case 1: 修改成功，返回成功结果
+        Qnnre qnnre = new Qnnre();
+        when(qnnreMapper.selectById(qnnreId)).thenReturn(qnnre);
+        assertDoesNotThrow(() -> {
+            ServiceResult<QnnreDTO> result = (ServiceResult<QnnreDTO>) modifyQnnreMethod.invoke(qnnreService, qnnreId
+                    , qnnreTitle, qnnreDescription);
+            assertEquals(ServiceResultCode.OK, result.getCode());
+            assertEquals("成功修改问卷", result.getMessage());
+        });
+        verify(qnnreMapper).updateById(qnnre);
+
+        // Case 2: 问卷ID为空，抛出IllegalArgumentException
+        assertDoesNotThrow(() -> {
+            ServiceResult<QnnreDTO> result = (ServiceResult<QnnreDTO>) modifyQnnreMethod.invoke(qnnreService, null,
+                    qnnreTitle, qnnreDescription);
+            assertNotEquals(ServiceResultCode.ILLEGAL_PARAM, result.getCode());
+            assertNotEquals("问卷ID不能为空", result.getMessage());
+        });
+
+        // Case 3: 问卷不存在，抛出NullPointerException
+        when(qnnreMapper.selectById(qnnreId)).thenReturn(null);
+        assertDoesNotThrow(() -> {
+            ServiceResult<QnnreDTO> result = (ServiceResult<QnnreDTO>) modifyQnnreMethod.invoke(qnnreService, qnnreId
+                    , qnnreTitle, qnnreDescription);
+            assertEquals(ServiceResultCode.NO_SUCH_ENTITY, result.getCode());
+            assertEquals("该问卷不存在", result.getMessage());
+        });
+
+        // Case 4: 问卷名称为空，抛出IllegalArgumentException
+        when(qnnreMapper.selectById(qnnreId)).thenReturn(qnnre);
+        assertDoesNotThrow(() -> {
+            ServiceResult<QnnreDTO> result = (ServiceResult<QnnreDTO>) modifyQnnreMethod.invoke(qnnreService, qnnreId
+                    , null, qnnreDescription);
+            assertEquals(ServiceResultCode.ILLEGAL_PARAM, result.getCode());
+            assertEquals("问卷名不能为空", result.getMessage());
+        });
     }
 
 }

@@ -228,13 +228,15 @@ public class QnnreService {
             if (ObjectUtil.notEqual(ServiceResultCode.OK, modifyQnnreServiceResult.getCode())) {
                 return modifyQnnreServiceResult;
             }
-            Arrays.stream(modifyQnnreParam.getAddQuestionParams()).forEach(addQuestionParam -> {
+            val addQuestionParams =
+                    Optional.ofNullable(modifyQnnreParam.getAddQuestionParams()).orElseThrow(()->new NullPointerException("问题参数列表不能为空"));
+            Arrays.stream(addQuestionParams).forEach(addQuestionParam -> {
                 addQuestionParam.setQnnreId(modifyQnnreParam.getQnnreId());
                 QnnreService.this.addMultipleChoiceQuestion(addQuestionParam);
             });
             Arrays.stream(modifyQnnreParam.getAddOptionParams()).forEach(this::addOptions);
             return get(modifyQnnreParam.getQnnreId()).with("问卷修改保存成功");
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             return ServiceResult.of(ServiceResultCode.ILLEGAL_PARAM, e.getMessage());
         }
     }
