@@ -25,4 +25,12 @@ public interface ResponseOptionMapper extends BaseMapper<ResponseOption> {
                 .eq(ResponseOption::getOptionId, optionId));
     }
 
+    default List<ResponseOption> selectByQnnreIdAndQuestionId(@NonNull String qnnreId,
+                                                              @NonNull Integer questionId) {
+        return selectList(new QueryWrapper<ResponseOption>().lambda()
+                .eq(ResponseOption::getQnnreId, qnnreId)
+                .eq(ResponseOption::getQuestionId, questionId));
+
+    }
+
 }

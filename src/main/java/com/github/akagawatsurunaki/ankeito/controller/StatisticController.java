@@ -1,5 +1,6 @@
 package com.github.akagawatsurunaki.ankeito.controller;
 
+import com.github.akagawatsurunaki.ankeito.api.param.query.QueryProjectParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryStatisticParam;
 import com.github.akagawatsurunaki.ankeito.api.result.HttpResponseEntity;
 import com.github.akagawatsurunaki.ankeito.common.convertor.ServiceResultConvertor;
@@ -25,6 +26,12 @@ public class StatisticController {
     @RequestMapping(path = "/getQuestionStatistic", method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity getQuestionStatistic(@RequestBody QueryStatisticParam queryStatisticParam) {
         val serviceResult = statisticService.getQuestionStatistic(queryStatisticParam);
+        return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
+    }
+
+    @RequestMapping(path = "/getSameQuestionsStatistic", method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity getSameQuestionsStatistic(@RequestBody QueryProjectParam queryProjectParam) {
+        val serviceResult = statisticService.getSameQuestionStatistic(queryProjectParam);
         return new ServiceResultConvertor<>(serviceResult).toHttpResponseEntity();
     }
 }

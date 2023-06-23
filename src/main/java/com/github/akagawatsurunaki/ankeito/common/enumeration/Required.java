@@ -9,7 +9,8 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum Required {
     REQUIRED("必答题"),
-    OPTIONAL("非必答题");
+    OPTIONAL("非必答题"),
+    I_DONT_CARE("关我屁事");
     public final String value;
 
     public static Required get(@NonNull String value) {

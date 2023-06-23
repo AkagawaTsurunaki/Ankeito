@@ -1,8 +1,87 @@
 let questionStatisticDTOList
+let isSameQuestionStatistic
+let qnnreId
 
 onload = () => {
-    $util.getPageParam('selectedQnnreId')
-    $util.getPageParam('selectedQnnreId')
+    let selectedQnnreId = $util.getPageParam('selectedQnnreId')
+
+    isSameQuestionStatistic = $util.getPageParam('IsSameQuestionStatistic')
+
+    if (isSameQuestionStatistic === true) {
+        sameQuestionsStatistic()
+        $util.setPageParam('IsSameQuestionStatistic', false)
+        return
+    }
+
+    singleQnnreStatistic(selectedQnnreId)
+    $util.setPageParam('IsSameQuestionStatistic', false)
+}
+
+const sameQuestionsStatistic = () => {
+
+
+    $.ajax({
+        url: '/statistic/getSameQuestionsStatistic', // 接口地址
+        type: 'POST',
+        data: JSON.stringify({
+            projectId: $util.getPageParam('seeProject'),
+            qnnreId: $util.getPageParam('selectedQnnreId'),
+            questionId: $util.getPageParam('qId')
+        }),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+            if (res.code === '666') {
+                questionStatisticDTOList = [
+                    {
+                        questionId,
+                        questionName,
+                        questionCount,
+                        optionList: {
+                            optionId,
+                            optionContent,
+                            percent,
+                            count,
+                        }
+                    }
+                ] = res.data
+
+                questionStatisticDTOList.forEach(
+                    questionStatisticDTO => {
+                        table(questionStatisticDTO)
+                        pie(questionStatisticDTO)
+                        ring(questionStatisticDTO)
+                        bar(questionStatisticDTO)
+                        tiao(questionStatisticDTO)
+                        line(questionStatisticDTO)
+                        $(`#qnnreTitle`).text(questionStatisticDTO.questionName)
+                        $(`#qnnreDescription`).text('')
+                    }
+                )
+            } else {
+                alert(res.message)
+            }
+        }
+    });
+}
+
+const singleQnnreStatistic = (selectedQnnreId) => {
+    $.ajax({
+        url: '/getQnnre', // 接口地址
+        type: 'POST',
+        data: JSON.stringify({
+            id: selectedQnnreId
+        }),
+        dataType: "json",
+        contentType: "application/json",
+        success(res) {
+            if (res.code === '666') {
+                $(`#qnnreTitle`).text(res.data.name)
+                $(`#qnnreDescription`).text(res.data.description)
+                qnnreId = res.data.id
+            }
+        }
+    });
     let param = {
         qnnreId: $util.getPageParam('selectedQnnreId')
     }
@@ -42,7 +121,11 @@ onload = () => {
             }
         }
     });
-
+}
+const handleSameQuestionsStatistic = (qId) => {
+    $util.setPageParam('IsSameQuestionStatistic', true)
+    $util.setPageParam('qId', qId)
+    location.href = "/pages/statisticChart/index.html"
 }
 
 const table = (questionStatisticDTO) => {
@@ -50,7 +133,13 @@ const table = (questionStatisticDTO) => {
 
     let ele = `
     <div class="problem" id="problem${questionId}">
-        <div id="tableStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px;">
+        <div class="top">
+            <span class="question-title" id="questionTitle${questionId}">第 ${questionId + 1} 题  ${questionStatisticDTO.questionName}</span>
+            <span style="margin-right: 0">
+                <span onclick="handleSameQuestionsStatistic('${questionId}')" ${isSameQuestionStatistic ? `style="display: none"` : ''}>同类问题统计</span>
+            </span>
+        </div>
+        <div id="tableStatistic${questionId}" class="chartContainer" >
             <table id="tableQuestion${questionId}" class="table table-bordered table-striped">
                 <tr id="tr${questionId}">
                     <th>选项</th>
@@ -110,13 +199,13 @@ const table = (questionStatisticDTO) => {
 
 const showChart = (questionId, id) => {
 
-    $(`#tableStatistic${questionId}`).css('display','none')
-    $(`#pieStatistic${questionId}`).css('display','none')
-    $(`#ringStatistic${questionId}`).css('display','none')
-    $(`#barStatistic${questionId}`).css('display','none')
-    $(`#yBarStatistic${questionId}`).css('display','none')
-    $(`#lineStatistic${questionId}`).css('display','none')
-    $(`#${id}`).css('display','block')
+    $(`#tableStatistic${questionId}`).css('display', 'none')
+    $(`#pieStatistic${questionId}`).css('display', 'none')
+    $(`#ringStatistic${questionId}`).css('display', 'none')
+    $(`#barStatistic${questionId}`).css('display', 'none')
+    $(`#yBarStatistic${questionId}`).css('display', 'none')
+    $(`#lineStatistic${questionId}`).css('display', 'none')
+    $(`#${id}`).css('display', 'block')
 }
 
 const pie = (questionStatisticDTO) => {
@@ -220,7 +309,7 @@ const ring = (questionStatisticDTO) => {
     option && myChart.setOption(option);
 }
 
-const bar = (questionStatisticDTO) =>{
+const bar = (questionStatisticDTO) => {
     let questionId = questionStatisticDTO.questionId
     let chartDom = document.getElementById(`barStatistic${questionId}`);
     let myChart = echarts.init(chartDom);
@@ -258,7 +347,7 @@ const bar = (questionStatisticDTO) =>{
     option && myChart.setOption(option);
 }
 
-const tiao = (questionStatisticDTO) =>{
+const tiao = (questionStatisticDTO) => {
     let questionId = questionStatisticDTO.questionId
     let chartDom = document.getElementById(`yBarStatistic${questionId}`);
     let myChart = echarts.init(chartDom);
