@@ -35,12 +35,15 @@ onload = () => {
  */
 const onAddQuestion = (type) => {
     let ele
+    let typeStr = ''
     switch (type) {
         case 1:
             ele = handleAddSingleChoice()
+            typeStr = 'SINGLE_CHOICE_QUESTION'
             break;
         case 2:
             ele = handleAddMultipleChoice()
+            typeStr = 'MULTIPLE_CHOICE_QUESTION'
             break;
         case 3:
             ele = handleAddFillBlanks()
@@ -55,8 +58,7 @@ const onAddQuestion = (type) => {
             break;
     }
     $('#problem').append(ele)
-    problem.push({problemName: '', mustAnswer: true, option: [{}]})
-
+    problem.push({problemName: '', mustAnswer: true, option: [{}], type: typeStr})
     $(".question").hover(() => {
         let hoverSelector = $('.question:hover')
         let problemIndex = hoverSelector.attr('data-problemIndex')
@@ -205,7 +207,6 @@ const handleDelete = (problemIndex) => {
 }
 
 const handleAddSingleChoice = () => {
-    problem.type = 'SINGLE_CHOICE_QUESTION'
     return `
     <div class="question" id="question${problem.length}" data-type="1" data-problemIndex="${problem.length}">
       <div class="top">
@@ -242,6 +243,7 @@ const singleChoiceAddOption = (problemIndex) => {
       <span class="option-del" onclick="singleChoiceDelOption(${problemIndex}, ${problem[problemIndex].option.length})">删除</span>
     </div>
   `)
+    problem[problemIndex].type = 'SINGLE_CHOICE_QUESTION'
     problem[problemIndex].option.push({})
 }
 const singleChoiceDelOption = (problemIndex, optionIndex) => {
@@ -267,35 +269,8 @@ const singleChoiceEditFinish = (problemIndex) => {
     `)
     })
 }
-const databaseAddOptions = (problemIndex) => {
-    let contentArr = []
-
-    $("#problem #question" + problemIndex).find('.option-item').each(function () {
-        let optionText = $(this).find('input').val(); // 获取当前选项的文本值
-        contentArr.push(optionText); // 将文本值保存到数组中
-    });
-
-    let addOptionParam = {
-        questionId: problemIndex,
-        content: contentArr
-    }
-
-    $.ajax({
-        url: '/option/addOptions',
-        type: 'POST',
-        data: JSON.stringify(addOptionParam),
-        dataType: "json",
-        contentType: "application/json",
-        success(res) {
-            if (res.code !== '666') {
-                alert(res.message)
-            }
-        }
-    });
-}
-
 const handleAddMultipleChoice = () => {
-    problem.type = 'MULTIPLE_CHOICE_QUESTION'
+
     return `
     <div class="question" id="question${problem.length}" data-type="2" data-problemIndex="${problem.length}">
       <div class="top">
