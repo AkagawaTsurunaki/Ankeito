@@ -1,7 +1,9 @@
 package com.github.akagawatsurunaki.ankeito.entity.answer;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -11,6 +13,8 @@ import java.util.Date;
  * @author AkagawaTsurunaki
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ResponseSheet {
 
