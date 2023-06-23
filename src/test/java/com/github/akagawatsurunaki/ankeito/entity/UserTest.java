@@ -8,6 +8,9 @@ import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
 import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
@@ -15,6 +18,9 @@ import java.util.UUID;
 import static com.github.akagawatsurunaki.ankeito.common.constant.StringValue.BASE_NAME;
 import static com.github.akagawatsurunaki.ankeito.common.constant.StringValue.BASE_STRING;
 
+@SpringBootTest
+@Transactional
+@Rollback
 public class UserTest {
 
     /**

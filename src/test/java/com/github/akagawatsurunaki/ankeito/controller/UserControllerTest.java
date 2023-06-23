@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @SpringBootTest
+@Transactional
+@Rollback
 public class UserControllerTest {
     @Autowired
     UserController userController;
