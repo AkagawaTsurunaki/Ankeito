@@ -7,6 +7,8 @@ import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -16,6 +18,8 @@ import static com.github.akagawatsurunaki.ankeito.common.constant.StringValue.BA
 import static com.github.akagawatsurunaki.ankeito.common.constant.StringValue.BASE_NAME;
 
 @SpringBootTest
+@Transactional
+@Rollback
 public class ProjectTest {
 
     /**
