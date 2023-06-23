@@ -609,7 +609,7 @@ const handleEditFinish = () => {
         dataType: "json",
         contentType: "application/json",
         success(res) {
-            console.log(res.data.message)
+            alert(res.message)
         }
     })
 }
