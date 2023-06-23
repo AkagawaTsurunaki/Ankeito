@@ -25,7 +25,7 @@ public class OptionServiceTest {
 
     @Test
     public void testAddOptions() {
-        val addOptionParam = new AddOptionParam();
+        val addOptionParam = AddOptionParam.builder().build();
         String[] strs = {"asd", "aaa"};
         addOptionParam.setQnnreId(UUID.randomUUID().toString());
         addOptionParam.setQuestionId(null);
