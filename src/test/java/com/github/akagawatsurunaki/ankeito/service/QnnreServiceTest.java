@@ -6,11 +6,13 @@ import com.github.akagawatsurunaki.ankeito.api.dto.QnnreDTO;
 import com.github.akagawatsurunaki.ankeito.api.dto.QuestionDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddOptionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddQnnreParam;
+import com.github.akagawatsurunaki.ankeito.api.param.add.AddQuestionParam;
 import com.github.akagawatsurunaki.ankeito.api.param.delete.DeleteQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyQnnreParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryQnnreListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreStatus;
+import com.github.akagawatsurunaki.ankeito.common.enumeration.QuestionType;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Option;
 import com.github.akagawatsurunaki.ankeito.entity.qnnre.Qnnre;
@@ -171,7 +173,7 @@ public class QnnreServiceTest {
 
     @Test
     public void testPublishQnnre_success() {
-        ModifyQnnreParam param = new ModifyQnnreParam();
+        ModifyQnnreParam param = ModifyQnnreParam.builder().build();
 
         val qnnreId = UUID.randomUUID().toString();
         val qnnreStatus = RandomUtil.randomEle(QnnreStatus.values());
@@ -187,7 +189,7 @@ public class QnnreServiceTest {
 
     @Test
     public void testPublishQnnre_invalidParam() {
-        ModifyQnnreParam param = new ModifyQnnreParam();
+        ModifyQnnreParam param = ModifyQnnreParam.builder().build();
         param.setQnnreId(null);
 
         ServiceResult<Object> result = qnnreService.publishQnnre(param);
@@ -293,7 +295,6 @@ public class QnnreServiceTest {
         verify(qnnreMapper, never()).updateQnnreStatusById(anyString(), any());
     }
 
-
     @Test
     public void testSave_success() {
         // 设置测试数据
@@ -311,10 +312,11 @@ public class QnnreServiceTest {
                 .build();
         when(qnnreMapper.selectById(qnnreId)).thenReturn(mockedQnnreDTO.getQnnre());
 
-        val modifyQnnreParam = new ModifyQnnreParam();
-        modifyQnnreParam.setQnnreId(qnnreId);
-        modifyQnnreParam.setQnnreTitle(qnnreTitle);
-        modifyQnnreParam.setQnnreDescription(qnnreDescription);
+        val modifyQnnreParam = ModifyQnnreParam.builder()
+                .qnnreId(qnnreId)
+                .qnnreTitle(qnnreTitle)
+                .qnnreDescription(qnnreDescription)
+                .build();
         // 调用save方法
         ServiceResult<QnnreDTO> result = qnnreService.save(modifyQnnreParam);
 
@@ -342,10 +344,11 @@ public class QnnreServiceTest {
         String qnnreId = "1";
 
         // 设置addOptionParam对象并调用addOptions方法
-        AddOptionParam addOptionParam = new AddOptionParam();
-        addOptionParam.setContent(contents);
-        addOptionParam.setQuestionId(questionId);
-        addOptionParam.setQnnreId(qnnreId);
+        AddOptionParam addOptionParam = AddOptionParam.builder()
+                .content(contents)
+                .questionId(questionId)
+                .qnnreId(qnnreId)
+                .build();
 
         // 使用反射获取并调用addOptions方法
         Method addOptionsMethod = null;
@@ -411,6 +414,43 @@ public class QnnreServiceTest {
             assertEquals(ServiceResultCode.ILLEGAL_PARAM, result.getCode());
             assertEquals("问卷名不能为空", result.getMessage());
         });
+    }
+
+    @Test
+    public void testSave_2() {
+
+        val qnnreId = "b8030ee6-b95a-4102-b00e-f3edd66dfe6d";
+        String[] strs = {"asd", "asasdad"};
+        AddOptionParam[] addOptionParams = {
+                AddOptionParam.builder().qnnreId(qnnreId).content(strs).questionId(1).build(),
+                AddOptionParam.builder().qnnreId(qnnreId).content(strs).questionId(2).build(),
+                AddOptionParam.builder().qnnreId(qnnreId).content(strs).questionId(3).build(),
+        };
+        AddQuestionParam[] addQuestionParams = {
+                AddQuestionParam.builder()
+                        .index(0)
+                        .mustAnswer(true)
+                        .qnnreId(qnnreId)
+                        .problemName("asljkdsajdh")
+                        .type(QuestionType.SINGLE_CHOICE_QUESTION.toString())
+                        .build(),
+                AddQuestionParam.builder()
+                        .index(0)
+                        .mustAnswer(false)
+                        .qnnreId(qnnreId)
+                        .problemName("sadsadsa")
+                        .type(QuestionType.MULTIPLE_CHOICE_QUESTION.toString())
+                        .build(),
+        };
+        val modifyQnnreParam = ModifyQnnreParam.builder()
+                .addOptionParams(addOptionParams)
+                .qnnreId(qnnreId)
+                .qnnreDescription("desdes")
+                .qnnreTitle("title")
+                .addQuestionParams(addQuestionParams)
+                .build();
+        qnnreService.save(modifyQnnreParam);
+
     }
 
 }
