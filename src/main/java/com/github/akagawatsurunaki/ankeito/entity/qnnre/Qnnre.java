@@ -1,5 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.entity.qnnre;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +25,7 @@ public class Qnnre {
     /**
      * 问卷ID
      */
+    @TableId(type = IdType.INPUT)
     String id;
     /**
      * 项目ID
