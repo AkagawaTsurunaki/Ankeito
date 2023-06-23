@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 22/06/2023 11:14:32
+ Date: 23/06/2023 10:53:02
 */
 
 SET NAMES utf8mb4;
@@ -58,7 +58,7 @@ CREATE TABLE `project`  (
 -- ----------------------------
 -- Records of project
 -- ----------------------------
-INSERT INTO `project` VALUES ('3a64b27a-2f52-4cfa-82eb-115abbf7de41', 'TODO', '测试项目', '该项目用于测试', 'admin', 'admin', '2023-06-20 23:52:30', '2023-06-20 23:52:30');
+INSERT INTO `project` VALUES ('ceb85cfd-406a-491d-a8a0-e15148dffe29', 'TODO', 'jfczlhnwzijibmbt', 'zscdndihwqxzbmfxphjgmiytoluidrzxelifsrhyeiirpaqcjclimjrlkqgawwklhncqlnheislgyjzfnuijkhakikahfxhknfpqwidlfmqtqxoeuyzxtgislnnvakmesauvoavmtqxyaoidjmqakdnmxzbiosgghyfoqsnhnzwocrxxzdqdpecwjokvhwewccdspbng', 'njkrnwyf', 'mzfhgtpi', '2023-06-23 10:49:18', '2023-06-23 10:49:18');
 
 -- ----------------------------
 -- Table structure for qnnre
@@ -78,8 +78,8 @@ CREATE TABLE `qnnre`  (
 -- ----------------------------
 -- Records of qnnre
 -- ----------------------------
-INSERT INTO `qnnre` VALUES ('26114385-1ae2-4679-91ee-b146b5869d3b', '3a64b27a-2f52-4cfa-82eb-115abbf7de41', '测试调查问卷', '这是一段调查问卷说明', '2023-06-21 08:00:00', '2023-06-30 08:00:00', 'DRAFT');
-INSERT INTO `qnnre` VALUES ('b8030ee6-b95a-4102-b00e-f3edd66dfe6d', '3a64b27a-2f52-4cfa-82eb-115abbf7de41', '如来真来了吗', '中国人认为, 宇宙万法...', '2023-05-31 08:00:00', '2023-06-29 08:00:00', 'DRAFT');
+INSERT INTO `qnnre` VALUES ('26114385-1ae2-4679-91ee-b146b5869d3b', '3a64b27a-2f52-4cfa-82eb-115abbf7de41', '测试调查问卷', '这是一段调查问卷说明', '2023-06-21 08:00:00', '2023-06-30 08:00:00', 'PUBLISHED');
+INSERT INTO `qnnre` VALUES ('b8030ee6-b95a-4102-b00e-f3edd66dfe6d', '3a64b27a-2f52-4cfa-82eb-115abbf7de41', '如来真来了吗', '中国人认为, 宇宙万法...', '2023-05-31 08:00:00', '2023-06-29 08:00:00', 'PUBLISHED');
 
 -- ----------------------------
 -- Table structure for question
@@ -98,7 +98,7 @@ CREATE TABLE `question`  (
 -- Records of question
 -- ----------------------------
 INSERT INTO `question` VALUES (0, '你是人类吗?', 'REQUIRED', 'SINGLE_CHOICE_QUESTION', '26114385-1ae2-4679-91ee-b146b5869d3b');
-INSERT INTO `question` VALUES (1, '下列哪个字词组合不是人类可读的?', 'OPTIONAL', 'SINGLE_CHOICE_QUESTION', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `question` VALUES (1, '下列哪个字词组合不是人类可读的?', 'OPTIONAL', 'MULTIPLE_CHOICE_QUESTION', '26114385-1ae2-4679-91ee-b146b5869d3b');
 
 -- ----------------------------
 -- Table structure for response_option
@@ -114,9 +114,16 @@ CREATE TABLE `response_option`  (
 -- ----------------------------
 -- Records of response_option
 -- ----------------------------
-INSERT INTO `response_option` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', 2, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
-INSERT INTO `response_option` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', 0, '0', '26114385-1ae2-4679-91ee-b146b5869d3b');
-INSERT INTO `response_option` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', 3, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('73ec6a40-5201-450d-a7d0-59eeaafda18d', 0, '0', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('73ec6a40-5201-450d-a7d0-59eeaafda18d', 0, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('3cd0572c-6d75-4117-be34-4df06e2b9f60', 0, '0', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('3cd0572c-6d75-4117-be34-4df06e2b9f60', 1, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('3cd0572c-6d75-4117-be34-4df06e2b9f60', 2, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('3cd0572c-6d75-4117-be34-4df06e2b9f60', 3, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('7268cc8c-b331-4b31-b8bb-5f2cc4967148', 1, '0', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('7268cc8c-b331-4b31-b8bb-5f2cc4967148', 1, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('7268cc8c-b331-4b31-b8bb-5f2cc4967148', 2, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
+INSERT INTO `response_option` VALUES ('7268cc8c-b331-4b31-b8bb-5f2cc4967148', 3, '1', '26114385-1ae2-4679-91ee-b146b5869d3b');
 
 -- ----------------------------
 -- Table structure for response_sheet
@@ -135,8 +142,11 @@ CREATE TABLE `response_sheet`  (
 -- ----------------------------
 -- Records of response_sheet
 -- ----------------------------
-INSERT INTO `response_sheet` VALUES ('1eee2956-d4e9-2096-6b50-661846c86b6c', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', '815fc4ca-c344-26eb-980a-5f755f76eeca', '张三', '2023-06-21 21:40:55');
-INSERT INTO `response_sheet` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', 'at2023', 'AkagawaTsurunaki', '2023-06-21 20:46:37');
+INSERT INTO `response_sheet` VALUES ('3cd0572c-6d75-4117-be34-4df06e2b9f60', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', '4c22ca63-5a5f-4cd0-85b6-a9c13212619d', 'TempUser26758657703982927244', '2023-06-23 00:21:22');
+INSERT INTO `response_sheet` VALUES ('46348560-78c6-4957-8d49-eb6b2579f1ff', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', '8971ab77-e4e7-421e-a701-1343ec1431f6', 'TempUser32524058565133072452', '2023-06-23 01:50:33');
+INSERT INTO `response_sheet` VALUES ('7268cc8c-b331-4b31-b8bb-5f2cc4967148', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', '723a7b89-6dde-4257-b31d-951d6fe7b41a', 'TempUser80819914814811362027', '2023-06-23 00:21:31');
+INSERT INTO `response_sheet` VALUES ('73ec6a40-5201-450d-a7d0-59eeaafda18d', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', 'f51a7cf5-3951-4465-8dcd-715150ebb013', 'TempUser09249458663454980685', '2023-06-22 15:54:42');
+INSERT INTO `response_sheet` VALUES ('bfa68783-ebbb-44f2-a5e0-e7ebca1f68b7', '26114385-1ae2-4679-91ee-b146b5869d3b', '测试调查问卷', '742754be-e388-4ade-aef7-fad5b4be0b3f', 'TempUser93743575811549322943', '2023-06-22 16:04:20');
 
 -- ----------------------------
 -- Table structure for response_sheet_detail
@@ -152,9 +162,12 @@ CREATE TABLE `response_sheet_detail`  (
 -- ----------------------------
 -- Records of response_sheet_detail
 -- ----------------------------
-INSERT INTO `response_sheet_detail` VALUES ('1eee2956-d4e9-2096-6b50-661846c86b6c', '26114385-1ae2-4679-91ee-b146b5869d3b', '1');
-INSERT INTO `response_sheet_detail` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', '26114385-1ae2-4679-91ee-b146b5869d3b', '0');
-INSERT INTO `response_sheet_detail` VALUES ('44180c27-a198-6e68-fdb5-b4c7a890dec2', '26114385-1ae2-4679-91ee-b146b5869d3b', '1');
+INSERT INTO `response_sheet_detail` VALUES ('3cd0572c-6d75-4117-be34-4df06e2b9f60', '26114385-1ae2-4679-91ee-b146b5869d3b', '0');
+INSERT INTO `response_sheet_detail` VALUES ('3cd0572c-6d75-4117-be34-4df06e2b9f60', '26114385-1ae2-4679-91ee-b146b5869d3b', '1');
+INSERT INTO `response_sheet_detail` VALUES ('7268cc8c-b331-4b31-b8bb-5f2cc4967148', '26114385-1ae2-4679-91ee-b146b5869d3b', '0');
+INSERT INTO `response_sheet_detail` VALUES ('7268cc8c-b331-4b31-b8bb-5f2cc4967148', '26114385-1ae2-4679-91ee-b146b5869d3b', '1');
+INSERT INTO `response_sheet_detail` VALUES ('73ec6a40-5201-450d-a7d0-59eeaafda18d', '26114385-1ae2-4679-91ee-b146b5869d3b', '0');
+INSERT INTO `response_sheet_detail` VALUES ('73ec6a40-5201-450d-a7d0-59eeaafda18d', '26114385-1ae2-4679-91ee-b146b5869d3b', '1');
 
 -- ----------------------------
 -- Table structure for user
@@ -166,7 +179,7 @@ CREATE TABLE `user`  (
   `password` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `start_time` datetime NOT NULL,
   `stop_time` datetime NOT NULL,
-  `user_role` enum('ADMIN','NO_ROLE') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `user_role` enum('ADMIN','NO_ROLE','STUDENT','TEACHER') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `user_status` enum('ENABLE','DISABLE') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `created_by` char(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
   `creation_time` datetime NULL DEFAULT NULL,

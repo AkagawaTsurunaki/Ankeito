@@ -1,8 +1,10 @@
 package com.github.akagawatsurunaki.ankeito.entity.qnnre;
 
 import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -14,6 +16,8 @@ import java.util.Date;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Qnnre {
 
     /**
