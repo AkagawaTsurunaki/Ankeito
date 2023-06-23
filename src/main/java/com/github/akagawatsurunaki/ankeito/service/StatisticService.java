@@ -92,7 +92,7 @@ public class StatisticService {
         val questionCount = (int) responseSheetDetailMapper.countByQnnreIdAndQuestionId(qnnreId, questionId);
 
         val options =
-                Optional.ofNullable(optionMapper.selectByQuestionId(questionId)).orElseThrow(() -> new NullPointerException("该问题下没有选项"));
+                Optional.ofNullable(optionMapper.selectByQnnreIdAndQuestionId(qnnreId, questionId)).orElseThrow(() -> new NullPointerException("该问题下没有选项"));
         val innerOptionList = options.stream()
                 .map(option -> {
                     int innerOptionCount = (int) responseOptionMapper.countByQnnreIdAndQuestionIdAndOptionId(qnnreId,

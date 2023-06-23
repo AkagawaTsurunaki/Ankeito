@@ -50,27 +50,27 @@ const table = (questionStatisticDTO) => {
 
     let ele = `
     <div class="problem" id="problem${questionId}">
-        <div id="tableStatistic${questionId}">
-        <table id="tableQuestion${questionId}" class="table table-bordered table-striped">
-            <tr id="tr${questionId}">
-                <th>选项</th>
-                <th>小计</th>
-                <th>比例</th>
-            </tr>
-        </table>
+        <div id="tableStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px;">
+            <table id="tableQuestion${questionId}" class="table table-bordered table-striped">
+                <tr id="tr${questionId}">
+                    <th>选项</th>
+                    <th>小计</th>
+                    <th>比例</th>
+                </tr>
+            </table>
         </div>
-        <div id="pieStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
-        <div id="ringStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
-        <div id="barStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px; "></div>
-        <div id="yBarStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px;"></div>
-        <div id="lineStatistic${questionId}" class="chartContainer" style="width: 600px; height: 400px;"></div>
+        <div id="pieStatistic${questionId}"   class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
+        <div id="ringStatistic${questionId}"  class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
+        <div id="barStatistic${questionId}"   class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
+        <div id="yBarStatistic${questionId}"  class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
+        <div id="lineStatistic${questionId}"  class="chartContainer" style="width: 600px; height: 400px; display: none"></div>
         <div style="text-align: right">
-            <button type="button" class="btn btn-default">表格</button>
-            <button type="button" class="btn btn-default">饼状</button>
-            <button type="button" class="btn btn-default">圆环</button>
-            <button type="button" class="btn btn-default">柱状</button>
-            <button type="button" class="btn btn-default">条形</button>
-            <button type="button" class="btn btn-default">折线</button>
+            <button type="button" class="btn btn-default" onclick="showChart('${questionId}', 'tableStatistic${questionId}')">表格</button>
+            <button type="button" class="btn btn-default" onclick="showChart('${questionId}', 'pieStatistic${questionId}')">  饼状</button>
+            <button type="button" class="btn btn-default" onclick="showChart('${questionId}', 'ringStatistic${questionId}')"> 圆环</button>
+            <button type="button" class="btn btn-default" onclick="showChart('${questionId}', 'barStatistic${questionId}')">  柱状</button>
+            <button type="button" class="btn btn-default" onclick="showChart('${questionId}', 'yBarStatistic${questionId}')"> 条形</button>
+            <button type="button" class="btn btn-default" onclick="showChart('${questionId}', 'lineStatistic${questionId}')">  折线</button>
         </div>
     </div>
     `
@@ -106,6 +106,17 @@ const table = (questionStatisticDTO) => {
     $(`#tableQuestion${questionId} tr:last`).after(questionCountEle)
 
 
+}
+
+const showChart = (questionId, id) => {
+
+    $(`#tableStatistic${questionId}`).css('display','none')
+    $(`#pieStatistic${questionId}`).css('display','none')
+    $(`#ringStatistic${questionId}`).css('display','none')
+    $(`#barStatistic${questionId}`).css('display','none')
+    $(`#yBarStatistic${questionId}`).css('display','none')
+    $(`#lineStatistic${questionId}`).css('display','none')
+    $(`#${id}`).css('display','block')
 }
 
 const pie = (questionStatisticDTO) => {
