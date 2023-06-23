@@ -20,4 +20,10 @@ public interface OptionMapper extends BaseMapper<Option> {
                 questionId));
     }
 
+    default Option selectByQnnreIdAndQuestionIdAndOptionId(@NonNull String qnnreId, @NonNull Integer questionId
+            , @NonNull Integer optionId) {
+        return selectOne(Wrappers.<Option>query().lambda().eq(Option::getQnnreId, qnnreId).eq(Option::getQuestionId,
+                questionId).eq(Option::getId, optionId));
+    }
+
 }
