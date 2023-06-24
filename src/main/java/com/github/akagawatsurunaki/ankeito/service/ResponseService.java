@@ -1,6 +1,7 @@
 package com.github.akagawatsurunaki.ankeito.service;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.akagawatsurunaki.ankeito.api.dto.OptionDTO;
 import com.github.akagawatsurunaki.ankeito.api.dto.ResponseSheetDTO;
 import com.github.akagawatsurunaki.ankeito.api.param.add.AddResponseSheetParam;
@@ -22,7 +23,11 @@ import lombok.val;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ResponseService {
@@ -110,9 +115,16 @@ public class ResponseService {
         try {
             val qnnreList = qnnreMapper.selectByProjectId(Optional.ofNullable(queryResponseSheetParam.getProjectId())
                     .orElseThrow(() -> new IllegalArgumentException("ProjectId必须被指定")));
+            var result = qnnreList.stream()
+                    .flatMap(qnnre -> responseSheetMapper.selectByQnnreId(qnnre.getId()).stream())
+                    .collect(Collectors.toList());
 
-            List<ResponseSheet> result = new ArrayList<>();
-            qnnreList.stream().map(Qnnre::getId).forEach(qnnreId -> result.addAll(responseSheetMapper.selectByQnnreId(qnnreId)));
+            val username = queryResponseSheetParam.getUsername();
+            if (StrUtil.isNotBlank(username)) {
+                result = result.stream()
+                        .filter(responseSheet -> responseSheet.getRespondentName().equals(queryResponseSheetParam.getUsername()))
+                        .toList();
+            }
 
             return ServiceResult.ofOK("成功查询到" + result.size() + "份答卷", result);
         } catch (IllegalArgumentException e) {

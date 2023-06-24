@@ -17,18 +17,25 @@ class ResponseSheet {
 
 let responseSheet
 
+const find = () => {
+    let username = $(`#username`).val()
+    fetchResponseSheetList(username)
+}
+
+
 const onClickDetail = (id) => {
     $util.setPageParam('selectedResponseSheetId', id)
     location.href = '/pages/responseSheetDetail/index.html'
 }
 
-const fetchResponseSheetList = () => {
+const fetchResponseSheetList = (username) => {
     let selectedProjectId = $util.getPageParam('onProjectStatistics')
     $.ajax({
         url: API_BASE_URL + '/response/getResponseSheet',
         type: 'POST',
         data: JSON.stringify({
-            projectId: selectedProjectId
+            projectId: selectedProjectId,
+            username: username
         }),
         dataType: 'json',
         contentType: 'application/json',
@@ -38,7 +45,6 @@ const fetchResponseSheetList = () => {
             responseSheet.map((item, index) => {
                 $('#table #tbody').append(`
           <tr>
-            <td>${index + 1}</td>
             <td>${item.qnnreName}</td>
             <td>${item.respondentName}</td>
             <td>${item.finishedTime}</td>
@@ -50,43 +56,4 @@ const fetchResponseSheetList = () => {
             })
         }
     })
-
-    // let responseSheetDTO = {
-    //     responseSheet: {
-    //         id:,
-    //         qnnreId:,
-    //         qnnreName:,
-    //         respondentId:,
-    //         respondentName:,
-    //         finishedTime: ;
-    //     },
-    //     qnnreDTO: {
-    //         qnnre: {
-    //             id:,
-    //             projectId:,
-    //             name:,
-    //             description:,
-    //             startTime:,
-    //             stopTime:,
-    //             qnnreStatus:
-    //         },
-    //         questionDTOList: [{
-    //             question: {
-    //                 id:,
-    //                 qnnreId:,
-    //                 content:,
-    //                 required:,
-    //                 type:
-    //             },
-    //             optionList: [{
-    //                 option: {
-    //                     id:,
-    //                     questionId:,
-    //                     content:
-    //                 },
-    //                 selected:
-    //             }]
-    //         }]
-    //     }
-    // }
 }
