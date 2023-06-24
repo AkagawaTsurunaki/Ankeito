@@ -27,10 +27,16 @@ const handleCreateNewQnnre = () => {
     let startTimeSelector = $('#surveyStartTime');
     let stopTimeSelector = $('#surveyStopTime');
 
+    let surveyName =  $('#surveyName').val()
+    let surveyDescription = $('#surveyDescription').val()
+
+    if (!surveyName) return alert('调查名称不能为空')
+    if (!surveyDescription) return alert('调查说明不能为空')
+
     let params = {
         projectId: selectProjectId,
-        name: $('#surveyName').val(),
-        description: $('#surveyDescription').val(),
+        name: surveyName,
+        description: surveyDescription,
         startTime: startTimeSelector.val() && new Date(startTimeSelector.val()).getTime(),
         stopTime: stopTimeSelector.val() && new Date(stopTimeSelector.val()).getTime()
     }
@@ -45,7 +51,6 @@ const handleCreateNewQnnre = () => {
             // 如果创建成功了
             if (res.code === '666') {
                 $util.setPageParam('qnnreId', res.data.id)
-                alert(res.message + res.data.id)
                 location.href = "/pages/designQuestionnaire/index.html"
             } else {
                 alert(res.message)
