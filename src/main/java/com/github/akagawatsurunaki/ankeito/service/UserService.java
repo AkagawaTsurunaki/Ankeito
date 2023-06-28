@@ -8,7 +8,6 @@ import com.github.akagawatsurunaki.ankeito.api.param.login.UserLoginParam;
 import com.github.akagawatsurunaki.ankeito.api.param.modify.ModifyUserParam;
 import com.github.akagawatsurunaki.ankeito.api.param.query.QueryUserListParam;
 import com.github.akagawatsurunaki.ankeito.api.result.ServiceResult;
-import com.github.akagawatsurunaki.ankeito.common.enumeration.QnnreType;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.ServiceResultCode;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserRole;
 import com.github.akagawatsurunaki.ankeito.common.enumeration.UserStatus;
@@ -19,21 +18,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
 
+    private static final Map<String, User> loginUserMap = new HashMap<>();
     private final UserMapper userMapper;
 
     @Autowired
     public UserService(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
-
 
 
     /**
@@ -72,7 +68,14 @@ public class UserService {
      * @return 服务响应结果
      */
     public ServiceResult<User> userLogin(@NonNull UserLoginParam userLoginParam) {
-        val user = userMapper.selectByUsername(userLoginParam.getUsername());
+
+        val username = userLoginParam.getUsername();
+        var user = loginUserMap.get(username);
+
+        if (user == null) {
+            user = userMapper.selectByUsername(userLoginParam.getUsername());
+            loginUserMap.put(username, user);
+        }
 
         if (user == null || (!user.getPassword().equals(userLoginParam.getPassword()))) {
             return ServiceResult.of(
