@@ -1,5 +1,19 @@
-# 紫箩篮大学 软件系统开发实训（东大+2021）
+# Ankeito - Questionnaire Survey System
 
-## 联系方式
-邮箱
-<a> AkagawaTsurunaki@outlook.com </a>
+The intention of this system is to provide an online questionnaire survey platform, so that users can create, publish and manage questionnaires, and collect and analyse questionnaire data.
+
+## Environment
+
+- JDK: 17
+- Spring Boot: 3.1.0
+- MySQL: 8.0
+
+## Usage
+
+### Database
+
+Run `src\main\resources\sql\ankeito_dev_nova_structure.sql` to create database and `src\main\resources\sql\ankeito_dev_nova.sql` to create data into the database you have created.
+
+### Application Running
+
+Run with JDK 17.
